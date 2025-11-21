@@ -13,13 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
     // Solo ADMIN puede registrar usuarios
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PostMapping("/registrar")
+    @PostMapping("/crear-estudiante")
     public ResponseEntity<Usuario> registrarUsuario(@RequestBody UsuarioRequest request) {
         Usuario usuario = usuarioService.registrarUsuario(
                 request.getNombreUsuario(),
@@ -31,7 +32,7 @@ public class UsuarioController {
 
     // Solo ADMIN puede listar usuarios
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @GetMapping
+    @GetMapping("/estudiantes")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }

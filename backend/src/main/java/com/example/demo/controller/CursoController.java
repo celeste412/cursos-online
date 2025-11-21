@@ -32,8 +32,7 @@ public class CursoController {
     }
 
     // Todos pueden ver cursos
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<List<CursoDTO>> listarCursos() {
         return ResponseEntity.ok(cursoService.listarCursos());
     }

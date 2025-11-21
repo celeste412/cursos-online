@@ -20,21 +20,23 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    //  Registro de usuario con rol (UsuarioService)
-    @PostMapping("/register")
-    public ResponseEntity<?> registrar(@RequestBody Map<String, String> request) {
+    // Registro de usuario con rol (UsuarioService)
+    @PostMapping("/registro-estudiante")
+    public ResponseEntity<?> registrarEstudiante(@RequestBody Map<String, String> request) {
         String nombreUsuario = request.get("nombreUsuario");
         String password = request.get("password");
-        String rol = request.getOrDefault("rol", "USER");
+
+        // Forzar el rol a ESTUDIANTE
+        String rol = "ESTUDIANTE";
 
         Usuario nuevo = usuarioService.registrarUsuario(nombreUsuario, password, rol);
+
         return ResponseEntity.ok(Map.of(
-                "mensaje", "Usuario registrado correctamente",
-                "usuario", nuevo.getNombreUsuario()
-        ));
+                "mensaje", "Estudiante registrado correctamente",
+                "usuario", nuevo.getNombreUsuario()));
     }
 
-    //  Login con JWT
+    // Login con JWT
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         String nombreUsuario = request.get("nombreUsuario");
@@ -46,14 +48,12 @@ public class AuthController {
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
             return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
         }
-
         // Genera el token JWT
         String token = jwtUtil.generarToken(nombreUsuario);
 
         return ResponseEntity.ok(Map.of(
                 "token", token,
                 "usuario", usuario.getNombreUsuario(),
-                "roles", usuario.getRoles()
-        ));
+                "roles", usuario.getRoles()));
     }
 }
