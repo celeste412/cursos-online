@@ -1,0 +1,51 @@
+.email-sent-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("/assets/img3.png") center/cover no-repeat;
+  font-family: "Poppins", sans-serif;
+
+  .email-sent-content {
+    background: white;
+    border-radius: 25px;
+    padding: 3rem 4rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 480px;
+
+    .logo {
+      width: 150px;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .btn-volver {
+      background-color: #ffa726;
+      color: white;
+      border: none;
+      padding: 0.9rem 1.6rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:hover {
+        background-color: #ff9800;
+      }
+    }
+  }
+}

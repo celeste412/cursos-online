@@ -1,0 +1,23 @@
+/* ---- CONSTANTES ---- */
+$c-primary: #FF9500;
+$c-secondary: #F4F1F1;
+$c-terciary: #565C5B;
+
+.text-color {
+  color:  #565C5B;
+}
+
+.box-scroll {
+  height: 100%;
+  overflow-y: auto;
+}
+
+
+/* ---- RAÍZ ---- */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+$font-main: 'Montserrat', sans-serif;
+
+* {
+  font-family: $font-main;
+}

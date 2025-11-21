@@ -1,0 +1,38 @@
+<div class="contenedor-nav d-flex flex-column text-start gap-3 mt-4">
+
+  <a
+    routerLink="/student/home"
+    class="a-nav py-3 px-3"
+    routerLinkActive="active-nav"
+  >
+    <i class="bi bi-bank"></i>
+    <span class="ms-2">Home</span>
+  </a>
+
+  <a
+    routerLink="/student/cursos"
+    class="a-nav py-3 px-3"
+    routerLinkActive="active-nav"
+  >
+    <i class="bi bi-archive"></i>
+    <span class="ms-2">Cursos</span>
+  </a>
+
+  <a
+    routerLink="/student/mis-cursos"
+    class="a-nav py-3 px-3"
+    routerLinkActive="active-nav"
+  >
+    <i class="bi bi-backpack3"></i>
+    <span class="ms-2">Mis cursos</span>
+  </a>
+
+  <button
+    (click)="handleLogout()"
+    class="a-nav py-3 px-3 btn btn-link text-start text-decoration-none mt-auto logout-btn"
+  >
+    <i class="bi bi-box-arrow-right"></i>
+    <span class="ms-2">Cerrar sesión</span>
+  </button>
+
+</div>

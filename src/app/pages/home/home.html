@@ -1,0 +1,20 @@
+<div class="home-container">
+  <header class="home-header">
+    <h1>Bienvenido a la Plataforma de Cursos</h1>
+    <div class="auth-buttons">
+      <button routerLink="/login">Login</button>
+      <button routerLink="/register">Registrarse</button>
+    </div>
+  </header>
+
+  <div *ngIf="loading" class="loading">Cargando cursos...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="cursos-grid" *ngIf="!loading && !error">
+    <div class="curso-card" *ngFor="let curso of cursos">
+      <h2>{{ curso.titulo }}</h2>
+      <p>{{ curso.descripcion }}</p>
+      <button (click)="verCurso(curso.id)">Ver Curso</button>
+    </div>
+  </div>
+</div>

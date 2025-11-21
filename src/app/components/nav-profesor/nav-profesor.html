@@ -1,0 +1,46 @@
+<div class="contenedor-nav d-flex flex-column text-start">
+
+  <!-- Logo -->
+  <div class="logo-box text-center mb-4">
+    <img src="assets/logo-cursos.png" alt="Logo" class="logo-img" />
+    <h3 class="logo-text">Digital Academy</h3>
+  </div>
+
+  <!-- Opciones -->
+  <a
+    routerLink="/teacher/home"
+    routerLinkActive="active-nav"
+    class="a-nav py-3 px-3"
+  >
+    <i class="bi bi-bank"></i>
+    <span class="ms-2">Home</span>
+  </a>
+
+  <a
+    routerLink="/teacher/cursos"
+    routerLinkActive="active-nav"
+    class="a-nav py-3 px-3"
+  >
+    <i class="bi bi-journal-bookmark"></i>
+    <span class="ms-2">Mis Cursos</span>
+  </a>
+
+  <a
+    routerLink="/teacher/progreso"
+    routerLinkActive="active-nav"
+    class="a-nav py-3 px-3"
+  >
+    <i class="bi bi-bar-chart-line"></i>
+    <span class="ms-2">Progreso del Estudiante</span>
+  </a>
+
+  <!-- Cerrar sesión -->
+  <button
+    (click)="handleLogout()"
+    class="a-nav py-3 px-3 btn btn-link text-start text-decoration-none mt-auto logout-btn"
+  >
+    <i class="bi bi-box-arrow-right"></i>
+    <h5 class="ms-1">Cerrar sesión</h5>
+  </button>
+
+</div>

@@ -1,0 +1,83 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background: url("https://buscatusclases.com/wp-content/uploads/2022/04/reunion-equipo-gestionar-trabajo.jpg") center/cover;
+}
+
+.login-left {
+  flex: 1;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  width: 140px;
+  margin-bottom: 20px;
+}
+
+/* Maneja el resto de letras*/
+.login-right {
+  color: black;
+  flex: 1;
+  background: #fff;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 30px 0 0 30px;
+}
+
+/* centra solo lo primero  */
+.login-right h3,
+.login-right p:first-of-type {
+  text-align: center;
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc; 
+  background: #ffffff; 
+  color: #555; 
+}
+
+
+.login-right button {
+  margin-top: 15px;
+  padding: 12px;
+  background: #F9A826; /* naranja */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.register-link {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 14px;
+  color: #0056b3;
+  display: block; /* importante para que pueda alinearse */
+}
+
+.login-right img {
+  max-width: 180px;    /* Ajusta el tamaño a tu gusto */
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px auto; /* La centra */
+}
+
+

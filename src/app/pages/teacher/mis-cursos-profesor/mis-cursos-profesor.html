@@ -1,0 +1,25 @@
+<div class="d-flex">
+
+  <!-- NAV PROFESOR -->
+  <app-nav-profesor></app-nav-profesor>
+
+  <div class="misCursosProfesor contenido-principal px-4 py-3">
+    <h2>Mis Cursos</h2>
+
+    <div class="cursos-grid">
+      <div class="curso-card" *ngFor="let curso of cursos">
+        <img [src]="curso.img" [alt]="curso.titulo" />
+
+        <h3>{{ curso.titulo }}</h3>
+
+        <p><strong>Lecciones:</strong> {{ curso.lecciones }}</p>
+        <p><strong>Duración:</strong> {{ curso.duracion }}</p>
+
+        <button class="btn-curso" (click)="verCurso(curso.id)">
+          Ver Curso
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

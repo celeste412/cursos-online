@@ -1,0 +1,17 @@
+<div class="register-container">
+  <h2>Registro de Estudiante</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <label for="nombreUsuario">Usuario:</label>
+    <input type="text" id="nombreUsuario" [(ngModel)]="nombreUsuario" name="nombreUsuario" required>
+
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" [(ngModel)]="password" name="password" required>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Registrando...' : 'Registrarse' }}
+    </button>
+  </form>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+</div>

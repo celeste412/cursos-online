@@ -1,0 +1,79 @@
+.progresoEstudiante {
+  width: 100%;
+  padding-top: 20px;
+
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+  }
+
+  .tabla-progreso {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #ff7f32;
+    color: #fff;
+    padding: 14px;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  td {
+    padding: 14px;
+    font-size: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .barra {
+    width: 100%;
+    background: #eee;
+    height: 12px;
+    border-radius: 8px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+
+  .relleno {
+    height: 100%;
+    background: #4c6ef5;
+    border-radius: 8px;
+    transition: 0.3s ease;
+  }
+
+  .porcentaje {
+    font-size: 13px;
+    margin-left: 6px;
+    font-weight: 600;
+    color: #444;
+  }
+}
+
+.logout-btn {
+  border-radius: 10px;
+  background: #ffe5d1;
+  color: #ff7f32;
+  transition: 0.3s;
+
+  &:hover {
+    background: #ff7f32;
+    color: #fff;
+  }
+}
+

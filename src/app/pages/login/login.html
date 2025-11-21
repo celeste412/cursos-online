@@ -1,0 +1,52 @@
+<div class="login-container">
+  <div class="login-left">
+    <img src="assets/logoC.png" alt="Imagen" class="logo" alt="Digital Academy" />
+    <h2>Una de las academias</h2>
+    <h2>
+      virtuales líderes en Latinoamérica. Formación digital de calidad para
+      impulsar tu crecimiento profesional.
+    </h2>
+  </div>
+
+  <div class="login-right">
+    <img src="assets/logoC.png" alt="Digital Academy" class="small-logo" />
+    <h3>INICIAR SESIÓN</h3>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form">
+      <label>Nombre de Usuario</label>
+      <input type="text" formControlName="username" placeholder="Ingrese su nombre de usuario" />
+      <div *ngIf="username.touched && username.invalid" class="error">
+        <div *ngIf="username.errors?.['required']">El nombre de usuario es obligatorio.</div>
+      </div>
+
+
+      <label>Contraseña</label>
+      <input type="password" formControlName="password" placeholder="Ingrese su contraseña" />
+      <div *ngIf="password.touched && password.invalid" class="error">
+        <div *ngIf="password.errors?.['required']">Contraseña obligatoria.</div>
+        <div *ngIf="password.errors?.['minlength']">Debe tener al menos 4 caracteres.</div>
+      </div>
+
+
+      <div class="extra-links">
+        <a (click)="goToForgotPassword()" class="forgot-password">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <label>Tipo de usuario</label>
+      <select formControlName="role">
+        <option value="">-- Selecciona --</option>
+        <option value="student">Estudiante</option>
+        <option value="teacher">Profesor</option>
+        <option value="admin">Administrador</option>
+      </select>
+
+      <button type="submit">Iniciar Sesión</button>
+      <!-- Botón para ir al registro -->
+      <button type="button" class="register-btn" (click)="goToRegister()">
+        ¿No tienes cuenta? Regístrate
+      </button>
+
+    </form>
+  </div>
+</div>un

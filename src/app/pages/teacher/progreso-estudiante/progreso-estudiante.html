@@ -1,0 +1,26 @@
+<div class="d-flex">
+
+  <!-- Sidebar -->
+  <app-nav-profesor></app-nav-profesor>
+
+  <!-- Contenido principal -->
+  <div class="progresoEstudiante contenido-principal px-4 py-3">
+    <h2>Progreso del Estudiante</h2>
+
+    <table class="tabla-progreso">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Progreso</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let est of estudiantes">
+          <td>{{ est.nombre }}</td>
+          <td>{{ est.progreso }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

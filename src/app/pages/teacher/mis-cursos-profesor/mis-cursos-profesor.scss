@@ -1,0 +1,181 @@
+.contenedor-nav {
+    width: 240px;
+    background: #fff;
+    border-radius: 0 20px 20px 0;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+    gap: 18px;
+}
+
+.a-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    border-radius: 10px;
+    padding: 12px;
+    text-decoration: none;
+    transition: background 0.25s, color 0.25s, transform 0.12s;
+    cursor: pointer;
+    width: 100%;
+
+    i {
+        font-size: 20px;
+    }
+
+    &:hover {
+        background: #ff7f32;
+        color:  #ff7f32;
+        transform: translateX(4px);
+    }
+}
+
+.a-nav.active {
+    background: #ff8c00;
+    color: #fff;
+    font-weight: 700;
+
+    i {
+        color: #fff;
+    }
+}
+
+.contenedor-nav button {
+    margin-top: auto;
+}
+
+
+
+.misCursosProfesor {
+    width: 100%;
+    padding: 40px;
+
+    h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+
+    .cursos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 25px;
+    }
+
+    .curso-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #222;
+        }
+
+        p {
+            width: 100%;
+            margin: 3px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .btn-curso {
+            margin-top: 10px;
+            background:  #ff7f32;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+
+            &:hover {
+                background: #ff7f32;
+            }
+        }
+    }
+}
+
+
+.logo-box {
+    text-align: center;
+}
+
+.logo-img {
+    width: 120px;
+    margin-bottom: 10px;
+}
+
+.logo-text {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+
+.active-nav {
+    background: #ff7f32 !important;
+    
+    color: #fff !important;
+    border-radius: 10px;
+
+    i {
+        color: #fff !important;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    .contenedor-nav {
+        width: 100%;
+        flex-direction: row;
+        min-height: auto;
+        border-radius: 12px;
+        padding: 12px 16px;
+    }
+
+    .a-nav {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+.ms-1{
+   margin-top: auto;
+    background: #ff4e4e;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+ 

@@ -1,0 +1,28 @@
+<div class="contenedor-nav d-flex flex-column text-start gap-3 mt-4">
+
+  <a routerLink="/admin/home" class="a-nav py-3 px-3">
+    <i class="bi bi-bank"></i>
+    <span class="ms-2">Home</span>
+  </a>
+
+  <a routerLink="/admin/GetUsuario" class="a-nav py-3 px-3">
+    <i class="bi bi-archive"></i>
+    <span class="ms-2">Gestión de Usuarios</span>
+  </a>
+
+  <a routerLink="/admin/getCursos" class="a-nav py-3 px-3">
+    <i class="bi bi-backpack3"></i>
+    <span class="ms-2">Gestión de Cursos</span>
+  </a>
+
+  <a routerLink="/admin/reportesProgresos" class="a-nav py-3 px-3">
+    <i class="bi bi-backpack3"></i>
+    <span class="ms-2">Reportes y Progresos</span>
+  </a>
+
+  <button (click)="handleLogout()" class="a-nav py-3 px-3 text-start btn btn-link text-decoration-none">
+    <i class="bi bi-box-arrow-right"></i>
+    <span class="ms-2 text-color">Cerrar sesión</span>
+  </button>
+
+</div>
