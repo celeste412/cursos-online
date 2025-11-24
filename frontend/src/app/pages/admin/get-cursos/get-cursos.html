@@ -1,234 +1,206 @@
-<div class="row mx-0 vh-100">
-    <!-- Barra lateral -->
-    <div class="col-2 mt-4 d-flex flex-column align-items-center">
-        <div class="contenedor-logo mt-3">
-            <img [src]="logo" alt="Logo" />
+<div class="dashboard-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getUsuario"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+                        (click)="setActive('gestion-usuarios')">
+                        <i class="bi bi-people-fill nav-icon"></i>
+                        <span>Gestión Usuarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getCursos"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+                        (click)="setActive('gestion-cursos')">
+                        <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+                        <span>Gestión Cursos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/reportesProgresos"
+                        [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+                        (click)="setActive('reportes')">
+                        <i class="bi bi-graph-up-arrow nav-icon"></i>
+                        <span>Reportes y Progreso</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+
+        <div class="top-bar">
+            <h1 class="page-title">GESTIÓN CURSOS</h1> <div class="user-menu-wrapper">
+                <div class="user-menu" (click)="toggleUserMenu()">
+                    <div class="user-avatar">
+                        <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+                    </div>
+                    <span class="user-info">Administrador</span>
+                    <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+                </div>
+                <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                    <a class="dropdown-item logout" (click)="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <!-- NAV ADMIN -->
-        <app-nav-admin></app-nav-admin>
-    </div>
+        <div class="gestion-cursos-container">
 
-    <!-- Contenido principal -->
-    <div class="col-10 p-0 d-flex align-items-center">
-        <div class="box-body rounded-5 p-5">
-
-            <!-- BUSCADOR -->
-            <div class="mt-4">
-                <div class="input-group">
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Buscar nombre del cursos o editor encargado"
-                    />
-
-                    <button class="btn-t2 p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                            fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 
-                                3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 
-                                6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                        </svg>
-                        <span class="ms-2">Buscar</span>
+            <div class="cursos-top-actions">
+                <div class="cursos-search-bar">
+                    <input type="text" placeholder="Búsqueda por nombre o editor responsable." class="search-input">
+                    <button class="btn-primary-action btn-search">
+                        <i class="bi bi-search"></i>
+                        Buscar
                     </button>
                 </div>
+                
+                <button class="btn-primary-action btn-add-course" (click)="openAddCourseModal()">
+                    <i class="bi bi-plus-lg"></i>
+                    Agregar Curso
+                </button>
             </div>
 
-            <!-- TARJETAS -->
-            <div class="container mt-4">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-
-                    <!-- NGFOR -->
-                    <div class="col" *ngFor="let c of cursos">
-                        <div class="card-admi bg-light h-100 rounded-4 p-0">
-
-                            <!-- Imagen -->
-                            <img [src]="img4" class="card-img-small" alt="curso" />
-
-                            <!-- Cuerpo -->
-                            <div class="card-body text-start p-3">
-
-                                <span class="badge bg-light text-dark mb-2 px-0">
-                                    CATEGORIA
-                                </span>
-
-                                <h6 class="m-0 fw-bold">NOMBRE DEL CURSO</h6>
-                                <small class="text-muted">Javier Ochoa</small>
-
-                                <div class="mt-2 d-flex align-items-center gap-2 text-muted">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
-                                        <path
-                                            d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 
-                                            1-1 1v7.5a2.5 2.5 0 0 1-2.5 
-                                            2.5h-9A2.5 2.5 0 0 1 1 
-                                            12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 
-                                            1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 
-                                            0 1.5-1.5V5zm13-3H1v2h14zM5 
-                                            7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 
-                                            1 0 1h-5a.5.5 0 0 1-.5-.5" />
-                                    </svg>
-                                    <small>15 Lecciones (10h 5m)</small>
-                                </div>
-                            </div>
-
-                            <!-- ICONOS -->
-                            <div class="px-3 pb-3 d-flex gap-3">
-                                <button class="btn btn-sm btn-warning me-2"
-                                    data-bs-toggle="modal" data-bs-target="#modalEditarCurso">
-                                    Editar
-                                </button>
-                                <button class="btn btn-sm btn-danger"
-                                    data-bs-toggle="modal" data-bs-target="#modalEliminarCurso">
-                                    Eliminar
-                                </button>
-                            </div>
-                        </div>
+            <div class="cursos-grid">
+                
+                <div class="course-card-add-new" (click)="openAddCourseModal()">
+                    <div class="add-icon">
+                        <i class="bi bi-plus-lg"></i>
                     </div>
-
-                    <!-- TARJETA AGREGAR -->
-                    <div class="col">
-                        <div class="card h-100 rounded-4 d-flex justify-content-center align-items-center"
-                            style="min-height: 280px; cursor: pointer"
-                            data-bs-toggle="modal" data-bs-target="#modalAgregarCurso">
-
-                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"
-                                fill="currentColor" class="bi bi-cloud-arrow-up"
-                                viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M7.646 5.146a.5.5 0 0 1 .708 
-                                    0l2 2a.5.5 0 0 1-.708.708L8.5 
-                                    6.707V10.5a.5.5 0 0 1-1 
-                                    0V6.707L6.354 7.854a.5.5 0 1 
-                                    1-.708-.708z" />
-                                <path
-                                    d="M4.406 3.342A5.53 5.53 0 0 1 8 
-                                    2c2.69 0 4.923 2 5.166 
-                                    4.579C14.758 6.804 16 8.137 
-                                    16 9.773 16 11.569 14.502 13 
-                                    12.687 13H3.781C1.708 13 0 
-                                    11.366 0 9.318c0-1.763 1.266-3.223 
-                                    2.942-3.593.143-.863.698-1.723 
-                                    1.464-2.383" />
-                            </svg>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
-            <!-- MODAL EDITAR -->
-            <div class="modal fade" id="modalEditarCurso" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-4">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title fw-bold">Editar Curso</h5>
-                            <button class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="course-card">
+                    <div class="card-category">CATEGORÍA</div>
+                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                    <div class="card-body">
+                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
+                        <p class="course-editor">Editor Responsable</p>
+                        <div class="course-meta">
+                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
                         </div>
-
-                        <div class="modal-body">
-                            <label class="form-label fw-bold">Portada:</label>
-                            <input type="file" class="form-control mb-3" />
-
-                            <label class="form-label fw-bold">Nombre del curso:</label>
-                            <input type="text" class="form-control mb-3" />
-
-                            <label class="form-label fw-bold">Descripción:</label>
-                            <textarea class="form-control mb-3" rows="3"></textarea>
-
-                            <label class="form-label fw-bold">Categoría:</label>
-                            <select class="form-select mb-3">
-                                <option>Programación</option>
-                                <option>Diseño</option>
-                                <option>Ofimática</option>
-                            </select>
-
-                            <label class="form-label fw-bold">Editor responsable:</label>
-                            <select class="form-select mb-3">
-                                <option>Javier Ochoa</option>
-                                <option>Ana Rosales</option>
-                                <option>Pedro Jiménez</option>
-                            </select>
+                        <div class="course-actions">
+                            <i class="bi bi-pencil-square action-edit"></i>
+                            <i class="bi bi-trash3 action-delete"></i>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-primary">Guardar cambios</button>
+                <div class="course-card">
+                    <div class="card-category">CATEGORÍA</div>
+                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                    <div class="card-body">
+                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
+                        <p class="course-editor">Editor Responsable</p>
+                        <div class="course-meta">
+                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
                         </div>
-
+                        <div class="course-actions">
+                            <i class="bi bi-pencil-square action-edit"></i>
+                            <i class="bi bi-trash3 action-delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-card">
+                    <div class="card-category">CATEGORÍA</div>
+                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                    <div class="card-body">
+                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
+                        <p class="course-editor">Editor Responsable</p>
+                        <div class="course-meta">
+                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
+                        </div>
+                        <div class="course-actions">
+                            <i class="bi bi-pencil-square action-edit"></i>
+                            <i class="bi bi-trash3 action-delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-card">
+                    <div class="card-category">CATEGORÍA</div>
+                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                    <div class="card-body">
+                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
+                        <p class="course-editor">Editor Responsable</p>
+                        <div class="course-meta">
+                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
+                        </div>
+                        <div class="course-actions">
+                            <i class="bi bi-pencil-square action-edit"></i>
+                            <i class="bi bi-trash3 action-delete"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+            </div>
+        </div>
+</div>
 
-            <!-- MODAL ELIMINAR -->
-            <div class="modal fade" id="modalEliminarCurso" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-4">
+<div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
+    <div class="modal-card modal-agregar-curso">
+        <h3 class="modal-title">AGREGAR CURSO</h3>
+        <button class="btn-eye-toggle close-button" (click)="closeModal()">
+            <i class="bi bi-x-lg"></i>
+        </button>
 
-                        <div class="modal-header">
-                            <h5 class="modal-title text-danger fw-bold">Eliminar Curso</h5>
-                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
+        <div class="upload-area">
+            <i class="bi bi-cloud-upload-fill"></i>
+            <p>Subir portada del Curso</p>
+        </div>
 
-                        <div class="modal-body">
-                            <p>¿Estás seguro que deseas eliminar este curso?</p>
-                        </div>
+        <div class="modal-form-grid">
 
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-danger">Eliminar</button>
-                        </div>
+            <div class="form-group full-width">
+                <label for="new-nombre">Nombre</label>
+                <input type="text" id="new-nombre">
+            </div>
 
-                    </div>
+            <div class="form-group full-width">
+                <label for="new-descripcion">Descripción</label>
+                <textarea id="new-descripcion" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="new-categoria">Categoría</label>
+                <div class="custom-select-wrapper">
+                    <select id="new-categoria">
+                        <option value="" disabled selected>Selecciona una categoría</option>
+                        <option value="diseno">Diseño</option>
+                        <option value="desarrollo">Desarrollo</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- MODAL AGREGAR -->
-            <div class="modal fade" id="modalAgregarCurso" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-4">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title fw-bold">Agregar Curso</h5>
-                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <label class="form-label fw-bold">Portada:</label>
-                            <input type="file" class="form-control mb-3" />
-
-                            <label class="form-label fw-bold">Nombre del curso:</label>
-                            <input type="text" class="form-control mb-3" />
-
-                            <label class="form-label fw-bold">Descripción:</label>
-                            <textarea class="form-control mb-3" rows="3"></textarea>
-
-                            <label class="form-label fw-bold">Categoría:</label>
-                            <select class="form-select mb-3">
-                                <option>Programación</option>
-                                <option>Diseño</option>
-                                <option>Ofimática</option>
-                            </select>
-
-                            <label class="form-label fw-bold">Editor responsable:</label>
-                            <select class="form-select mb-3">
-                                <option>Javier Ochoa</option>
-                                <option>Ana Rosales</option>
-                                <option>Pedro Jiménez</option>
-                            </select>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-primary">Guardar</button>
-                        </div>
-
-                    </div>
+            <div class="form-group full-width">
+                <label for="new-editor">Editor Responsable</label>
+                <div class="custom-select-wrapper">
+                    <select id="new-editor">
+                        <option value="" disabled selected>Selecciona un editor</option>
+                        <option value="editor1">Editor Juan</option>
+                        <option value="editor2">Editor Maria</option>
+                    </select>
                 </div>
             </div>
 
         </div>
+        
+        <button class="btn-primary-action btn-modal-create">CREAR</button>
     </div>
 </div>

@@ -1,196 +1,205 @@
-<div class="row mx-0 vh-100">
-  <!-- Barra lateral izquierda -->
-  <div class="col-2 mt-4 d-flex flex-column align-items-center">
-    <div class="contenedor-logo mt-3">
-      <img src="assets/logo-cursos.png" alt="Logo" />
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getUsuario"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+                        (click)="setActive('gestion-usuarios')">
+                        <i class="bi bi-people-fill nav-icon"></i>
+                        <span>Gestión Usuarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/getCursos"
+                        [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+                        (click)="setActive('gestion-cursos')">
+                        <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+                        <span>Gestión Cursos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/reportesProgresos"
+                        [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+                        (click)="setActive('reportes')">
+                        <i class="bi bi-graph-up-arrow nav-icon"></i>
+                        <span>Reportes y Progreso</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+
+        <div class="top-bar">
+            <h1 class="page-title">GESTIÓN USUARIOS</h1>
+            <div class="user-menu-wrapper">
+                <div class="user-menu" (click)="toggleUserMenu()">
+                    <div class="user-avatar">
+                        <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+                    </div>
+                    <span class="user-info">Administrador</span>
+                    <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+                </div>
+
+                <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                    <a class="dropdown-item logout" (click)="logout()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="gestion-container">
+
+            <div class="gestion-form-card">
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido">
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo / Username</label>
+                        <input type="email" id="correo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input [type]="passwordFieldType" id="password" #passwordInput style="padding-right: 3rem;">
+                        <button class="btn-eye-toggle" (click)="togglePasswordVisibility()">
+                            <i class="bi" [class.bi-eye-slash-fill]="!passwordVisible"
+                                [class.bi-eye-fill]="passwordVisible"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="rol">Rol Asignado</label>
+                        <div class="custom-select-wrapper">
+                            <select id="rol">
+                                <option value="" disabled selected>Selecciona un rol</option>
+                                <option value="admin">Administrador</option>
+                                <option value="editor">Editor</option>
+                                <option value="alumno">Alumno</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-filler"></div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary-action btn-guardar">GUARDAR</button>
+                </div>
+            </div>
+            <div class="gestion-search-bar">
+                <input type="text" placeholder="Búsqueda por nombre, rol o correo." class="search-input">
+                <button class="btn-primary-action btn-search">
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+            </div>
+
+            <div class="gestion-table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+                            <td>juan@correo.com</td>
+                            <td>Alumno</td>
+                            <td class="action-buttons">
+                                <button class="btn-action btn-edit" (click)="showAction('Editando Usuario ID 1')">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Admin</td>
+                            <td>Master</td>
+                            <td>admin@digital.com</td>
+                            <td>Administrador</td>
+                            <td class="action-buttons">
+                                <button class="btn-action btn-edit" (click)="showAction('Editando Administrador ID 2')">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <app-nav-admin></app-nav-admin>
-  </div>
+<div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
+    <div class="modal-card">
+        <h3 class="modal-title">{{ modalTitle || 'EDITAR USUARIO' }}</h3>
+        <button class="btn-eye-toggle close-button" (click)="closeModal()">
+            <i class="bi bi-x-lg"></i>
+        </button>
 
-  <!-- Contenido principal -->
-  <div class="col-10 p-0 d-flex align-items-center">
-    <main class="box-body rounded-5 p-5">
+        <div class="modal-form-grid">
 
-      <div class="mt-4">
-        <h4>Usuarios</h4>
-      </div>
+            <div class="form-group">
+                <label for="edit-nombre">Nombre</label>
+                <input type="text" id="edit-nombre" value="Juan">
+            </div>
+            <div class="form-group">
+                <label for="edit-apellido">Apellido</label>
+                <input type="text" id="edit-apellido" value="Pérez">
+            </div>
 
-      <!-- FORMULARIO -->
-      <form class="p-4 rounded bg-white shadow-sm mt-4">
-        <div class="row g-3">
+            <div class="form-group full-width">
+                <label for="edit-correo">Correo / Username</label>
+                <input type="email" id="edit-correo" value="juan@correo.com">
+            </div>
 
-          <!-- Nombre -->
-          <div class="col-md-6">
-            <label class="form-label">Nombre</label>
-            <input type="text" class="form-control" placeholder="Ingrese nombre" />
-          </div>
-
-          <!-- Apellido -->
-          <div class="col-md-6">
-            <label class="form-label">Apellido</label>
-            <input type="text" class="form-control" placeholder="Ingrese apellido" />
-          </div>
-
-          <!-- Correo -->
-          <div class="col-md-6">
-            <label class="form-label">Correo</label>
-            <input type="email" class="form-control" placeholder="ejemplo@correo.com" />
-          </div>
-
-          <!-- Contraseña -->
-          <div class="col-md-6">
-            <label class="form-label">Contraseña</label>
-            <input type="password" class="form-control" placeholder="Ingrese contraseña" />
-          </div>
-
-          <!-- Rol -->
-          <div class="col-md-6">
-            <label class="form-label">Rol asignado</label>
-            <select class="form-select">
-              <option value="profesor">Profesor</option>
-              <option value="administrador">Administrador</option>
-            </select>
-          </div>
+            <div class="form-group full-width">
+                <label for="edit-rol">Rol Asignado</label>
+                <div class="custom-select-wrapper">
+                    <select id="edit-rol">
+                        <option value="admin">Administrador</option>
+                        <option value="editor">Editor</option>
+                        <option value="alumno" selected>Alumno</option>
+                    </select>
+                </div>
+            </div>
         </div>
-
-        <!-- Botón -->
-        <div class="mt-4">
-          <button type="submit" class="btn-t2 px-4 rounded-1 p-2">
-            Crear Usuario
-          </button>
-        </div>
-      </form>
-
-      <!-- Buscador + Filtro -->
-      <div class="mt-4">
-        <div class="d-flex justify-content-between align-items-center w-100">
-
-          <!-- INPUT + BOTÓN -->
-          <div class="input-group" style="max-width: 600px; width: 100%;">
-            <input type="text" class="form-control" placeholder="Buscar alumno por nombre o correo..." />
-
-            <button class="btn-t2 p-2 d-flex align-items-center">
-              <i class="bi bi-search"></i>
-              <span class="ms-2">Buscar</span>
-            </button>
-          </div>
-
-          <!-- Select rol -->
-          <select class="form-select ms-3" style="width: 200px;">
-            <option value="" disabled selected>Seleccionar Rol</option>
-            <option value="administrador">Administrador</option>
-            <option value="estudiante">Profesor</option>
-          </select>
-
-        </div>
-      </div>
-
-      <!-- TABLA DE USUARIOS -->
-      <div class="mt-4">
-        <table class="table table-striped table-hover text-start">
-          <thead class="table-primary">
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (usuario of usuarios; track usuario.id; let i = $index) {
-            <tr>
-              <td>{{ i + 1 }}</td>
-              <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.apellido }}</td>
-              <td>{{ usuario.correo }}</td>
-              <td>{{ usuario.rol }}</td>
-
-              <td class="text-center">
-                <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario">
-                  Editar
-                </button>
-
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarUsuario">
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-            }
-          </tbody>
-
-        </table>
-      </div>
-
-      <!-- MODAL EDITAR -->
-      <div class="modal fade" id="modalEditarUsuario" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title">Editar Usuario</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-              <label class="form-label">Nombre</label>
-              <input type="text" class="form-control mb-2" />
-
-              <label class="form-label">Apellido</label>
-              <input type="text" class="form-control mb-2" />
-
-              <label class="form-label">Correo</label>
-              <input type="email" class="form-control mb-2" />
-
-              <label class="form-label">Rol</label>
-              <select class="form-select">
-                <option>Profesor</option>
-                <option>Administrador</option>
-              </select>
-            </div>
-
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button class="btn btn-primary" data-bs-dismiss="modal">
-                Guardar
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- MODAL ELIMINAR -->
-      <div class="modal fade" id="modalEliminarUsuario" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title text-danger">Eliminar Usuario</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-              <p class="mb-0">
-                ¿Estás seguro de que deseas <strong>eliminar este usuario</strong>?
-                <br />Esta acción no se puede deshacer.
-              </p>
-            </div>
-
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </div>
+        <button class="btn-primary-action btn-modal-edit">EDITAR</button>
+    </div>
 </div>

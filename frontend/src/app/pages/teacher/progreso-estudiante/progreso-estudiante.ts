@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { NavProfesor } from '../../../components/nav-profesor/nav-profesor';
 import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-progreso-estudiante',
-  imports: [NgFor, NavProfesor],
+  imports: [NgFor],
   templateUrl: './progreso-estudiante.html',
   styleUrl: './progreso-estudiante.scss',
 })

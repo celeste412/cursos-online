@@ -1,33 +1,41 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NavAdmin } from '../../../components/nav-admin/nav-admin';
+import { Router, RouterModule } from '@angular/router';
+
 
 
 @Component({
   selector: 'app-home-admin',
-  imports: [NavAdmin],
+  standalone: true, // <- obligatorio si es standalone
+  imports: [RouterModule, CommonModule],
   templateUrl: './home-admin.html',
   styleUrl: './home-admin.scss',
 })
 export class HomeAdmin {
 
-  logo = 'assets/logo-cursos.png';
-  img3 = 'assets/img3.png';
-  img4 = 'assets/img4.png';
-  img7 = 'assets/img7.png';
-  img8 = 'assets/img8.png';
+  constructor(private router: Router) { }
 
-  cursos = [this.img4, this.img3];
-  actividades = [
-    'Hacer la actividad de Word....',
-    'Avance de Proyecto en Python....'
-  ];
+  activeLink: string = 'home';
+  userMenuOpen: boolean = false;
+  modalOpen: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
 
-  constructor(private router: Router) {}
-
+  setActive(link: string) { this.activeLink = link; }
+  toggleUserMenu() { this.userMenuOpen = !this.userMenuOpen; }
+  showAction(action: string) {
+    this.modalTitle = action;
+    this.modalMessage = `Has seleccionado: ${action}`;
+    this.modalOpen = true;
+  }
+  closeModal() { this.modalOpen = false; }
+  // Cerrar sesión
   logout() {
+    // 1. Limpiar token o datos de usuario
+    localStorage.removeItem('token'); // o sessionStorage
     localStorage.removeItem('user');
-    sessionStorage.clear();
+
+    // 2. Redirigir al login
     this.router.navigate(['/login']);
   }
 }

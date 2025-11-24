@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Login } from './pages/login/login'; // ajusta la ruta según tu carpeta
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { EmailSent } from './pages/email-sent/email-sent';
 
@@ -13,15 +12,19 @@ import { CourseViewProfesor } from './pages/teacher/course-view-profesor/course-
 import { MisCursosProfesor } from './pages/teacher/mis-cursos-profesor/mis-cursos-profesor';
 import { ProgresoEstudiante } from './pages/teacher/progreso-estudiante/progreso-estudiante';
 
-import { HomeE } from './pages/student/homeE/homeE';
 import { Cursos } from './pages/student/cursos/cursos';
 import { MisCursos } from './pages/student/mis-cursos/mis-cursos';
 import { CourseView } from './pages/student/course-view/course-view';
 import { HomePrincipal } from './pages/home/home';
 import { Register } from './pages/student/register/register';
+import { SobreNosotrosComponent } from './pages/sobre-nosotros/sobre-nosotros.component';
+import { CatalogoComponent } from './pages/catalogo/catalogo.component';
+import { LoginComponent } from './pages/login/login.component';
+import { DashEstudianteComponent } from './pages/student/dash-estudiante/dash-estudiante.component';
+import { ViewCourseComponent } from './pages/student/view-course/view-course.component';
 
 export const routes: Routes = [
-  { path: 'login', component: Login },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: Register },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'email-sent', component: EmailSent },
@@ -38,13 +41,17 @@ export const routes: Routes = [
   { path: 'teacher/progreso/:id', component: ProgresoEstudiante },
 
   // Student
-  { path: 'student/home', component: HomeE },
-  { path: 'student/cursos', component: Cursos },
-  { path: 'student/mis-cursos', component: MisCursos },
+  { path: 'student/home', component: DashEstudianteComponent},
+  { path: 'student/cursos', component: MisCursos },
+  { path: 'student/view', component: ViewCourseComponent },
+  //{ path: 'student/mis-cursos', component: MisCursos },
   { path: 'student/course/:id', component: CourseView },
 
   // Página de inicio para todos
   { path: '', component: HomePrincipal },
+    { path: 'sobre-nosotros', component: SobreNosotrosComponent},
+    { path: 'catalogo', component: CatalogoComponent},
+
 
   // Página 404
   { 

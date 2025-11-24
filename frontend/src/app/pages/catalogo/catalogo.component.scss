@@ -1,0 +1,327 @@
+@use "sass:color";
+
+// VARIABLES
+$primary-color: #ff8c00; // Naranja principal (Botones, texto destacado)
+$secondary-color: #2a3a47; // Color oscuro para fondo del Footer/CTA
+$text-color: #333;
+$light-text-color: #fff;
+$secondary-text-color: #666;
+$border-radius: 8px;
+$padding-base: 1.5rem;
+$max-width: 1300px;
+$font-family: 'Poppins', sans-serif;
+
+// MIXINS Y FUNCIONES BÁSICAS
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin button-styles($bg, $color: $light-text-color) {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: $border-radius;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+    background-color: $bg;
+    color: $color;
+    border: 1px solid transparent;
+
+    &:hover {
+        opacity: 0.9;
+    }
+}
+
+// 13. SECCIÓN CATÁLOGO: HERO / BÚSQUEDA
+.catalog-hero {
+    background: linear-gradient(135deg, color.adjust($secondary-color, $lightness: -5%), #385b6b);
+    color: $light-text-color;
+    padding: 3rem 0 4rem;
+    text-align: center;
+
+    .catalog-hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+    }
+
+    .subtitle-tag {
+        display: inline-block;
+        background-color: rgba($light-text-color, 0.2);
+        color: $light-text-color;
+        padding: 0.25rem 0.75rem;
+        border-radius: $border-radius;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    .search-box-container {
+        display: flex;
+        align-items: center;
+        background-color: $light-text-color;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+        i {
+            color: $secondary-text-color;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+
+        input {
+            flex-grow: 1;
+            border: none;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+            outline: none;
+            color: $text-color;
+            background: transparent;
+        }
+    }
+
+    .results-count {
+        margin-top: 1rem;
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+}
+
+// 14. SECCIÓN CATÁLOGO: LISTA DE CURSOS
+.catalog-list {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 2rem $padding-base;
+
+    .cursos-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); // 3 columnas para el catálogo
+        gap: 2rem;
+        margin-top: 2rem;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .curso-card {
+        display: block;
+        text-decoration: none;
+        color: $text-color;
+        background-color: $light-text-color;
+        border-radius: $border-radius;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eee;
+        transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            border-color: $primary-color;
+        }
+
+        .curso-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+
+            .rating {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background-color: $primary-color;
+                color: $light-text-color;
+                padding: 0.4rem 0.7rem;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+
+                i {
+                    font-size: 0.8rem;
+                    margin-right: 0.3rem;
+                }
+            }
+
+            .category-tag {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                background-color: $light-text-color;
+                color: $text-color;
+                padding: 0.4rem 0.7rem;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 0.8rem;
+                display: flex;
+                align-items: center;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+                i {
+                    font-size: 1rem;
+                    margin-right: 0.5rem;
+                    color: $primary-color;
+                }
+            }
+        }
+
+        .curso-content {
+            padding: 1.5rem;
+
+            h3 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                margin: 0 0 0.5rem;
+                color: $text-color;
+            }
+
+            .description {
+                font-size: 0.95rem;
+                color: $secondary-text-color;
+                margin-bottom: 1rem;
+                line-height: 1.4;
+                /* Controlar la longitud del texto */
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .curso-meta {
+                display: flex;
+                gap: 1.5rem;
+                font-size: 0.9rem;
+                color: $secondary-text-color;
+                padding: 1rem 0;
+                margin-bottom: 1rem;
+                border-top: 1px solid #f0f0f0;
+                border-bottom: 1px solid #f0f0f0;
+
+                i {
+                    margin-right: 0.3rem;
+                    color: $primary-color;
+                }
+            }
+
+            .curso-actions {
+                display: flex;
+                gap: 0.5rem;
+                justify-content: space-between;
+
+                .btn-inscribir {
+                    padding: 0.6rem 1rem;
+                    font-size: 0.9rem;
+                    flex: 1;
+                }
+
+                .btn-details {
+                    @include button-styles(transparent, $primary-color);
+                    border: 1px solid $primary-color;
+                    flex: 1;
+
+                    &:hover {
+                        background-color: rgba($primary-color, 0.1);
+                        color: $primary-color;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Estados de Carga/Error/Sin Resultados */
+.loading-state,
+.error-state,
+.no-results-state {
+    text-align: center;
+    padding: 4rem 0;
+    font-size: 1.2rem;
+    color: $secondary-text-color;
+
+    .loading-icon {
+        font-size: 3rem;
+        color: $primary-color;
+        margin-bottom: 1rem;
+        animation: spin 1s linear infinite;
+    }
+
+    .error-icon {
+        font-size: 3rem;
+        color: #dc3545; // Rojo para error
+        margin-bottom: 1rem;
+    }
+
+    .no-results-icon {
+        font-size: 3rem;
+        color: #ffc107; // Amarillo/Naranja para advertencia
+        margin-bottom: 1rem;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// 15. SECCIÓN CATÁLOGO: CTA INFERIOR
+.cta-catalog {
+    /* Mismo estilo de fondo que el CTA de la Home */
+    background: linear-gradient(135deg, $secondary-color, #385b6b);
+    color: $light-text-color;
+    padding: 3rem 0;
+    margin: 4rem 0;
+
+    .cta-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+        text-align: center;
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary.large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+    }
+}

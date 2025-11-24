@@ -1,0 +1,32 @@
+<header class="header">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo">
+      <a routerLink="/home">
+        <img src="/assets/LogoDigital.png" alt="Digital Academy Logo">
+      </a>
+    </div>
+
+    <!-- Menú de navegación -->
+    <nav class="nav-menu">
+      <ul>
+        <li>
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+        </li>
+        <li>
+          <a routerLink="/sobre-nosotros" routerLinkActive="active">Sobre nosotros</a>
+        </li>
+        <li>
+          <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+        </li>
+      </ul>
+    </nav>
+
+
+    <!-- Botones de Login / Registro -->
+    <div class="auth-buttons">
+      <a routerLink="/login" class="btn btn-login">Login</a>
+      <a routerLink="/register" class="btn btn-register btn-primary">Registrar</a>
+    </div>
+  </div>
+</header>

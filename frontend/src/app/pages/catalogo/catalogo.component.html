@@ -1,0 +1,55 @@
+<main>
+  <section class="catalog-hero">
+    <div class="catalog-hero-content">
+      <span class="subtitle-tag">Explora y Aprende</span>
+      <h1>Catálogo de Cursos</h1>
+      <p>Descubre nuestra amplia selección de cursos diseñados por expertos</p>
+      
+      <div class="search-box-container">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Buscar por nombre o descripción..." [(ngModel)]="searchTerm" (input)="filtrarCursos()">
+      </div>
+      
+      <p class="results-count">Mostrando {{ cursosFiltrados.length || 0 }} de {{ cursos.length || 0 }} cursos</p>
+    </div>
+  </section>
+
+  <section class="catalog-list">
+    <div *ngIf="loading" class="loading-state">
+      <i class="bi bi-arrow-clockwise loading-icon"></i>
+      <p>Cargando cursos...</p>
+    </div>
+    <div *ngIf="error" class="error-state">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+      <p>{{ error }}</p>
+    </div>
+
+    <div class="cursos-grid" *ngIf="!loading && !error">
+      <a [routerLink]="['/curso', curso.id]" class="curso-card" *ngFor="let curso of cursosFiltrados">
+        <div class="curso-content">
+          <h3>{{ curso.titulo }}</h3>
+          <p class="description">{{ curso.descripcion }}</p>
+          <small>Creado el: {{ curso.fechaCreacion | date:'longDate' }}</small>
+
+          <div class="curso-actions">
+            <button class="btn btn-primary btn-inscribir" (click)="$event.preventDefault(); inscribir(curso.id)">Inscribirme</button>
+            <button class="btn btn-secondary btn-details" (click)="$event.preventDefault(); verCurso(curso.id)">Ver detalles</button>
+          </div>
+        </div>
+      </a>
+    </div>
+    
+    <div *ngIf="!loading && !error && cursosFiltrados.length === 0" class="no-results-state">
+      <i class="bi bi-box-seam no-results-icon"></i>
+      <p>No se encontraron cursos que coincidan con tu búsqueda.</p>
+    </div>
+  </section>
+  
+  <section class="cta-catalog">
+    <div class="cta-content">
+      <h2>¿No encuentras lo que buscas?</h2>
+      <p>Contáctanos y ayúdanos a crear el curso perfecto para ti. Estamos constantemente agregando nuevo contenido.</p>
+      <a href="/contacto" class="btn btn-primary large">Contactar</a>
+    </div>
+  </section>
+</main>

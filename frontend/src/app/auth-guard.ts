@@ -6,7 +6,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const token = localStorage.getItem('token');
@@ -18,13 +18,14 @@ export class AuthGuard implements CanActivate {
     }
 
     const expectedRole = route.data['role'];
-    if (expectedRole && expectedRole !== role) {
-      // si el rol no coincide, redirige al home según rol
-      if (role === 'admin') this.router.navigate(['/admin/home']);
-      else if (role === 'teacher') this.router.navigate(['/teacher/home']);
+
+    if (expectedRole && expectedRole.toUpperCase() !== role) {
+      if (role === 'ADMINISTRADOR') this.router.navigate(['/admin/home']);
+      else if (role === 'EDITOR') this.router.navigate(['/teacher/home']);
       else this.router.navigate(['/student/home']);
       return false;
     }
+
 
     return true;
   }

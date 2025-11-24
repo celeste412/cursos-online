@@ -1,20 +1,153 @@
-<div class="home-container">
-  <header class="home-header">
-    <h1>Bienvenido a la Plataforma de Cursos</h1>
-    <div class="auth-buttons">
-      <button routerLink="/login">Login</button>
-      <button routerLink="/register">Registrarse</button>
+<main>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="highlight-label">✨ Más de 50,000 estudiantes activos</span>
+      <h1>Aprende a tu ritmo con los mejores <span class="highlight-text">cursos virtuales</span></h1>
+      <p>Accede a cientos de cursos en línea diseñados por expertos. Desarrolla nuevas habilidades y alcanza tus metas
+        profesionales desde cualquier lugar del mundo.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary">Ver Catálogo <span class="arrow">→</span></a>
+      </div>
     </div>
-  </header>
-
-  <div *ngIf="loading" class="loading">Cargando cursos...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <div class="cursos-grid" *ngIf="!loading && !error">
-    <div class="curso-card" *ngFor="let curso of cursos">
-      <h2>{{ curso.titulo }}</h2>
-      <p>{{ curso.descripcion }}</p>
-      <button (click)="verCurso(curso.id)">Ver Curso</button>
+    <div class="hero-image">
+      <img src="/assets/hero-image.avif" alt="Estudiante aprendiendo en una laptop">
+      <div class="progress-card">
+        <span class="icon">↗</span>
+        <p>Tu progreso<br><strong>+47% este mes</strong></p>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-item">
+        <p class="stat-number">500+</p>
+        <p class="stat-label">Cursos</p>
+      </div>
+      <div class="stat-item">
+        <p class="stat-number">50K+</p>
+        <p class="stat-label">Estudiantes</p>
+      </div>
+      <div class="stat-item">
+        <p class="stat-number">4.9⭐</p>
+        <p class="stat-label">Valoración</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-title">
+      <span class="subtitle">¿Por qué elegirnos?</span>
+      <h2>Una experiencia de aprendizaje <span class="highlight-text">excepcional</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon-box">
+          <i class="bi bi-award"></i>
+        </div>
+        <h3>Certificaciones</h3>
+        <p>Obtén certificados reconocidos al completar tus cursos</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">
+          <i class="bi bi-clock"></i>
+        </div>
+        <h3>Acceso 24/7</h3>
+        <p>Estudia cuando quieras, donde quieras, a tu propio ritmo</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">
+          <i class="bi bi-people"></i>
+        </div>
+        <h3>Instructores Expertos</h3>
+        <p>Aprende de profesionales con experiencia en la industria</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon-box">
+          <i class="bi bi-stars"></i>
+        </div>
+        <h3>Plataforma Amigable</h3>
+        <p>Interfaz intuitiva y fácil de usar para todos los niveles</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="popular-courses">
+    <div class="section-title">
+      <span class="subtitle">Lo más popular</span>
+      <h2>Cursos que están <span class="highlight-text">transformando carreras</span></h2>
+    </div>
+
+    <div class="course-grid">
+      <a href="#" class="course-card">
+        <div class="course-image image-webdev">
+          <span class="rating"><i class="bi bi-star-fill"></i> 4.9</span>
+        </div>
+        <div class="course-content">
+          <h3>Desarrollo Web Full Stack</h3>
+          <p>Aprende a crear aplicaciones web completas desde cero</p>
+          <div class="course-meta">
+            <span><i class="bi bi-people"></i> 12,500</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="course-card">
+        <div class="course-image image-marketing">
+          <span class="rating"><i class="bi bi-star-fill"></i> 4.8</span>
+        </div>
+        <div class="course-content">
+          <h3>Marketing Digital</h3>
+          <p>Domina las estrategias de marketing online y social media</p>
+          <div class="course-meta">
+            <span><i class="bi bi-people"></i> 8,900</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="course-card">
+        <div class="course-image image-uxui">
+          <span class="rating"><i class="bi bi-star-fill"></i> 4.9</span>
+        </div>
+        <div class="course-content">
+          <h3>Diseño UX/UI</h3>
+          <p>Crea experiencias digitales increíbles y funcionales</p>
+          <div class="course-meta">
+            <span><i class="bi bi-people"></i> 6,234</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="course-card">
+        <div class="course-image image-data">
+          <span class="rating"><i class="bi bi-star-fill"></i> 4.7</span>
+        </div>
+        <div class="course-content">
+          <h3>Data Science</h3>
+          <p>Analiza datos y crea modelos predictivos con Python</p>
+          <div class="course-meta">
+            <span><i class="bi bi-people"></i> 11,567</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="center-button">
+      <a href="#" class="btn btn-secondary outlined">
+        Ver todos los cursos <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+
+  <section class="cta-banner">
+    <div class="cta-content">
+      <h2>¿Listo para comenzar tu aprendizaje?</h2>
+      <p>Únete a miles de estudiantes que ya están transformando sus carreras y alcanzando sus metas profesionales</p>
+      <a href="#" class="btn btn-primary large">Comienza ahora gratis</a>
+    </div>
+  </section>
+</main>

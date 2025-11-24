@@ -1,76 +1,184 @@
-<div class="row mx-0 vh-100">
-  <!-- Barra lateral izquierda -->
-  <div class="col-2 mt-4 d-flex flex-column align-items-center">
-    <div class="contenedor-logo mt-3">
-      <img src="assets/logo-cursos.png" alt="Logo" />
+<div class="dashboard-layout">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="assets/LogoDigital.png" alt="Digital Academy Logo" class="logo-img">
     </div>
 
-    <app-nav-admin></app-nav-admin>
-  </div>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/home"
+            [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-house-fill nav-icon"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getUsuario"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+            (click)="setActive('gestion-usuarios')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Gestión Usuarios</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getCursos"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+            (click)="setActive('gestion-cursos')">
+            <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+            <span>Gestión Cursos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/reportesProgresos"
+            [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+            (click)="setActive('reportes')">
+            <i class="bi bi-graph-up-arrow nav-icon"></i>
+            <span>Reportes y Progreso</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 
-  <!-- Contenido principal -->
-  <div class="col-10 p-0 d-flex align-items-center">
-    <div class="box-body rounded-5 p-5 w-100">
-      
-      <!-- Título + Filtros + Botones -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="m-0">Reporte de Cursos</h3>
+  <main class="main-wrapper">
+    <div class="top-bar">
+      <h1 class="page-title">
+        {{ activeLink === 'reportes' ? 'REPORTES - ADMINISTRADOR' : 'OTRA VISTA - ADMINISTRADOR' }}
+      </h1>
 
-        <div class="d-flex align-items-center gap-3">
+      <div class="user-menu-wrapper">
+        <div class="user-menu" (click)="toggleUserMenu()">
+          <div class="user-avatar">
+            <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+          </div>
+          <span class="user-info">Administrador</span>
+          <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+        </div>
+        <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+          <div class="dropdown-item logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <!-- SELECT FILTRO -->
-          <select class="form-select" style="width: 200px">
-            <option value="">Cursos populares</option>
-            <option value="">Cursos recientes</option>
-            <option value="">Con más alumnos</option>
-            <option value="">Con menos alumnos</option>
-          </select>
 
-          <!-- BOTÓN PDF -->
-          <button class="btn btn-danger d-flex align-items-center gap-2">
-            <i class="bi bi-filetype-pdf"></i>
-            PDF
-          </button>
+    <div *ngIf="activeLink === 'reportes'" class="reports-container">
 
-          <!-- BOTÓN EXCEL -->
-          <button class="btn btn-success d-flex align-items-center gap-2">
-            <i class="bi bi-file-earmark-excel"></i>
-            Excel
-          </button>
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Seguimiento de progreso de los estudiantes</h3>
+          <div class="report-filters">
+            Curso:
+            <select>
+              <option>Curso A</option>
+              <option>Curso B</option>
+              <option>Todos</option>
+            </select>
+          </div>
+        </div>
 
+        <div class="chart-wrapper chart-purple">
+          <div class="y-axis-labels">
+            <span class="label-100">100%</span>
+            <span class="label-75">75%</span>
+            <span class="label-50">50%</span>
+            <span class="label-25">25%</span>
+            <span class="label-0">0%</span>
+          </div>
+          <div class="y-axis-grid">
+            <div class="grid-line-50"></div>
+            <div class="grid-line-base"></div>
+          </div>
+
+          <div class="bar-chart-container">
+            <div class="bar" style="height: 15%;" data-label="Est. 1"></div>
+            <div class="bar" style="height: 80%;" data-label="Est. 2"></div>
+            <div class="bar" style="height: 8%;" data-label="Est. 3"></div>
+            <div class="bar" style="height: 65%;" data-label="Est. 4"></div>
+            <div class="bar" style="height: 10%;" data-label="Est. 5"></div>
+            <div class="bar" style="height: 40%;" data-label="Est. 6"></div>
+            <div class="bar" style="height: 25%;" data-label="Est. 7"></div>
+          </div>
         </div>
       </div>
 
-      <!-- TABLA -->
-      <table class="table table-striped table-hover table-bordered text-start mt-3">
-        <thead class="table-primary">
-          <tr>
-            <th>#</th>
-            <th>Curso</th>
-            <th>Profesor</th>
-            <th>Alumnos Inscritos</th>
-            <th>Alumnos Finalizaron</th>
-            <th>Duración</th>
-            <th>Fecha de creación</th>
-          </tr>
-        </thead>
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Promedio de calificaciones por curso</h3>
+          <div class="report-filters">
+            Curso:
+            <select>
+              <option>Curso 1</option>
+              <option>Curso 2</option>
+              <option>Todos</option>
+            </select>
+          </div>
+        </div>
 
-        <tbody>
-          @for (item of cursos; track item.id) {
-          <tr>
-            <td>{{ item.id }}</td>
-            <td>{{ item.curso }}</td>
-            <td>{{ item.profesor }}</td>
-            <td>{{ item.inscritos }}</td>
-            <td>{{ item.finalizaron }}</td>
-            <td>{{ item.duracion }}</td>
-            <td>{{ item.fecha }}</td>
-          </tr>
-          }
-        </tbody>
+        <div class="chart-wrapper chart-aqua">
+          <div class="y-axis-labels">
+            <span class="label-100">100%</span>
+            <span class="label-75">75%</span>
+            <span class="label-50">50%</span>
+            <span class="label-25">25%</span>
+            <span class="label-0">0%</span>
+          </div>
+          <div class="y-axis-grid">
+            <div class="grid-line-50"></div>
+            <div class="grid-line-base"></div>
+          </div>
 
-      </table>
+          <div class="bar-chart-container">
+            <div class="bar" style="height: 20%;" data-label="Cálculo"></div>
+            <div class="bar" style="height: 78%;" data-label="Algoritmos"></div>
+            <div class="bar" style="height: 8%;" data-label="Diseño"></div>
+            <div class="bar" style="height: 70%;" data-label="Redes"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-header">
+          <h3 class="report-title">Progreso de estudiante por Curso</h3>
+          <div class="report-filters">
+            Alumno:
+            <select>
+              <option>Estudiante X</option>
+              <option>Estudiante Y</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="chart-wrapper chart-green">
+          <div class="y-axis-labels">
+            <span class="label-100">100%</span>
+            <span class="label-75">75%</span>
+            <span class="label-50">50%</span>
+            <span class="label-25">25%</span>
+            <span class="label-0">0%</span>
+          </div>
+          <div class="y-axis-grid">
+            <div class="grid-line-50"></div>
+            <div class="grid-line-base"></div>
+          </div>
+
+          <div class="bar-chart-container">
+            <div class="bar" style="height: 18%;" data-label="HTML"></div>
+            <div class="bar" style="height: 90%;" data-label="CSS"></div>
+            <div class="bar" style="height: 5%;" data-label="JS"></div>
+            <div class="bar" style="height: 75%;" data-label="Angular"></div>
+          </div>
+        </div>
+      </div>
 
     </div>
-  </div>
+
+  </main>
+</div>
+
+<div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
 </div>

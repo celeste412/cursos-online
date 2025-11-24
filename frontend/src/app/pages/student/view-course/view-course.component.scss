@@ -1,0 +1,481 @@
+// VARIABLES
+$primary-color: #FF7E00;
+$secondary-color: #FFB84D;
+$success-color: #10B981;
+$warning-color: #F59E0B;
+$text-color-dark: #1f2937;
+$text-color-light: #4b5563;
+$bg-light: #f9fafb;
+$bg-gray: #f3f4f6;
+$radius-default: 0.75rem;
+$radius-large: 1rem;
+$padding-base: 1.5rem;
+$max-width: 1400px;
+$font-family: 'Inter', sans-serif;
+$sidebar-width: 300px; // ANCHO DEL ASIDE A 300PX
+
+// GLOBAL
+* {
+    font-family: $font-family;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: $text-color-dark; // Color de texto base para el body
+}
+
+// DASHBOARD LAYOUT
+.dashboard-layout {
+    display: flex;
+    background-color: $bg-light;
+    min-height: 100vh;
+}
+
+// SIDEBAR
+.sidebar {
+    width: $sidebar-width;
+    flex-shrink: 0;
+    background-color: white;
+    padding: 2rem 1.5rem;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+
+    @media (max-width: 1024px) {
+        transform: translateX(-100%);
+        box-shadow: none;
+
+        &.is-open {
+            transform: translateX(0);
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 3rem;
+
+        .logo-img {
+            max-width: 70px; // Ajustado según tu diseño
+            height: auto;
+            border-radius: 0.5rem;
+        }
+    }
+
+    .nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .nav-item {
+            .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.75rem 1rem;
+                border-radius: $radius-large;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                line-height: 1.5;
+                font-size: 1rem;
+
+                &.nav-link-active {
+                    color: white;
+                    background: linear-gradient(90deg, $primary-color 0%, $secondary-color 100%);
+                    box-shadow: 0 6px 20px rgba($primary-color, 0.4);
+
+                    .nav-icon {
+                        color: white;
+                    }
+                }
+
+                &.nav-link-inactive {
+                    color: $text-color-light;
+                    background-color: white;
+
+                    &:hover {
+                        background-color: $bg-gray;
+                        color: $text-color-dark;
+                        transform: translateX(5px);
+                    }
+                }
+
+                .nav-icon {
+                    font-size: 1.2rem;
+                    color: $text-color-light;
+                    transition: color 0.3s;
+                }
+            }
+        }
+    }
+}
+
+// MAIN WRAPPER
+.main-wrapper {
+    margin-left: $sidebar-width;
+    padding: 2rem;
+    flex-grow: 1;
+    background-color: $bg-light;
+    transition: margin-left 0.3s ease;
+    max-width: calc(100% - #{$sidebar-width});
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+        margin-left: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    // USER MENU
+    .user-menu-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 2rem;
+        position: relative;
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &:hover {
+                background-color: $bg-gray;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                border-radius: 9999px;
+                overflow: hidden;
+                border: 2px solid $primary-color;
+                flex-shrink: 0;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .user-info {
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: $text-color-dark;
+
+                @media (max-width: 640px) {
+                    display: none;
+                }
+            }
+
+            i {
+                transition: transform 0.3s;
+
+                &.rotate {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            width: 200px;
+            background-color: white;
+            border-radius: $radius-default;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            z-index: 999;
+
+            &.visible {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .dropdown-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+                color: $text-color-dark;
+                cursor: pointer;
+                border-radius: $radius-default;
+                margin: 0 0.5rem;
+                transition: all 0.2s;
+
+                &:hover {
+                    background-color: $bg-gray;
+                    color: $primary-color;
+                }
+
+                &.logout {
+                    color: #ef4444;
+                    font-weight: 600;
+                    margin-top: 0.5rem;
+                    border-top: 1px solid $bg-gray;
+
+                    &:hover {
+                        background-color: #fee2e2;
+                        color: #b91c1c;
+                    }
+                }
+            }
+        }
+    }
+
+    // BREADCRUMBS
+    .breadcrumbs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        color: $text-color-light;
+
+        .breadcrumb-item {
+            &.active {
+                font-weight: 600;
+                color: $text-color-dark;
+            }
+        }
+
+        i {
+            font-size: 0.7rem;
+        }
+    }
+
+    // COURSE DETAIL PAGE LAYOUT
+    .course-detail-page {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap; // Permite que el sidebar se apile en pantallas pequeñas
+        background-color: white; // Contenedor principal de la página de detalle
+        border-radius: $radius-large;
+        padding: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+
+        @media (max-width: 1024px) {
+            flex-direction: column; // Sidebar y contenido principal se apilan
+        }
+
+        .course-main-content {
+            flex: 3; // Ocupa más espacio
+            min-width: 300px;
+
+            .course-title-detail {
+                font-size: 2.2rem;
+                font-weight: 800;
+                margin-top: 0;
+                margin-bottom: 1.5rem;
+                color: $text-color-dark;
+            }
+
+            .course-hero-image {
+                width: 100%;
+                height: 400px; // Altura fija para la imagen principal
+                background-size: cover;
+                background-position: center;
+                border-radius: $radius-large;
+                margin-bottom: 2rem;
+                background-color: $bg-gray; // Placeholder
+            }
+
+            .course-meta {
+                padding-right: 2rem; // Espacio entre el contenido principal y la barra lateral
+
+                .course-creator-info {
+                    font-size: 1rem;
+                    color: $text-color-light;
+                    margin-bottom: 1.5rem;
+
+                    strong {
+                        color: $text-color-dark;
+                    }
+                }
+
+                .course-description {
+                    font-size: 1rem;
+                    line-height: 1.6;
+                    color: $text-color-light;
+                    margin-bottom: 2rem;
+                }
+
+                .course-includes-title {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: $text-color-dark;
+                    margin-bottom: 1rem;
+                }
+
+                .course-stats {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1.5rem;
+                    margin-bottom: 2.5rem;
+                    font-size: 0.95rem;
+                    color: $text-color-dark;
+
+                    span {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        color: $text-color-light; // Color para el texto de estadísticas
+
+                        i {
+                            color: $primary-color; // Color para los íconos
+                            font-size: 1.1rem;
+                        }
+                    }
+                }
+
+                .course-actions {
+                    display: flex;
+                    gap: 1rem; // Espacio entre los botones
+                    flex-wrap: wrap; // Permite que los botones se apilen si no hay espacio
+
+                    .btn-primary-action {
+                        background: linear-gradient(90deg, $primary-color 0%, $secondary-color 100%);
+                        color: white;
+                        padding: 0.8rem 1.8rem;
+                        border-radius: 9999px;
+                        border: none;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+                        &:hover {
+                            opacity: 0.9;
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 20px rgba($primary-color, 0.4);
+                        }
+                    }
+
+                    // NUEVO ESTILO PARA EL BOTÓN SECUNDARIO (VISUALIZAR CONTENIDO)
+                    .btn-secondary-action {
+                        background-color: $bg-gray; // Fondo gris claro
+                        color: $text-color-light; // Texto más oscuro
+                        padding: 0.8rem 1.8rem;
+                        border-radius: 9999px;
+                        border: 1px solid $bg-gray; // Borde sutil
+                        font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+
+                        &:hover {
+                            background-color: $text-color-light; // Fondo más oscuro en hover
+                            color: white; // Texto blanco en hover
+                            border-color: $text-color-light;
+                            transform: translateY(-2px);
+                        }
+                    }
+                }
+            }
+        }
+
+        .course-sidebar {
+            flex: 1; // Ocupa el espacio restante
+            min-width: 250px;
+            background-color: $bg-light; // Fondo diferente para el sidebar
+            border-radius: $radius-default;
+            padding: 1.5rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); // Sombra interior sutil
+            border: 1px solid #f3f4f6;
+
+            .sidebar-title {
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: $text-color-dark;
+                margin-top: 0;
+                margin-bottom: 1.5rem;
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .module-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                .module-item {
+                    margin-bottom: 1.5rem;
+
+                    .module-title {
+                        font-size: 1rem;
+                        font-weight: 600;
+                        color: $primary-color;
+                        margin-top: 0;
+                        margin-bottom: 0.8rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .lesson-list {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+
+                        .lesson-item {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            padding: 0.6rem 0;
+                            font-size: 0.9rem;
+                            color: $text-color-light;
+                            border-bottom: 1px dashed #e5e7eb;
+
+                            &:last-child {
+                                border-bottom: none;
+                            }
+
+                            .lesson-number {
+                                background-color: $bg-gray;
+                                color: $text-color-dark;
+                                border-radius: 9999px;
+                                width: 28px;
+                                height: 28px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 0.75rem;
+                                font-weight: 600;
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

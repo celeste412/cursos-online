@@ -1,50 +1,116 @@
+@use "sass:color";
+
+// VARIABLES (Son las mismas que ya definiste)
+$primary-color: #ff8c00;
+$secondary-color: #2a3a47;
+$text-color: #333;
+$light-text-color: #fff;
+$secondary-text-color: #666;
+$border-radius: 8px;
+
+// Mixin para centrar elementos (si se usa el contenedor de registro)
+@mixin flex-center {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+@mixin button-styles($bg, $color: $light-text-color) {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+  background-color: $bg;
+  color: $color;
+  border: 1px solid transparent;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
 .register-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  background-color: #fff;
+  @include flex-center;
+  min-height: 100vh;
+  padding-top: 8vh;
+  background-color: #f5f5f5;
 
-  h2 {
+  >div {
+    background: #fff; 
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 450px;
+  }
+}
+
+h2 {
+  color: $text-color;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  label {
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: $text-color;
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 50px; // Redondeado
+    font-size: 1rem;
+    background: $light-text-color;
+    color: $text-color;
+    transition: border-color 0.3s, box-shadow 0.3s;
 
-    label {
-      margin-top: 10px;
+    &::placeholder {
+      color: #aaa;
     }
 
-    input {
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px;
-      border: none;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-
-      &:disabled {
-        background-color: #aaa;
-        cursor: not-allowed;
-      }
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
     }
   }
 
-  .error {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
+  button[type="submit"] {
+    @include button-styles($primary-color);
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+
+    &:disabled {
+      background-color: color.adjust($primary-color, $lightness: 15%);
+      cursor: not-allowed;
+    }
   }
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 500;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: color.mix($light-text-color, #e74c3c, 90%);
+  border-radius: $border-radius;
+  text-align: center;
 }

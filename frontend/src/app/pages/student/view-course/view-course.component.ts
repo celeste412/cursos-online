@@ -1,15 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-mis-cursos',
+  selector: 'app-view-course',
   standalone: true, // <- obligatorio si es standalone
   imports: [RouterModule, CommonModule],
-  templateUrl: './mis-cursos.html',
-  styleUrl: './mis-cursos.scss',
+  templateUrl: './view-course.component.html',
+  styleUrl: './view-course.component.scss'
 })
-export class MisCursos {
+export class ViewCourseComponent {
   constructor(private router: Router) { }
 
   activeLink: string = 'cursos';

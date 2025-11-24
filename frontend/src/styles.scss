@@ -1,23 +1,750 @@
-/* ---- CONSTANTES ---- */
-$c-primary: #FF9500;
-$c-secondary: #F4F1F1;
-$c-terciary: #565C5B;
+@use "sass:color";
 
-.text-color {
-  color:  #565C5B;
+// VARIABLES
+$primary-color: #ff8c00; // Naranja principal (Botones, texto destacado)
+$secondary-color: #2a3a47; // Color oscuro para fondo del Footer/CTA
+$text-color: #333;
+$light-text-color: #fff;
+$secondary-text-color: #666;
+$border-radius: 8px;
+$padding-base: 1.5rem;
+$max-width: 1200px;
+$radius-default: 0.75rem;
+$font-family: 'Poppins', sans-serif;
+
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+
+// MIXINS Y FUNCIONES BÁSICAS
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.box-scroll {
-  height: 100%;
-  overflow-y: auto;
+@mixin button-styles($bg, $color: $light-text-color) {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+  background-color: $bg;
+  color: $color;
+  border: 1px solid transparent;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 
-
-/* ---- RAÍZ ---- */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-$font-main: 'Montserrat', sans-serif;
-
+// ESTILOS GLOBALES / RESET BÁSICO
 * {
-  font-family: $font-main;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  font-family: $font-family;
+  color: $text-color;
+  line-height: 1.6;
+  background-color: #f8f8f8;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.highlight-text {
+  color: $primary-color;
+}
+
+.btn {
+  @include button-styles(transparent, $text-color);
+}
+
+.btn-primary {
+  @include button-styles($primary-color, $light-text-color);
+  border: none;
+}
+
+.btn-secondary {
+  @include button-styles(#e0e0e0, $text-color);
+  border: 1px solid #ccc;
+  background-color: #fff;
+
+  &.outlined {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    color: $text-color;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+// 1. HEADER
+.header {
+  background-color: $light-text-color;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+
+  &-container {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 $padding-base;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .logo img {
+    height: 55px;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-menu ul {
+    display: flex;
+    gap: 2rem;
+
+    li a {
+      font-weight: 500;
+      color: $secondary-text-color;
+      position: relative;
+      transition: color 0.3s;
+
+      &.active,
+      &:hover {
+        color: $primary-color;
+
+        &::after {
+          content: '';
+          display: block;
+          width: 100%;
+          height: 2px;
+          background-color: $primary-color;
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          border-radius: 1px;
+        }
+      }
+    }
+  }
+
+  .auth-buttons {
+    display: flex;
+    gap: 1rem;
+
+    .btn-login {
+      color: $secondary-text-color;
+      font-weight: 500;
+      padding: 0.6rem 1.5rem;
+      border-radius: 25px; // hace los botones totalmente redondeados
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: $primary-color;
+        background-color: rgba(255, 140, 0, 0.1);
+        transform: scale(1.05);
+      }
+    }
+
+    .btn-register {
+      @include button-styles($primary-color, $light-text-color);
+      padding: 0.65rem 1.25rem;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: color.adjust($primary-color, $lightness: -10%);
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// RESPONSIVE
+@media (max-width: 992px) {
+  .header-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-menu ul {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .auth-buttons {
+    justify-content: center;
+  }
+}
+
+
+// 2. SECCIÓN HERO
+.hero {
+  display: flex;
+  max-width: $max-width;
+  margin: 2rem auto;
+  padding: $padding-base;
+  gap: 3rem;
+  align-items: center;
+  min-height: 550px;
+
+  &-content {
+    flex: 1;
+
+    .highlight-label {
+      display: inline-block;
+      background-color: $primary-color;
+      color: $light-text-color;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.15rem;
+      color: $secondary-text-color;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+
+      .btn-primary {
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+
+        .arrow {
+          margin-left: 0.5rem;
+        }
+      }
+
+      .btn-secondary {
+        background: none;
+        border: none;
+        color: $primary-color;
+        font-weight: 600;
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  &-image {
+    flex: 1;
+    position: relative;
+
+    >img {
+      width: 100%;
+      height: auto;
+      border-radius: $border-radius;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-card {
+      position: absolute;
+      bottom: 5%;
+      left: -10%;
+      background-color: $light-text-color;
+      padding: 1.5rem;
+      border-radius: $border-radius;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .icon {
+        @include flex-center;
+        background-color: $primary-color;
+        color: $light-text-color;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.2;
+        font-size: 0.9rem;
+      }
+
+      strong {
+        color: #28a745; // Color verde para el progreso
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// 3. SECCIÓN DE ESTADÍSTICAS
+.stats {
+  margin-bottom: 1rem;
+
+  &-container {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 $padding-base;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+  }
+
+  .stat-item {
+    p {
+      margin: 0;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $primary-color;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: $secondary-text-color;
+    }
+  }
+}
+
+// ESTILOS DE SECCIÓN REUTILIZABLES
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .subtitle {
+    color: $secondary-text-color;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+// 4. SECCIÓN POR QUÉ ELEGIRNOS (FEATURES)
+.features {
+  padding: 4rem 0;
+  background-color: $light-text-color;
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .subtitle {
+      background-color: #ffecc6;
+      color: $primary-color;
+      padding: 0.25rem 0.75rem;
+      border-radius: $border-radius;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+
+      .highlight-text {
+        color: $primary-color;
+      }
+    }
+  }
+
+  &-grid {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 $padding-base;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background-color: #fff;
+    border-radius: $border-radius;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+    border: 1px solid #e0e0e0;
+    transition: border 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      border: 2px solid $primary-color;
+      /* Borde naranja visible */
+      box-shadow: 0 5px 20px rgba($primary-color, 0.2);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin: 1rem 0 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    p {
+      color: $secondary-text-color;
+      line-height: 1.4;
+    }
+
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      @include flex-center;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background-color: $primary-color;
+      box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+
+      i {
+        color: $light-text-color;
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+
+// 5. SECCIÓN CURSOS POPULARES
+.popular-courses {
+  padding: 2rem 0;
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .subtitle {
+      background-color: #ffecc6;
+      color: $primary-color;
+      padding: 0.25rem 0.75rem;
+      border-radius: $border-radius;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+
+      .highlight-text {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .course-grid {
+    max-width: $max-width;
+    margin: 0 auto 3.5rem;
+    padding: 0 $padding-base;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .course-card {
+    display: block;
+    text-decoration: none;
+    color: $text-color;
+    background-color: $light-text-color;
+    border-radius: $border-radius;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid transparent;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+      border-color: $primary-color;
+    }
+
+    .course-image {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+
+      &.image-webdev {
+        background-image: url('assets/img1.png');
+      }
+
+      &.image-marketing {
+        background-image: url('assets/img1.png');
+      }
+
+      &.image-uxui {
+        background-image: url('assets/img1.png');
+      }
+
+      &.image-data {
+        background-image: url('assets/img1.png');
+      }
+
+      .rating {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: $primary-color;
+        color: $light-text-color;
+        padding: 0.4rem 0.7rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+
+        i {
+          font-size: 0.8rem;
+          margin-right: 0.3rem;
+        }
+      }
+    }
+
+    .course-content {
+      padding: 1rem 1rem 0.5rem;
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+        color: $text-color;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: $secondary-text-color;
+        margin: 0 0 1rem;
+        line-height: 1.4;
+      }
+
+      .course-meta {
+        padding: 0 1rem 1rem;
+        font-size: 0.85rem;
+        color: $secondary-text-color;
+        border-top: 1px solid #f0f0f0;
+        margin-top: 0.5rem;
+
+        i {
+          margin-right: 0.3rem;
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .center-button {
+    text-align: center;
+    margin-top: 2rem;
+  }
+}
+
+// 6. SECCIÓN CALL TO ACTION (CTA)
+.cta-banner {
+  background: linear-gradient(135deg, $secondary-color, #385b6b);
+  color: $light-text-color;
+  padding: 4rem 0;
+  margin: 4rem 0;
+
+  .cta-content {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 $padding-base;
+    text-align: center;
+
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .btn-primary.large {
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// 7. FOOTER
+.footer {
+  background: linear-gradient(180deg, rgba(42, 58, 71, 1) 0%, rgba(56, 91, 107, 1) 100%);
+  color: $light-text-color;
+  padding-top: 4rem;
+  font-size: 0.9rem;
+
+  &-container {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 $padding-base 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+
+    .footer-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &-info {
+    .logo img {
+      height: 50px;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+
+    .contact-item {
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+
+      .icon {
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+        color: $light-text-color;
+        opacity: 0.8;
+      }
+
+      span {
+        font-size: 1rem;
+        opacity: 0.9;
+
+        &[class*='@'] {
+          color: $primary-color;
+          font-weight: 500;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &-links {
+    h4 {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    ul li a {
+      display: block;
+      padding: 0.3rem 0;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+        color: $primary-color;
+      }
+    }
+  }
+
+  &-social {
+    h4 {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+
+      .social-icon {
+        @include flex-center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.25);
+        border-radius: 50%;
+        color: $light-text-color;
+        font-size: 1rem;
+
+        &:hover {
+          background-color: $primary-color;
+          color: $light-text-color;
+        }
+      }
+    }
+  }
+
+  &-bottom {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 1.5rem $padding-base;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      opacity: 0.7;
+    }
+
+    .legal-links a {
+      margin-left: 1.5rem;
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 1;
+        color: $primary-color;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,138 @@
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
+    <nav>
+  <ul class="nav-list">
+    <li class="nav-item">
+      <a 
+         class="nav-link"
+         routerLink="/student/home"
+         [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+         (click)="setActive('home')">
+        <i class="bi bi-house-fill nav-icon"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a 
+         class="nav-link"
+         routerLink="/student/cursos" 
+         [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+         (click)="setActive('cursos')">
+        <i class="bi bi-journal-check nav-icon"></i>
+        <span>Mis Cursos</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <!-- USER MENU -->
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/30x30/FF7E00/ffffff?text=A" alt="Avatar">
+        </div>
+        <span class="user-info">Alumno</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- WELCOME CARD -->
+    <div class="welcome-card-container">
+      <div class="welcome-text-area">
+        <h1>Hola Alumno, ¡Bienvenido!</h1>
+        <p>Es bueno verte otra vez. Aquí está tu resumen de progreso.</p>
+        <div class="welcome-message-box">
+          <h2>Aprende a tu ritmo,</h2>
+          <h2>mejora cada día</h2>
+          <small>Domina nuevas habilidades y alcanza tus metas con los mejores cursos online.</small>
+        </div>
+      </div>
+
+      <div class="progress-cards-container">
+        <div class="progress-desktop-card" *ngFor="let prog of progress">
+          <div class="progress-icon-bg" [ngClass]="prog.type">
+            <i [class]="prog.icon" [style.color]="prog.color"></i>
+          </div>
+          <div class="progress-info">
+            <strong>{{prog.value}}</strong>
+            <p>{{prog.label}}</p>
+          </div>
+          <div class="progress-bar-area">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width]="prog.percentage" [style.background]="prog.color"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURSOS -->
+    <div class="content-layout">
+      <section class="popular-courses">
+        <div class="section-header">
+          <h2>Cursos Populares</h2>
+          <button class="btn-base btn-ver-todos" (click)="showAction('Ver Todos los Cursos')">Ver Todos</button>
+        </div>
+        <div class="course-grid">
+          <div class="course-card" *ngFor="let course of courses" (click)="showAction('Entrar a Curso: '+course.title)">
+            <div class="course-image" [style.backgroundImage]="'url('+course.img+')'">
+              <i [class]="course.icon"></i>
+            </div>
+            <div class="course-info">
+              <p class="course-title">{{course.title}}</p>
+              <p class="course-subtitle">Inicia: {{course.start}}</p>
+              <p class="course-students">{{course.students}} alumnos registrados</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVIDADES -->
+      <section class="activities">
+        <div class="section-header">
+          <h2>Actividades Recientes</h2>
+          <button class="btn-base btn-ver-todos" (click)="showAction('Ver Todas las Actividades')">Ver Todo</button>
+        </div>
+        <div class="activity-list">
+          <div class="activity-card" *ngFor="let act of activities">
+            <div class="activity-details">
+              <div class="activity-icon-bg" [style.color]="act.color">
+                <i [class]="act.icon"></i>
+              </div>
+              <p class="activity-text" [innerHTML]="act.text"></p>
+            </div>
+            <div class="activity-actions">
+              <button class="btn-base btn-skip" (click)="showAction(act.skip)">Omitir</button>
+              <button class="btn-base btn-activity" [style.background]="act.color" [style.borderColor]="act.color" (click)="showAction(act.go)">Acción</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-backdrop" [class.show]="modalOpen">
+      <div class="modal-content">
+        <h3 id="modalTitle">{{modalTitle}}</h3>
+        <p id="modalMessage">{{modalMessage}}</p>
+        <button class="btn-base btn-activity" (click)="closeModal()">Aceptar</button>
+      </div>
+    </div>
+
+  </div>
+</div>

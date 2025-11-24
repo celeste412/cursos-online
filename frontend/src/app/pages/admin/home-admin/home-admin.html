@@ -1,213 +1,175 @@
-<div class="row mx-0 vh-100">
-  <!-- Barra lateral izquierda -->
-  <div class="col-2 mt-4 d-flex flex-column align-items-center">
-    <div class="contenedor-logo mt-3">
-      <img [src]="logo" alt="Logo" />
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/home"
+            [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-house-fill nav-icon"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getUsuario"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-usuarios', 'nav-link-inactive': activeLink!=='gestion-usuarios'}"
+            (click)="setActive('gestion-usuarios')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Gestión Usuarios</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/getCursos"
+            [ngClass]="{'nav-link-active': activeLink==='gestion-cursos', 'nav-link-inactive': activeLink!=='gestion-cursos'}"
+            (click)="setActive('gestion-cursos')">
+            <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+            <span>Gestión Cursos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/admin/reportesProgresos"
+            [ngClass]="{'nav-link-active': activeLink==='reportes', 'nav-link-inactive': activeLink!=='reportes'}"
+            (click)="setActive('reportes')">
+            <i class="bi bi-graph-up-arrow nav-icon"></i>
+            <span>Reportes y Progreso</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </aside>
+
+  <div class="main-wrapper">
+    <div class="top-bar">
+      <h1 class="page-title">CURSOS</h1>
+      <div class="user-menu-wrapper">
+        <div class="user-menu" (click)="toggleUserMenu()">
+          <div class="user-avatar">
+            <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
+          </div>
+          <span class="user-info">Administrador</span>
+          <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+        </div>
+
+        <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+          <a class="dropdown-item logout" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar Sesión</span>
+          </a>
+        </div>
+      </div>
     </div>
 
-    <!-- NAV ADMIN -->
-    <app-nav-admin></app-nav-admin>
-  </div>
-
-  <!-- Contenido principal -->
-  <div class="col-10 p-0 d-flex align-items-center">
-    <div class="box-body rounded-5 p-5">
-      
-      <!-- Sección saludo -->
-      <div class="container-1 d-flex">
-        <div class="box-saludo px-4 rounded-3">
-          <div class="box-textoSaludo d-flex flex-column justify-content-center">
-            <h5 class="texto-saludo">Hola.......; ¡Bienvenido!</h5>
-            <p>Es bueno verte otra vez</p>
-          </div>
-
-          <div class="box-img-admi">
-            <img [src]="img7" alt="img7" />
-          </div>
+    <div class="dashboard-grid-top">
+      <div class="welcome-admin-card">
+        <div class="welcome-text-area">
+          <h1>Hola <span class="highlight-name">.......</span>, ¡Bienvenido!</h1>
+          <p>Es bueno verte otra vez.</p>
         </div>
-
-        <!-- Usuario -->
-        <div class="box-datos">
-          <div class="user text-end py-2 d-flex align-items-center justify-content-end">
-
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                 fill="currentColor" class="bi bi-person-circle me-2"
-                 viewBox="0 0 16 16">
-              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-              <path fill-rule="evenodd"
-                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 
-                    0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 
-                    10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-            </svg>
-
-            <div class="dropdown">
-              <button class="btn btn-sm dropdown-toggle"
-                      type="button"
-                      data-bs-toggle="dropdown">
-                Hector Ramon
-              </button>
-
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li><button class="dropdown-item">Perfil</button></li>
-                <li>
-                  <button class="dropdown-item text-danger"
-                          (click)="logout()">
-                    Cerrar sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Tarjetas de progreso -->
-          <div class="row mx-0 justify-content-end gap-4">
-
-            <!-- Cursos completados -->
-            <div class="col-5 rounded-3 card-porcentaje d-flex align-items-center px-4">
-              <div class="py-3 row mx-0">
-                <div class="col-2 icon-green d-flex align-items-center justify-content-center p-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-                       fill="currentColor" class="bi bi-clipboard-check-fill"
-                       viewBox="0 0 16 16">
-                    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 
-                    1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 
-                    2.5v-1A1.5 1.5 0 0 0 9.5 0z" />
-                    <path d="M4 1.5H3a2 2 0 0 0-2 
-                    2V14a2 2 0 0 0 2 2h10a2 2 0 
-                    0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 
-                    2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 
-                    4 2.5zm6.854 7.354-3 
-                    3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 
-                    0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 
-                    0 0 1 .708.708" />
-                  </svg>
-                </div>
-
-                <div class="col-10">
-                  <h4 class="m-0">03</h4>
-                  <p class="letra-pequeña m-0">Cursos completados</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Cursos en progreso -->
-            <div class="col-5 rounded-3 card-porcentaje d-flex align-items-center px-4">
-              <div class="py-3 row mx-0">
-                <div class="col-2 icon-oranje d-flex justify-content-center align-items-center p-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-                       fill="currentColor" class="bi bi-graph-up-arrow"
-                       viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M0 0h1v15h15v1H0zm10 
-                          3.5a.5.5 0 0 1 .5-.5h4a.5.5 
-                          0 0 1 .5.5v4a.5.5 0 0 
-                          1-1 0V4.9l-3.613 
-                          4.417a.5.5 0 0 1-.74.037L7.06 
-                          6.767l-3.656 
-                          5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 
-                          0 0 1 .758-.06l2.609 
-                          2.61L13.445 4H10.5a.5.5 0 0 
-                          1-.5-.5" />
-                  </svg>
-                </div>
-
-                <div class="col-10">
-                  <h4 class="m-0">02</h4>
-                  <p class="letra-pequeña m-0">Cursos en progreso</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
+        <div class="welcome-image">
+          <img src="/assets/admin.png" alt="Admin Welcome">
         </div>
       </div>
 
-      <!-- Avance promedio -->
-      <div class="mt-5 d-flex justify-content-between align-items-center">
-        <h4>Avanze promedio por curso</h4>
-
-        <div class="dropdown">
-          <button class="btn btn-light dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown">
-            Curso ---------
-          </button>
-
-          <ul class="dropdown-menu bg-white shadow">
-            <li><button class="dropdown-item">Programación</button></li>
-            <li><button class="dropdown-item">Diseño Web</button></li>
-            <li><button class="dropdown-item">Marketing</button></li>
-            <li><button class="dropdown-item">Negocios</button></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="container-2 d-flex rounded-5 mt-4">
-        <div class="img-home-admi">
-          <img [src]="img8" alt="img8" />
-        </div>
-      </div>
-
-      <!-- Cursos populares + Últimos alumnos -->
-      <div class="container-3 row mx-0 mt-3">
-        
-        <!-- Últimos cursos -->
-        <div class="col-8 row mx-0 gap-4 justify-content-between">
-          <div class="col-12 d-flex justify-content-between">
-            <h5 class="texto-saludo">Ultimos Cursos Creados</h5>
-            <button class="btn-verTodo rounded px-2">Ver Todos</button>
+      <div class="stats-cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon bg-success"><i class="bi bi-journal-bookmark-fill"></i></div>
+          <div class="stat-info">
+            <strong>20</strong>
+            <p>Total de cursos</p>
           </div>
-
-          @for (img of cursos; track $index) {
-            <div class="col-5 rounded card-curso row mx-0 p-2">
-              <div class="col-6 img-card px-0 rounded">
-                <img [src]="img" alt="Curso" />
-              </div>
-
-              <div class="col-6 p-2">
-                <h6>Nombre del curso</h6>
-                <span class="letra-pequeña p-0 m-0">Inicia.......</span>
-                <p class="icon-oranje letra-mediana pt-3">N° de Alumnos</p>
-              </div>
-
-              <div class="col-12 letra-mediana p-2">
-                <p class="mb-0">
-                  Digital Marketing Ethics: Navigating the Ethical Landscape
-                </p>
-              </div>
-            </div>
-          }
         </div>
-
-        <!-- Últimos alumnos -->
-        <div class="col-4">
-          <h5 class="texto-saludo">Ultimos Alumnos</h5>
-
-          @for (item of actividades; track $index) {
-            <div class="col-12 card-actividades p-3 rounded mb-3">
-              <div class="d-flex align-items-center gap-2 mb-2">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="28"
-                     height="28" fill="currentColor"
-                     class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 
-                  3 3 0 0 1 6 0" />
-                  <path fill-rule="evenodd"
-                        d="M0 8a8 8 0 1 1 16 0A8 8 
-                        0 0 1 0 8m8-7a7 7 0 0 
-                        0-5.468 11.37C3.242 
-                        11.226 4.805 10 8 
-                        10s4.757 1.225 5.468 
-                        2.37A7 7 0 0 0 8 1" />
-                </svg>
-
-                <p class="mb-0 letra-mediana">{{ item }}</p>
-              </div>
-            </div>
-          }
+        <div class="stat-card">
+          <div class="stat-icon bg-primary"><i class="bi bi-people-fill"></i></div>
+          <div class="stat-info">
+            <strong>30</strong>
+            <p>Total de estudiantes</p>
+          </div>
         </div>
-
+        <div class="stat-card large">
+          <div class="stat-icon bg-warning"><i class="bi bi-pencil-square"></i></div>
+          <div class="stat-info">
+            <strong>5</strong>
+            <p>Editores Activos</p>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <section class="chart-section">
+      <div class="section-header">
+        <h2>Avance promedio por curso</h2>
+        <div class="chart-filter">
+          <label for="course-select">Curso:</label>
+          <select id="course-select">
+            <option>----------</option>
+            <option>Curso A</option>
+            <option>Curso B</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-container">
+        <img src="https://placehold.co/800x300/e0e7ff/3f51b5?text=GRAFICO+DE+AVANCE" alt="Gráfico de Avance"
+          class="chart-placeholder">
+      </div>
+    </section>
+
+    <div class="dashboard-grid-bottom">
+      <section class="latest-courses">
+        <div class="section-header">
+          <h2>Últimos cursos creados</h2>
+          <button class="btn-base btn-ver-todos">Ver Todos</button>
+        </div>
+        <div class="course-grid">
+          <div class="course-card">
+            <div class="course-image"
+              style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')"></div>
+            <div class="course-info">
+              <p class="course-title">Nombre del curso</p>
+              <p class="course-subtitle">Inicia: 24/07/2023</p>
+              <p class="course-students">N° alumnos registrados</p>
+            </div>
+          </div>
+          <div class="course-card">
+            <div class="course-image"
+              style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')"></div>
+            <div class="course-info">
+              <p class="course-title">Roger Hamilton</p>
+              <p class="course-subtitle">Inicia: 24/07/2023</p>
+              <p class="course-students">N° alumnos registrados</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="latest-users">
+        <div class="section-header">
+          <h2>Últimos usuarios registrados</h2>
+        </div>
+        <div class="user-list">
+          <div class="user-list-item">
+            <div class="user-avatar-small">
+              <img src="https://placehold.co/40x40/FF7E00/ffffff?text=JM" alt="Juan Martínez">
+            </div>
+            <div class="user-details">
+              <p class="user-name">Juan Martínez</p>
+              <span class="user-role">Alumno</span>
+            </div>
+          </div>
+          <div class="user-list-item">
+            <div class="user-avatar-small">
+              <img src="https://placehold.co/40x40/FF7E00/ffffff?text=LR" alt="Lucas Ramírez">
+            </div>
+            <div class="user-details">
+              <p class="user-name">Lucas Ramírez</p>
+              <span class="user-role">Alumno</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>

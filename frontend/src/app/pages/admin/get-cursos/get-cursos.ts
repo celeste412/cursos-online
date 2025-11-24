@@ -1,18 +1,69 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavAdmin } from '../../../components/nav-admin/nav-admin';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'app-get-cursos',
-  imports: [NavAdmin, CommonModule],
+  standalone: true, // <- obligatorio si es standalone
+  imports: [RouterModule, CommonModule],
   templateUrl: './get-cursos.html',
   styleUrl: './get-cursos.scss',
 })
 export class GetCursos {
 
-  logo = 'assets/logo-cursos.png';
-  img4 = 'assets/img4.png';
+  constructor(private router: Router) { }
 
-  cursos = [1, 2, 3, 4]; // temporal, como tu map de React
+  activeLink: string = 'gestion-cursos';
+  userMenuOpen: boolean = false;
+  modalOpen: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+
+  // PROPIEDADES DE USUARIO (Mantenidas si la plantilla HTML las usa)
+  passwordVisible: boolean = false;
+  passwordFieldType: string = 'password';
+  setActive(link: string): void {
+    this.activeLink = link;
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  showAction(action: string): void {
+    this.modalTitle = action;
+    this.modalMessage = `Has seleccionado: ${action}`;
+    this.modalOpen = true;
+  }
+
+  // Función para cerrar el modal
+  closeModal(): void {
+    this.modalOpen = false;
+    this.modalTitle = '';
+    this.modalMessage = '';
+  }
+
+  // Función de logout
+  logout(): void {
+    // 1. Limpiar token o datos de usuario
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    // 2. Redirigir al login
+    this.router.navigate(['/login']);
+  }
+
+  // Función para alternar la visibilidad de la contraseña
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+    this.passwordFieldType = this.passwordVisible ? 'text' : 'password';
+  }
+
+  openAddCourseModal(): void {
+    this.modalTitle = 'AGREGAR CURSO';
+    this.modalMessage = 'Introduce los detalles del nuevo curso.';
+    this.modalOpen = true;
+
+  }
 }

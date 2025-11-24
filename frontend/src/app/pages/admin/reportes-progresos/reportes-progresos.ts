@@ -1,20 +1,67 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavAdmin } from '../../../components/nav-admin/nav-admin';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-reportes-progresos',
-  imports: [CommonModule,NavAdmin],
+  imports: [CommonModule, RouterModule],
   templateUrl: './reportes-progresos.html',
   styleUrl: './reportes-progresos.scss',
 })
 export class ReportesProgresos {
 
-  cursos = [
-    { id: 1, curso: 'HTML desde Cero', profesor: 'Juan Pérez', inscritos: 35, finalizaron: 20, duracion: '6 horas', fecha: '12/02/2025' },
-    { id: 2, curso: 'CSS Avanzado', profesor: 'María López', inscritos: 28, finalizaron: 15, duracion: '8 horas', fecha: '08/02/2025' },
-    { id: 3, curso: 'JavaScript Profesional', profesor: 'Carlos Rivera', inscritos: 42, finalizaron: 30, duracion: '12 horas', fecha: '01/02/2025' },
-    { id: 4, curso: 'React Básico', profesor: 'Lucía Torres', inscritos: 19, finalizaron: 11, duracion: '10 horas', fecha: '15/01/2025' },
-    { id: 5, curso: 'Backend con NodeJS', profesor: 'Pedro García', inscritos: 30, finalizaron: 18, duracion: '15 horas', fecha: '10/01/2025' },
-  ];
+  constructor(private router: Router) { }
+
+  activeLink: string = 'reportes';
+  userMenuOpen: boolean = false;
+  modalOpen: boolean = false;
+  modalTitle: string = '';
+  modalMessage: string = '';
+
+  // PROPIEDADES DE USUARIO (Mantenidas si la plantilla HTML las usa)
+  passwordVisible: boolean = false;
+  passwordFieldType: string = 'password';
+  setActive(link: string): void {
+    this.activeLink = link;
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  showAction(action: string): void {
+    this.modalTitle = action;
+    this.modalMessage = `Has seleccionado: ${action}`;
+    this.modalOpen = true;
+  }
+
+  // Función para cerrar el modal
+  closeModal(): void {
+    this.modalOpen = false;
+    this.modalTitle = '';
+    this.modalMessage = '';
+  }
+
+  // Función de logout
+  logout(): void {
+    // 1. Limpiar token o datos de usuario
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    // 2. Redirigir al login
+    this.router.navigate(['/login']);
+  }
+
+  // Función para alternar la visibilidad de la contraseña
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+    this.passwordFieldType = this.passwordVisible ? 'text' : 'password';
+  }
+
+  openAddCourseModal(): void {
+    this.modalTitle = 'AGREGAR CURSO';
+    this.modalMessage = 'Introduce los detalles del nuevo curso.';
+    this.modalOpen = true;
+
+  }
 }

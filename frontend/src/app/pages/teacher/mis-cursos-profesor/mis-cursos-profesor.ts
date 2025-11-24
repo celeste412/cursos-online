@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavProfesor } from '../../../components/nav-profesor/nav-profesor';
 import { NgFor } from '@angular/common';
 
 
 @Component({
   selector: 'app-mis-cursos-profesor',
-  imports: [NgFor,NavProfesor],
+  imports: [NgFor],
   templateUrl: './mis-cursos-profesor.html',
   styleUrl: './mis-cursos-profesor.scss',
 })

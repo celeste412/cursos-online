@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavStudent } from '../../../components/nav-student/nav-student';
 import { NgFor, NgIf } from '@angular/common';
 
 
 @Component({
   selector: 'app-cursos',
-  imports: [NgIf, NgFor,NavStudent],
+  imports: [NgIf, NgFor],
   templateUrl: './cursos.html',
   styleUrl: './cursos.scss',
 })

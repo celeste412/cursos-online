@@ -1,0 +1,335 @@
+@use "sass:color";
+
+// VARIABLES
+$primary-color: #ff8c00; // Naranja principal (Botones, texto destacado)
+$secondary-color: #2a3a47; // Color oscuro para fondo del Footer/CTA
+$text-color: #333;
+$light-text-color: #fff;
+$secondary-text-color: #666;
+$border-radius: 8px;
+$padding-base: 1.5rem;
+$max-width: 1200px;
+$font-family: 'Poppins', sans-serif;
+
+// MIXINS Y FUNCIONES BÁSICAS
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 8. SECCIÓN SOBRE NOSOTROS: HERO/BANNER
+.about-hero {
+    background: linear-gradient(135deg, color.adjust($secondary-color, $lightness: -5%), #385b6b);
+    color: $light-text-color;
+    padding: 3rem 0 4rem;
+    text-align: center;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+
+    .about-hero-content {
+        max-width: $max-width;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+    }
+
+    .subtitle {
+        display: inline-block;
+        background-color: rgba($light-text-color, 0.2);
+        color: $light-text-color;
+        padding: 0.25rem 0.75rem;
+        border-radius: $border-radius;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+}
+
+// 9. SECCIÓN SOBRE NOSOTROS: INTRODUCCIÓN
+.about-intro {
+    padding: 3rem 0;
+
+    .intro-container {
+        max-width: $max-width;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .intro-content {
+        flex: 1;
+
+        .subtitle-tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: $secondary-text-color;
+            padding: 0.25rem 0.75rem;
+            border-radius: $border-radius;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            color: $secondary-text-color;
+        }
+    }
+
+    .intro-image {
+        flex: 1;
+        img {
+            width: 100%;
+            border-radius: $border-radius;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+// 10. SECCIÓN MISIÓN Y VISIÓN
+.mission-vision {
+    padding: 4rem 0;
+    background-color: #fff;
+
+    .section-title {
+        .subtitle-tag {
+            background-color: #ffecc6;
+            color: $primary-color;
+            padding: 0.25rem 0.75rem;
+            border-radius: $border-radius;
+            font-weight: 500;
+        }
+    }
+
+    .mv-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .mv-card {
+        background-color: $light-text-color;
+        border-radius: $border-radius;
+        padding: 2.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+        transition: transform 0.3s, box-shadow 0.3s;
+        
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: $secondary-color;
+        }
+
+        p {
+            color: $secondary-text-color;
+        }
+    }
+    
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        @include flex-center;
+        border-radius: $border-radius; /* Cuadrado redondeado */
+        margin-bottom: 1.5rem;
+        color: $light-text-color;
+        font-size: 1.8rem;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+        &.icon-orange-target {
+            background-color: $primary-color;
+        }
+
+        &.icon-teal-eye {
+            background-color: #2e8b84; /* Color turquesa/teal basado en la imagen */
+        }
+    }
+}
+
+// 11. SECCIÓN VALORES
+.values {
+    padding: 4rem 0;
+
+    .section-title {
+        .subtitle-tag {
+            background-color: #f0f0f0;
+            color: $secondary-text-color;
+            padding: 0.25rem 0.75rem;
+            border-radius: $border-radius;
+            font-weight: 500;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+    }
+
+    .values-grid {
+        max-width: $max-width;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .value-card {
+        background-color: $light-text-color;
+        border-radius: $border-radius;
+        padding: 2.5rem 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid transparent;
+        transition: transform 0.3s, border-color 0.3s;
+        
+        /* HOVER: Borde y sombra sutil */
+        &:hover {
+            border-color: #ccc;
+            transform: translateY(-3px);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+            color: $secondary-color;
+        }
+
+        p {
+            color: $secondary-text-color;
+            font-size: 0.95rem;
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            @include flex-center;
+            margin: 0 auto;
+            border-radius: $border-radius;
+            font-size: 2rem;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            color: $light-text-color;
+
+            &.icon-pink-heart {
+                background: linear-gradient(135deg, #ff6b81, #e84118); /* Rosa a Rojo */
+            }
+
+            &.icon-orange-award {
+                background: $primary-color; /* Naranja principal */
+            }
+
+            &.icon-blue-group {
+                background: linear-gradient(135deg, #00d2ff, #3a7bd5); /* Azul claro a oscuro */
+            }
+        }
+    }
+}
+
+// 12. SECCIÓN IMPACTO EN NÚMEROS (Estadísticas Grandes)
+.stats-impact {
+    background: linear-gradient(135deg, color.adjust($secondary-color, $lightness: -5%), #385b6b);
+    color: $light-text-color;
+    padding: 3rem 0;
+    margin-bottom: 2.5rem;
+
+    .section-title {
+        margin-bottom: 4rem;
+
+        .subtitle-tag {
+            display: inline-block;
+            background-color: rgba($light-text-color, 0.2);
+            color: $light-text-color;
+            padding: 0.25rem 0.75rem;
+            border-radius: $border-radius;
+            font-weight: 500;
+        }
+
+        h2 {
+            color: $light-text-color;
+            font-size: 3rem;
+        }
+    }
+
+    .impact-grid {
+        max-width: $max-width;
+        margin: 0 auto;
+        padding: 0 $padding-base;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    .impact-card {
+        background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente como en la imagen */
+        border-radius: 15px; /* Bordes más redondeados */
+        padding: 2.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background-color 0.3s, transform 0.3s;
+        
+        /* HOVER: Resaltar la tarjeta */
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        strong {
+            display: block;
+            font-size: 3rem;
+            font-weight: 700;
+            color: $light-text-color;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            @include flex-center;
+            margin: 0 auto 1.5rem;
+            border-radius: $border-radius;
+            font-size: 2rem;
+            /* Íconos con el brillo naranja */
+            background: linear-gradient(135deg, #ffad33, $primary-color);
+            box-shadow: 0 4px 15px rgba($primary-color, 0.4);
+        }
+    }
+}
