@@ -5,29 +5,33 @@
       <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
     </div>
     <nav>
-  <ul class="nav-list">
-    <li class="nav-item">
-      <a 
-         class="nav-link"
-         routerLink="/student/home"
-         [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
-         (click)="setActive('home')">
-        <i class="bi bi-house-fill nav-icon"></i>
-        <span>Home</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a 
-         class="nav-link"
-         routerLink="/student/cursos" 
-         [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
-         (click)="setActive('cursos')">
-        <i class="bi bi-journal-check nav-icon"></i>
-        <span>Mis Cursos</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/home"
+            [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-house-fill nav-icon"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos"
+            [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+            (click)="setActive('cursos')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Catalogo Cursos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos-select"
+            [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+            (click)="setActive('cursos-select')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Cursos Inscritos</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
   </aside>
 
@@ -118,7 +122,8 @@
             </div>
             <div class="activity-actions">
               <button class="btn-base btn-skip" (click)="showAction(act.skip)">Omitir</button>
-              <button class="btn-base btn-activity" [style.background]="act.color" [style.borderColor]="act.color" (click)="showAction(act.go)">Acción</button>
+              <button class="btn-base btn-activity" [style.background]="act.color" [style.borderColor]="act.color"
+                (click)="showAction(act.go)">Acción</button>
             </div>
           </div>
         </div>

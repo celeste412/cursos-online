@@ -18,7 +18,16 @@
             [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
             (click)="setActive('cursos')">
             <i class="bi bi-journal-check nav-icon"></i>
-            <span>Mis Cursos</span>
+            <span>Catalogo Cursos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos-select"
+            [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+            (click)="setActive('cursos-select')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Cursos Inscritos</span>
           </a>
         </li>
       </ul>

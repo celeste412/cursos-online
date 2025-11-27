@@ -1,0 +1,125 @@
+<div class="dashboard-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/cursos"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+                        (click)="setActive('cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Catalogo Cursos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/cursos-select"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+                        (click)="setActive('mis-cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Cursos Inscritos</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+        <!-- USER MENU -->
+        <div class="user-menu-wrapper">
+            <div class="user-menu" (click)="toggleUserMenu()">
+                <div class="user-avatar">
+                    <img src="https://placehold.co/35x35/FF7E00/ffffff?text=A" alt="Avatar">
+                </div>
+                <span class="user-info">Alumno</span>
+                <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+            </div>
+
+            <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                <a class="dropdown-item logout" (click)="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+
+            <h2 class="content-title">
+                {{ material.moduleTitle }}: {{ material.materialName }}
+            </h2>
+
+            <p class="content-type">
+                Tipo: {{ material.type }}
+            </p>
+
+            <!-- PDF -->
+            <iframe *ngIf="material.type === 'PDF'" width="100%" height="600px"
+                [src]="'/assets/pdfs/' + material.materialId + '.pdf'"></iframe>
+
+            <!-- VIDEO -->
+            <video *ngIf="material.type === 'VIDEO'" width="100%" height="400" controls>
+                <source [src]="'/assets/videos/' + material.materialId + '.mp4'">
+            </video>
+
+            <!-- QUIZ -->
+            <!-- QUIZ -->
+            <div *ngIf="material.type === 'QUIZ'" class="quiz-container">
+
+                <!-- Estado: antes de iniciar -->
+                <div *ngIf="!quiz.started">
+                    <h3 class="quiz-question">{{ quiz.title }}</h3>
+                    <p class="content-type">Este quiz contiene {{ quiz.options.length }} preguntas.</p>
+
+                    <button class="btn btn-primary" (click)="startQuiz()">
+                        Iniciar Quiz
+                    </button>
+                </div>
+
+                <!-- Estado: formulario del quiz -->
+                <div *ngIf="quiz.started && !quiz.completed">
+                    <h3 class="quiz-question">{{ quiz.question }}</h3>
+
+                    <div class="quiz-options">
+                        <label class="quiz-option" *ngFor="let option of quiz.options">
+                            <input type="radio" name="quizOption" [value]="option" [(ngModel)]="quiz.selected">
+                            <span>{{ option }}</span>
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary" (click)="saveQuizAnswer()">
+                        Guardar Respuesta
+                    </button>
+                </div>
+
+                <!-- Estado: completado -->
+                <p class="quiz-success" *ngIf="quiz.completed">
+                    ✔ ¡Quiz completado correctamente!
+                </p>
+            </div>
+
+
+
+            <!-- Botones de navegación -->
+            <div class="nav-buttons">
+                <button class="btn btn-secondary">Anterior</button>
+                <button class="btn btn-primary">Siguiente</button>
+            </div>
+        </div>
+
+    </div>
+</div>

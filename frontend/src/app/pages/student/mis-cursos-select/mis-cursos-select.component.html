@@ -1,0 +1,83 @@
+<div class="dashboard-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/cursos"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+                        (click)="setActive('cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Catalogo Cursos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/mis-cursos"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+                        (click)="setActive('mis-cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Cursos Inscritos</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+        <!-- USER MENU -->
+        <div class="user-menu-wrapper">
+            <div class="user-menu" (click)="toggleUserMenu()">
+                <div class="user-avatar">
+                    <img src="https://placehold.co/35x35/FF7E00/ffffff?text=A" alt="Avatar">
+                </div>
+                <span class="user-info">Alumno</span>
+                <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+            </div>
+
+            <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                <a class="dropdown-item logout" (click)="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- MAIN TITLE -->
+        <section class="enrolled-courses">
+            <h2 class="main-section-title">CURSOS INSCRITOS</h2>
+
+            <div class="enrolled-courses-grid">
+
+                <!-- CARD 1 -->
+                <div class="course-card" routerLink="/student/complete-courses">
+                    <div class="course-image has-category" data-category="CATEGORIA"
+                        style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')">
+                    </div>
+                    <div class="course-info">
+                        <p class="course-title">NOMBRE DEL CURSO</p>
+                        <p class="course-subtitle">
+                            <i class="bi bi-file-earmark-text"></i> 15 Lecciones
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</div>

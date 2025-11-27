@@ -479,3 +479,81 @@ body {
         }
     }
 }
+
+.course-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+
+    .btn-primary-action {
+        background: linear-gradient(90deg, $primary-color 0%, $secondary-color 100%);
+        color: white;
+        padding: 0.8rem 1.8rem;
+        border-radius: 9999px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+        &:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba($primary-color, 0.4);
+        }
+    }
+}
+
+// Modal inscripción
+.modal-inscrito {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 2000;
+
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-content-inscrito {
+        background: white;
+        padding: 2rem 3rem;
+        border-radius: $radius-large;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: pop 0.3s ease-out;
+        width: 320px;
+
+        i {
+            font-size: 3rem;
+            color: $success-color; 
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: $text-color-dark;
+            font-weight: 600;
+        }
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

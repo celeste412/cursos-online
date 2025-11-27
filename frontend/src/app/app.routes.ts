@@ -22,6 +22,9 @@ import { CatalogoComponent } from './pages/catalogo/catalogo.component';
 import { LoginComponent } from './pages/login/login.component';
 import { DashEstudianteComponent } from './pages/student/dash-estudiante/dash-estudiante.component';
 import { ViewCourseComponent } from './pages/student/view-course/view-course.component';
+import { MisCursosSelectComponent } from './pages/student/mis-cursos-select/mis-cursos-select.component';
+import { CompleteCoursesComponent } from './pages/student/complete-courses/complete-courses.component';
+import { ContentCoursesComponent } from './pages/student/content-courses/content-courses.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,26 +40,29 @@ export const routes: Routes = [
   // Rutas Teacher
   { path: 'teacher/home', component: HomeProfesor },
   { path: 'teacher/mis-cursos', component: MisCursosProfesor },
-  { path: 'teacher/curso/:id', component: CourseViewProfesor },
-  { path: 'teacher/progreso/:id', component: ProgresoEstudiante },
+  { path: 'teacher/content/:id', component: CourseViewProfesor },
+  { path: 'teacher/progreso', component: ProgresoEstudiante },
 
   // Student
-  { path: 'student/home', component: DashEstudianteComponent},
+  { path: 'student/home', component: DashEstudianteComponent },
   { path: 'student/cursos', component: MisCursos },
   { path: 'student/view', component: ViewCourseComponent },
+  { path: 'student/cursos-select', component: MisCursosSelectComponent },
+  { path: 'student/complete-courses', component: CompleteCoursesComponent },
+  { path: 'student/content-courses', component: ContentCoursesComponent },
   //{ path: 'student/mis-cursos', component: MisCursos },
   { path: 'student/course/:id', component: CourseView },
 
   // Página de inicio para todos
   { path: '', component: HomePrincipal },
-    { path: 'sobre-nosotros', component: SobreNosotrosComponent},
-    { path: 'catalogo', component: CatalogoComponent},
+  { path: 'sobre-nosotros', component: SobreNosotrosComponent },
+  { path: 'catalogo', component: CatalogoComponent },
 
 
   // Página 404
-  { 
-    path: '404', 
-    loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound) 
+  {
+    path: '404',
+    loadComponent: () => import('./pages/not-found/not-found').then(m => m.NotFound)
   },
 
   // Fallback general

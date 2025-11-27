@@ -1,0 +1,150 @@
+<div class="dashboard-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+        </div>
+
+        <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/home"
+                        [ngClass]="{'nav-link-active': activeLink==='home', 'nav-link-inactive': activeLink!=='home'}"
+                        (click)="setActive('home')">
+                        <i class="bi bi-house-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/cursos"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos', 'nav-link-inactive': activeLink!=='cursos'}"
+                        (click)="setActive('cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Catalogo Cursos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/student/mis-cursos"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+                        (click)="setActive('mis-cursos')">
+                        <i class="bi bi-journal-check nav-icon"></i>
+                        <span>Cursos Inscritos</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </aside>
+
+    <div class="main-wrapper">
+
+        <!-- USER MENU -->
+        <div class="user-menu-wrapper">
+            <div class="user-menu" (click)="toggleUserMenu()">
+                <div class="user-avatar">
+                    <img src="https://placehold.co/35x35/FF7E00/ffffff?text=A" alt="Avatar">
+                </div>
+                <span class="user-info">Alumno</span>
+                <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+            </div>
+
+            <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+                <a class="dropdown-item logout" (click)="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="breadcrumbs">
+            <span class="breadcrumb-item">Cursos</span>
+            <i class="bi bi-chevron-right"></i>
+            <span class="breadcrumb-item active">Nombre del curso</span>
+        </div>
+
+        <h2 class="course-title">Detalle del curso</h2>
+
+        <div class="course-cover">
+            <img src="/assets/cursos/portada-curso.jpg" alt="Portada del Curso">
+            <div class="course-cover-info">
+                <h3>{{ courseName }}</h3>
+                <p>{{ courseDescription }}</p>
+            </div>
+        </div>
+
+
+
+        <div class="module-item" *ngFor="let module of modules; let i = index">
+            <!-- HEADER DEL MÓDULO -->
+            <div class="module-header" (click)="toggleModule(i)">
+                <p class="module-title">
+                    {{ module.title }}
+                </p>
+
+                <i class="bi" [ngClass]="{
+         'bi-chevron-up': module.open,
+         'bi-chevron-down': !module.open
+       }"></i>
+            </div>
+
+            <!-- PROGRESO DEL MÓDULO -->
+            <div class="module-progress">
+                <div class="progress-info">
+                    <span>{{ module.progress }}% completado</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="module.progress"></div>
+                </div>
+            </div>
+
+            <!-- LISTA DE LECCIONES -->
+            <div class="lessons" *ngIf="module.open">
+                <div class="lesson-item" *ngFor="let lesson of module.lessons">
+                    <!-- Encabezado de la lección -->
+                    <div class="lesson-header" (click)="toggleLesson(module, lesson)">
+
+                        <span class="lesson-text">{{ lesson.name }}</span>
+
+                        <div class="lesson-right">
+                            <div class="lesson-button" [ngClass]="{ completed: lesson.completed }">
+                                <i class="bi" [ngClass]="{
+              'bi-play-fill': !lesson.completed,
+              'bi-check-lg': lesson.completed
+            }"></i>
+                            </div>
+
+                            <i class="bi" [ngClass]="lesson.open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                        </div>
+
+                    </div>
+                    <!-- MATERIALES DE LA LECCIÓN -->
+                    <div class="lesson-materials" *ngIf="lesson.open">
+                        <div class="material-item" *ngFor="let material of lesson.materials"
+                            (click)="openMaterial(module, lesson, material)">
+                            <div class="material-info">
+                                <p class="material-title">
+                                    {{ module.id }}: {{ material.name }}
+                                </p>
+
+                                <span class="material-type">
+                                    {{ material.type }}
+                                </span>
+                            </div>
+
+                            <div class="material-status">
+                                <i class="bi bi-check2" *ngIf="material.completed"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+</div>

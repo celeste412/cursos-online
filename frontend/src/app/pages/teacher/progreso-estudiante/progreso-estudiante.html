@@ -1,25 +1,126 @@
-<div class="d-flex">
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
 
-  <!-- Sidebar -->
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/home" [ngClass]="{'nav-link-active': activeLink==='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-speedometer2 nav-icon"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
 
-  <!-- Contenido principal -->
-  <div class="progresoEstudiante contenido-principal px-4 py-3">
-    <h2>Progreso del Estudiante</h2>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/mis-cursos" [ngClass]="{'nav-link-active': activeLink==='courses'}"
+            (click)="setActive('courses')">
+            <i class="bi bi-journal-richtext nav-icon"></i>
+            <span>Mis Cursos</span>
+          </a>
+        </li>
 
-    <table class="tabla-progreso">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Progreso</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let est of estudiantes">
-          <td>{{ est.nombre }}</td>
-          <td>{{ est.progreso }}</td>
-        </tr>
-      </tbody>
-    </table>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/progreso" [ngClass]="{'nav-link-active': activeLink==='students'}"
+            (click)="setActive('students')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Progreso Estudiantes</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- USER MENU -->
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=P" alt="Avatar">
+        </div>
+        <span class="user-info">Profesor</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="progreso-wrapper">
+
+      <h2>Progreso de Estudiantes</h2>
+
+      <!-- Filtros -->
+      <div class="filters">
+        <div>
+          <label>Curso:</label>
+          <select [(ngModel)]="selectedCurso">
+            <option [ngValue]="null">Selecciona curso</option>
+            <option *ngFor="let c of cursos" [ngValue]="c">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label>Alumno:</label>
+          <select [(ngModel)]="selectedAlumno">
+            <option [ngValue]="null">Selecciona alumno</option>
+            <option *ngFor="let a of alumnos" [ngValue]="a">
+              {{ a.name }}
+            </option>
+          </select>
+        </div>
+
+        <button class="btn" (click)="cargarProgreso()">Buscar</button>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div *ngIf="progresoData" class="resultado">
+
+        <h3>{{ progresoData.curso }}</h3>
+
+        <div class="barra">
+          <div class="barra-fill" [style.width]="progresoData.progreso + '%'"></div>
+        </div>
+
+        <p class="percent">{{ progresoData.progreso }}% completado</p>
+
+        <div class="modulo" *ngFor="let m of progresoData.modulos">
+          <h4>{{ m.nombre }}</h4>
+
+          <div class="barra-sm">
+            <div class="barra-sm-fill" [style.width]="m.progreso + '%'"></div>
+          </div>
+          <p class="percent-sm">{{ m.progreso }}%</p>
+
+          <ul>
+            <li *ngFor="let l of m.lecciones">
+              <span>{{ l.nombre }}</span>
+              <span class="estado" [class.ok]="l.completo">
+                {{ l.completo ? "✔ Completo" : "Pendiente" }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p *ngIf="progresoData == null && selectedAlumno && selectedCurso" class="no-data">
+        No hay progreso registrado para este estudiante.
+      </p>
+    </div>
+
+
+
   </div>
-
 </div>

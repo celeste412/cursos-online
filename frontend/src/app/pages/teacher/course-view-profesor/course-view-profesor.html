@@ -1,11 +1,137 @@
-<div class="curso-profesor-vista">
-  <h1>Curso #{{ id }}</h1>
-  <p>GESTIÓN DE CURSO.</p>
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+    </div>
 
-  <div class="acciones-profesor">
-    <button (click)="verEstudiantes()">Ver estudiantes inscritos</button>
-    <button (click)="subirMaterial()">Subir material</button>
-    <button (click)="crearClase()">Crear nueva clase</button>
-    <button (click)="editarCurso()">Editar información del curso</button>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/home" [ngClass]="{'nav-link-active': activeLink==='home'}"
+            (click)="setActive('home')">
+            <i class="bi bi-speedometer2 nav-icon"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/mis-cursos" [ngClass]="{'nav-link-active': activeLink==='courses'}"
+            (click)="setActive('courses')">
+            <i class="bi bi-journal-richtext nav-icon"></i>
+            <span>Mis Cursos</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teacher/progreso" [ngClass]="{'nav-link-active': activeLink==='students'}"
+            (click)="setActive('students')">
+            <i class="bi bi-people-fill nav-icon"></i>
+            <span>Progreso Estudiantes</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+
+    <!-- USER MENU -->
+    <div class="user-menu-wrapper">
+      <div class="user-menu" (click)="toggleUserMenu()">
+        <div class="user-avatar">
+          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=P" alt="Avatar">
+        </div>
+        <span class="user-info">Profesor</span>
+        <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
+      </div>
+
+      <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
+        <a class="dropdown-item logout" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- TITULO -->
+    <div class="builder-container">
+
+      <h2>Editor de Curso</h2>
+
+      <button class="btn-add" (click)="agregarModulo()">
+        + Agregar módulo
+      </button>
+
+      <div class="modulo" *ngFor="let modulo of modulos; let mi = index">
+
+        <!-- Título del módulo -->
+        <div class="mod-header">
+          <h3>M{{ mi + 1 }}:
+            <input type="text" [(ngModel)]="modulo.nombre" placeholder="Nombre del módulo" />
+          </h3>
+
+          <button class="btn-remove" (click)="eliminarModulo(mi)">Eliminar</button>
+        </div>
+
+        <button class="btn-sub" (click)="agregarLeccion(mi)">
+          + Agregar lección
+        </button>
+
+        <!-- LECCIONES -->
+        <div class="leccion" *ngFor="let leccion of modulo.lecciones; let li = index">
+
+          <div class="leccion-header">
+            <h4>L{{ li + 1 }}:
+              <input type="text" [(ngModel)]="leccion.nombre" placeholder="Nombre de la lección" />
+            </h4>
+
+            <button class="btn-remove" (click)="eliminarLeccion(mi, li)">Eliminar</button>
+          </div>
+
+          <button class="btn-sub" (click)="agregarMaterial(mi, li)">
+            + Agregar material
+          </button>
+
+          <!-- MATERIALES -->
+          <div class="material" *ngFor="let material of leccion.materiales; let ma = index">
+
+            <div class="material-block">
+
+              <div class="material-title">
+                <strong>M{{ ma + 1 }}:</strong>
+              </div>
+
+              <input type="text" [(ngModel)]="material.nombre" placeholder="Nombre del material" />
+
+              <select [(ngModel)]="material.tipo">
+                <option value="PDF">PDF</option>
+                <option value="VIDEO">VIDEO</option>
+                <option value="POWERPOINT">POWERPOINT</option>
+                <option value="QUIZ">QUIZ</option>
+              </select>
+
+              <button class="btn-remove-small" (click)="eliminarMaterial(mi, li, ma)">
+                X
+              </button>
+
+            </div>
+
+          </div>
+          <!-- FIN materiales -->
+
+        </div>
+        <!-- FIN lecciones -->
+
+      </div>
+
+      <div class="guardar">
+        <button class="btn-save" (click)="guardarCurso()">Guardar Curso</button>
+      </div>
+
+    </div>
+
+
   </div>
 </div>
