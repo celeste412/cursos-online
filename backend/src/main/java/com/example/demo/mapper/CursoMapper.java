@@ -1,11 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.CursoDTO;
-import com.example.demo.dto.CategoriaDTO;
-import com.example.demo.dto.ModuloDTO;
 import com.example.demo.model.Curso;
-
-import java.util.stream.Collectors;
 
 public class CursoMapper {
     public static CursoDTO toDTO(Curso curso) {

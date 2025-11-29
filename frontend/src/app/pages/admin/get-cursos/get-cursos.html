@@ -44,7 +44,8 @@
     <div class="main-wrapper">
 
         <div class="top-bar">
-            <h1 class="page-title">GESTIÓN CURSOS</h1> <div class="user-menu-wrapper">
+            <h1 class="page-title">GESTIÓN CURSOS</h1>
+            <div class="user-menu-wrapper">
                 <div class="user-menu" (click)="toggleUserMenu()">
                     <div class="user-avatar">
                         <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
@@ -71,7 +72,7 @@
                         Buscar
                     </button>
                 </div>
-                
+
                 <button class="btn-primary-action btn-add-course" (click)="openAddCourseModal()">
                     <i class="bi bi-plus-lg"></i>
                     Agregar Curso
@@ -79,21 +80,22 @@
             </div>
 
             <div class="cursos-grid">
-                
+
                 <div class="course-card-add-new" (click)="openAddCourseModal()">
                     <div class="add-icon">
                         <i class="bi bi-plus-lg"></i>
                     </div>
                 </div>
 
-                <div class="course-card">
-                    <div class="card-category">CATEGORÍA</div>
-                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                <div class="course-card" *ngFor="let curso of cursos">
+                    <div class="card-category">{{ curso.categoria?.nombre }}</div>
+                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso"
+                        class="card-image">
                     <div class="card-body">
-                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
-                        <p class="course-editor">Editor Responsable</p>
+                        <h4 class="course-title">{{ curso.titulo }}</h4>
+                        <p class="course-editor">{{ curso.editor?.nombre }}</p>
                         <div class="course-meta">
-                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
+                            <span><i class="bi bi-book-fill"></i> {{ curso.modulos?.length || 0 }} secciones </span>
                         </div>
                         <div class="course-actions">
                             <i class="bi bi-pencil-square action-edit"></i>
@@ -102,14 +104,15 @@
                     </div>
                 </div>
 
-                <div class="course-card">
-                    <div class="card-category">CATEGORÍA</div>
-                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
+                <div class="course-card" *ngFor="let curso of cursos">
+                    <div class="card-category">{{ curso.categoriaNombre }}</div>
+                    <img [src]="curso.imagenUrl || 'https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO'"
+                        alt="Portada de Curso" class="card-image">
                     <div class="card-body">
-                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
-                        <p class="course-editor">Editor Responsable</p>
+                        <h4 class="course-title">{{ curso.titulo }}</h4>
+                        <p class="course-editor">{{ curso.editorNombre }}</p>
                         <div class="course-meta">
-                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
+                            <span><i class="bi bi-book-fill"></i> {{ curso.modulos?.length || 0 }}</span>
                         </div>
                         <div class="course-actions">
                             <i class="bi bi-pencil-square action-edit"></i>
@@ -117,39 +120,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="course-card">
-                    <div class="card-category">CATEGORÍA</div>
-                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
-                    <div class="card-body">
-                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
-                        <p class="course-editor">Editor Responsable</p>
-                        <div class="course-meta">
-                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
-                        </div>
-                        <div class="course-actions">
-                            <i class="bi bi-pencil-square action-edit"></i>
-                            <i class="bi bi-trash3 action-delete"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="course-card">
-                    <div class="card-category">CATEGORÍA</div>
-                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso" class="card-image">
-                    <div class="card-body">
-                        <h4 class="course-title">NOMBRE DEL CURSO</h4>
-                        <p class="course-editor">Editor Responsable</p>
-                        <div class="course-meta">
-                            <span><i class="bi bi-book-fill"></i> 10 secciones (2h 5m)</span>
-                        </div>
-                        <div class="course-actions">
-                            <i class="bi bi-pencil-square action-edit"></i>
-                            <i class="bi bi-trash3 action-delete"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
+    </div>
 </div>
 
 <div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
@@ -159,31 +132,31 @@
             <i class="bi bi-x-lg"></i>
         </button>
 
-        <div class="upload-area">
+        <div class="upload-area" (click)="triggerFileInput()">
             <i class="bi bi-cloud-upload-fill"></i>
             <p>Subir portada del Curso</p>
         </div>
+
+        <input type="file" #fileInput accept="image/*" style="display:none" (change)="onFileSelected($event)">
 
         <div class="modal-form-grid">
 
             <div class="form-group full-width">
                 <label for="new-nombre">Nombre</label>
-                <input type="text" id="new-nombre">
+                <input type="text" id="new-nombre" name="titulo">
             </div>
 
             <div class="form-group full-width">
                 <label for="new-descripcion">Descripción</label>
-                <textarea id="new-descripcion" rows="3"></textarea>
+                <textarea id="new-descripcion" rows="3" name="descripcion"></textarea>
             </div>
-            
+
             <div class="form-group full-width">
                 <label for="new-categoria">Categoría</label>
                 <div class="custom-select-wrapper">
-                    <select id="new-categoria">
+                    <select id="new-categoria" name="categoriaId">
                         <option value="" disabled selected>Selecciona una categoría</option>
-                        <option value="diseno">Diseño</option>
-                        <option value="desarrollo">Desarrollo</option>
-                        <option value="marketing">Marketing</option>
+                        <option></option>
                     </select>
                 </div>
             </div>
@@ -191,16 +164,15 @@
             <div class="form-group full-width">
                 <label for="new-editor">Editor Responsable</label>
                 <div class="custom-select-wrapper">
-                    <select id="new-editor">
+                    <select id="new-editor" name="editorId">
                         <option value="" disabled selected>Selecciona un editor</option>
-                        <option value="editor1">Editor Juan</option>
-                        <option value="editor2">Editor Maria</option>
+                        <option></option>
                     </select>
                 </div>
             </div>
 
         </div>
-        
+
         <button class="btn-primary-action btn-modal-create">CREAR</button>
     </div>
 </div>

@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface UsuarioRequest {
+  nombre: string;
+  apellido: string;
   nombreUsuario: string;
   password: string;
 }
@@ -17,23 +19,27 @@ interface UsuarioRequest {
 })
 export class Register {
 
+  nombres = '';
+  apellidos = '';
   nombreUsuario = '';
   password = '';
   loading = false;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   onSubmit() {
     this.loading = true;
     this.error = null;
 
-     const usuario: UsuarioRequest = {
+    const usuario: UsuarioRequest = {
+      nombre: this.nombres,
+      apellido: this.apellidos,
       nombreUsuario: this.nombreUsuario,
       password: this.password
     };
 
-    this.http.post('http://localhost:8080/api/auth/registro-estudiante', usuario)
+    this.http.post('http://localhost:8080/api/auth/register', usuario)
       .subscribe({
         next: () => {
           this.loading = false;

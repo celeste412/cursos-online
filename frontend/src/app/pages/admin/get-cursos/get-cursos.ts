@@ -1,18 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CursoService } from '../../../services/CursoService';
 
 
 @Component({
   selector: 'app-get-cursos',
   standalone: true, // <- obligatorio si es standalone
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './get-cursos.html',
   styleUrl: './get-cursos.scss',
 })
-export class GetCursos {
+export class GetCursos implements OnInit {
 
-  constructor(private router: Router) { }
+  cursos: any[] = [];
+
+
+
+  constructor(private router: Router, private cursoService: CursoService) { }
 
   activeLink: string = 'gestion-cursos';
   userMenuOpen: boolean = false;
@@ -66,4 +72,76 @@ export class GetCursos {
     this.modalOpen = true;
 
   }
+
+  ngOnInit(): void {
+    this.cargarCursos();
+  }
+
+  cargarCursos() {
+    this.cursoService.listarCursos().subscribe({
+      next: (data) => {
+        this.cursos = data;
+        console.log('Cursos cargados:', data);
+      },
+      error: (err) => {
+        console.error('Error cargando cursos:', err);
+      }
+    });
+  }
+
+  /*onFileChange(event: any) {
+    this.imagen = event.target.files[0];
+  }*/
+
+  selectedFile: File | null = null;
+
+  @ViewChild('fileInput') fileInput: any;
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      console.log("Portada seleccionada:", file);
+    }
+  }
+
+  /*crearCurso() {
+  if (!this.selectedFile) {
+    alert("Debes subir la portada del curso");
+    return;
+  }
+
+  const curso = {
+    titulo: this.titulo,
+    descripcion: this.descripcion,
+    idCategoria: this.categoriaId,
+    idEditor: this.editorId
+  };
+
+  const formData = new FormData();
+  formData.append('curso', new Blob([JSON.stringify(curso)], { type: 'application/json' }));
+  formData.append('imagen', this.selectedFile);
+
+  const token = localStorage.getItem('token') || '';
+  if (!token) { alert("No hay token"); return; }
+
+  this.cursoService.agregarCurso(formData, token).subscribe({
+    next: resp => {
+      console.log("Curso creado:", resp);
+      this.cargarCursos();
+      this.closeModal();
+    },
+    error: err => {
+      console.error("Error al crear curso:", err);
+      alert("Error: " + (err.error?.message || "Verifica los datos y el token"));
+    }
+  });
+}*/
+
+
+
 }

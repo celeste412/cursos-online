@@ -4,6 +4,16 @@
 
     <form (ngSubmit)="onSubmit()">
       <div>
+        <label for="nombres">Nombres:</label>
+        <input type="text" id="nombres" [(ngModel)]="nombres" name="nombres" placeholder="Ingresa tu nombre" required>
+      </div>
+
+      <div>
+        <label for="apellidos">apellidos:</label>
+        <input type="text" id="apellidos" [(ngModel)]="apellidos" name="apellidos" placeholder="Ingresa tus apellidos" required>
+      </div>
+
+      <div>
         <label for="nombreUsuario">Usuario:</label>
         <input type="text" id="nombreUsuario" [(ngModel)]="nombreUsuario" name="nombreUsuario" placeholder="Ingresa tu usuario" required>
       </div>

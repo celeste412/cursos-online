@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { usuarioService } from '../../../services/usuarioService';
 
 
 
@@ -11,9 +12,13 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './home-admin.html',
   styleUrl: './home-admin.scss',
 })
-export class HomeAdmin {
+export class HomeAdmin implements OnInit {
+  adminName: string = '';
+  usuarios: any[] = [];
 
-  constructor(private router: Router) { }
+
+  constructor(private router: Router, private usuarioService: usuarioService
+  ) { }
 
   activeLink: string = 'home';
   userMenuOpen: boolean = false;
@@ -38,4 +43,17 @@ export class HomeAdmin {
     // 2. Redirigir al login
     this.router.navigate(['/login']);
   }
+
+  
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      this.usuarioService.getPerfilAdmin(token).subscribe((data: any) => {
+        this.adminName = data.nombreUsuario;
+      });
+    }
+  }
+
 }
