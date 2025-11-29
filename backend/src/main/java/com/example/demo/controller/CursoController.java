@@ -1,13 +1,19 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.CursoDTO;
+import com.example.demo.model.Categoria;
 import com.example.demo.model.Curso;
+import com.example.demo.model.Usuario;
+import com.example.demo.repository.CategoriaRepository;
+import com.example.demo.repository.UsuarioRepository;
 import com.example.demo.service.CursoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,20 +22,24 @@ import java.util.List;
 public class CursoController {
 
     private final CursoService cursoService;
+    private final CategoriaRepository categoriaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    // ADMIN puede crear cursos
+    /*@PostMapping("/crear")
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PostMapping
-    public ResponseEntity<CursoDTO> crearCurso(@RequestBody Curso curso) {
-        return ResponseEntity.ok(cursoService.crearCurso(curso));
-    }
+    public ResponseEntity<CursoDTO> crearCurso(
+            @RequestPart("curso") CursoDTO dto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) throws IOException {
 
-    // ADMIN o EDITOR pueden editar cursos
+        return ResponseEntity.ok(cursoService.crearCurso(dto, imagen));
+    }*/
+
+    /*/ ADMIN o EDITOR pueden editar cursos
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR')")
     @PutMapping("/{id}")
     public ResponseEntity<CursoDTO> editarCurso(@PathVariable Long id, @RequestBody Curso curso) {
         return ResponseEntity.ok(cursoService.editarCurso(id, curso));
-    }
+    }*/
 
     // Todos pueden ver cursos
     @GetMapping("/public")
@@ -37,7 +47,7 @@ public class CursoController {
         return ResponseEntity.ok(cursoService.listarCursos());
     }
 
-    // Todos pueden ver detalle del curso
+    /*/ Todos pueden ver detalle del curso
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
     @GetMapping("/{id}")
     public ResponseEntity<CursoDTO> obtenerCurso(@PathVariable Long id) {
@@ -51,4 +61,15 @@ public class CursoController {
         cursoService.eliminarCurso(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/categorias")
+    public List<Categoria> listarCategorias() {
+        return categoriaRepository.findAll();
+    }
+
+    /*@GetMapping("/editores")
+    public List<Usuario> listarEditores() {
+        return usuarioRepository.findAllByRoles_NombreRol("EDITOR");
+    }*/
+
 }

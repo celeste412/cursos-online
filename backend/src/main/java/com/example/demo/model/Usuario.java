@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "usuarios")
 @Getter
@@ -21,6 +23,12 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Long id;
 
+    @Column(name = "nombre", length = 50)
+    private String nombre;
+
+    @Column(name = "apellido", length = 50)
+    private String apellido;
+
     @Column(name = "nombre_usuario", nullable = false, unique = true, length = 50)
     private String nombreUsuario;
 
@@ -33,11 +41,13 @@ public class Usuario {
 
     // Relación con roles (un usuario puede tener varios roles)
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuarios_roles",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_rol")
-    )
+    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
     @Builder.Default
     private Set<Rol> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @Builder.Default
+    private Set<Inscripcion> inscripciones = new HashSet<>();
+
 }

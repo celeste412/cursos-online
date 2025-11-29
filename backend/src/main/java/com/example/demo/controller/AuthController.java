@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UsuarioRequest;
 import com.example.demo.model.Usuario;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,19 +23,16 @@ public class AuthController {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // Registro de usuario con rol (UsuarioService)
-    @PostMapping("/registro-estudiante")
-    public ResponseEntity<?> registrarEstudiante(@RequestBody Map<String, String> request) {
-        String nombreUsuario = request.get("nombreUsuario");
-        String password = request.get("password");
+    @PostMapping("/register")
+    public ResponseEntity<?> registrarEstudiante(@RequestBody Usuario usuario) {
 
-        // Forzar el rol a ESTUDIANTE
-        String rol = "ESTUDIANTE";
+        Usuario creado = usuarioService.registrarEstudiante(
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getNombreUsuario(),
+                usuario.getPassword());
 
-        Usuario nuevo = usuarioService.registrarUsuario(nombreUsuario, password, rol);
-
-        return ResponseEntity.ok(Map.of(
-                "mensaje", "Estudiante registrado correctamente",
-                "usuario", nuevo.getNombreUsuario()));
+        return ResponseEntity.ok(creado);
     }
 
     // Login con JWT
@@ -56,4 +55,19 @@ public class AuthController {
                 "usuario", usuario.getNombreUsuario(),
                 "roles", usuario.getRoles()));
     }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PostMapping("/crear")
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody UsuarioRequest request) {
+
+        Usuario usuario = usuarioService.registrarUsuario(
+                request.getNombre(),
+                request.getApellido(),
+                request.getNombreUsuario(),
+                request.getPassword(),
+                request.getRol());
+
+        return ResponseEntity.ok(usuario);
+    }
+
 }

@@ -31,8 +31,19 @@ public class Curso {
     private LocalDateTime fechaCreacion;
 
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default   
+    @Builder.Default
     private Set<Modulo> modulos = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "id_editor", nullable = false)
+    private Usuario editor; // suponiendo que el editor viene de la tabla usuarios
+
+    @Column(name = "imagen_url")
+    private String imagenUrl;
 
     @PrePersist
     protected void onCreate() {

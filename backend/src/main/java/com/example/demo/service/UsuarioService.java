@@ -19,27 +19,6 @@ public class UsuarioService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Registrar usuario con rol
-    public Usuario registrarUsuario(String nombreUsuario, String password, String nombreRol) {
-        if (usuarioRepository.existsByNombreUsuario(nombreUsuario)) {
-            throw new RuntimeException("El usuario ya existe");
-        }
-
-        // Buscar rol en BD
-        Rol rol = rolRepository.findByNombreRol(nombreRol)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + nombreRol));
-
-        // Crear usuario
-        Usuario usuario = Usuario.builder()
-                .nombreUsuario(nombreUsuario)
-                .password(passwordEncoder.encode(password)) // se guarda encriptada
-                .build();
-
-        usuario.getRoles().add(rol);  
-
-        return usuarioRepository.save(usuario);
-    }
-
     // Listar todos los usuarios
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
@@ -50,4 +29,69 @@ public class UsuarioService {
         return usuarioRepository.findByNombreUsuario(nombreUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + nombreUsuario));
     }
+
+    public Usuario registrarEstudiante(String nombre, String apellido, String nombreUsuario, String password) {
+
+        if (usuarioRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
+            throw new RuntimeException("El nombre de usuario ya existe");
+        }
+
+        // Buscar rol ESTUDIANTE
+        Rol rolEstudiante = rolRepository.findByNombreRol("ESTUDIANTE")
+                .orElseThrow(() -> new RuntimeException("Rol ESTUDIANTE no existe"));
+
+        Usuario u = new Usuario();
+        u.setNombre(nombre);
+        u.setApellido(apellido);
+        u.setNombreUsuario(nombreUsuario);
+        u.setPassword(passwordEncoder.encode(password));
+        u.getRoles().add(rolEstudiante);
+
+        return usuarioRepository.save(u);
+    }
+
+    public Usuario registrarUsuario(
+            String nombre,
+            String apellido,
+            String nombreUsuario,
+            String password,
+            String rolNombre) {
+
+        if (usuarioRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
+            throw new RuntimeException("El nombre de usuario ya existe");
+        }
+
+        Rol rol = rolRepository.findByNombreRol(rolNombre)
+                .orElseThrow(() -> new RuntimeException("El rol " + rolNombre + " no existe"));
+
+        Usuario u = new Usuario();
+        u.setNombre(nombre);
+        u.setApellido(apellido);
+        u.setNombreUsuario(nombreUsuario);
+        u.setPassword(passwordEncoder.encode(password));
+        u.getRoles().add(rol);
+
+        return usuarioRepository.save(u);
+    }
+
+    public Usuario editarUsuario(Long id, Usuario u) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setNombre(u.getNombre());
+        usuario.setApellido(u.getApellido());
+        usuario.setNombreUsuario(u.getNombreUsuario());
+        usuario.setPassword(u.getPassword());
+        usuario.setRoles(u.getRoles());
+
+        return usuarioRepository.save(usuario);
+    }
+
+    public void eliminarUsuario(Long id) {
+        if (!usuarioRepository.existsById(id)) {
+            throw new RuntimeException("No existe el usuario");
+        }
+        usuarioRepository.deleteById(id);
+    }
+
 }

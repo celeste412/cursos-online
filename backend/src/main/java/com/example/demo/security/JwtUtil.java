@@ -10,18 +10,21 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "MI_SISTEMA_DE_GESTION_DE_CURSOS_ONLINE_JWT_123456789";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hora
+     // Clave secreta segura (mín 32 bytes)
+    private static final String SECRET_KEY = "CLAVE_SUPER_SECRETA_DEL_SISTEMA_DE_CURSOS_ONLINE_1234567890";
+
+    // Tiempo de expiración (1 hora)
+    private static final long EXPIRATION_TIME = 60 * 60 * 1000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    //  Generar token
+    // Generar token temporal
     public String generarToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
@@ -44,9 +47,15 @@ public class JwtUtil {
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
+
             return true;
+
+        } catch (ExpiredJwtException e) {
+            System.out.println("Error: Token expirado");
         } catch (JwtException e) {
-            return false;
+            System.out.println("Error: Token inválido");
         }
+
+        return false;
     }
 }
