@@ -3,25 +3,28 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { usuarioService } from '../../../services/usuarioService';
 import { FormsModule } from '@angular/forms';
+import { UserStateService } from '../../../services/UserStateService';
 
 @Component({
   selector: 'app-get-usuario',
   standalone: true,
   imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './get-usuario.html',
-  styleUrls: ['./get-usuario.scss'], // <-- corregido
+  styleUrls: ['./get-usuario.scss'],
 })
 export class GetUsuario implements OnInit {
 
   constructor(
     private router: Router,
-    private usuarioService: usuarioService // <-- inyección correcta
+    private usuarioService: usuarioService,
+    private userStateService: UserStateService
   ) { }
 
   usuarios: any[] = [];
   usuarioEditado: any = {};
   selectedRol: string = '';
 
+  adminNombreCompleto: string = 'Administrador';
 
   activeLink: string = 'gestion-usuarios';
   userMenuOpen: boolean = false;
@@ -55,13 +58,17 @@ export class GetUsuario implements OnInit {
   }
 
   logout() {
+    this.userStateService.clearUser();
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 
-  guardarUsuario() {
+  // CARGAR NOMBRE DESDE SERVICIO COMPARTIDO
+  cargarNombreUsuario(): void {
+    this.adminNombreCompleto = this.userStateService.getUserName();
+  }
 
+  guardarUsuario() {
     const nombre = (document.getElementById('nombre') as HTMLInputElement).value;
     const apellido = (document.getElementById('apellido') as HTMLInputElement).value;
     const nombreUsuario = (document.getElementById('nombreUsuario') as HTMLInputElement).value;
@@ -88,12 +95,10 @@ export class GetUsuario implements OnInit {
       return;
     }
 
-    // ✔ SOLO ADMIN CREA USUARIOS
     this.usuarioService.crearUsuarioAdmin(data, token).subscribe({
       next: res => {
         alert("Usuario creado correctamente");
-        this.cargarUsuarios(); // <-- recarga la tabla automáticamente
-        // Opcional: limpiar formulario
+        this.cargarUsuarios();
         (document.getElementById('nombre') as HTMLInputElement).value = '';
         (document.getElementById('apellido') as HTMLInputElement).value = '';
         (document.getElementById('nombreUsuario') as HTMLInputElement).value = '';
@@ -124,6 +129,7 @@ export class GetUsuario implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cargarNombreUsuario();
     this.cargarUsuarios();
   }
 
@@ -134,13 +140,12 @@ export class GetUsuario implements OnInit {
       next: () => this.cargarUsuarios(),
       error: err => console.error("Error al eliminar", err)
     });
-
   }
 
   buscarUsuarios(event: any) {
     const term = event.target.value.toLowerCase();
     if (!term) {
-      this.cargarUsuarios(); // recarga todos si está vacío
+      this.cargarUsuarios();
       return;
     }
 
@@ -152,9 +157,7 @@ export class GetUsuario implements OnInit {
     );
   }
 
-
   guardarEdicion() {
-    // Guardamos el valor del select de vuelta al objeto usuarioEditado
     this.usuarioEditado.roles[0].nombreRol = this.selectedRol;
 
     const token = localStorage.getItem('token');
@@ -167,8 +170,8 @@ export class GetUsuario implements OnInit {
     this.usuarioService.editarUsuario(this.usuarioEditado.id, this.usuarioEditado)
       .subscribe({
         next: () => {
-          this.cargarUsuarios(); // recarga la lista
-          this.modalOpen = false; // cierra modal
+          this.cargarUsuarios();
+          this.modalOpen = false;
         },
         error: err => console.error('Error al editar:', err)
       });
@@ -178,13 +181,10 @@ export class GetUsuario implements OnInit {
     this.modalOpen = true;
     this.usuarioEditado = { ...usuario };
 
-    // Inicializar roles si están vacíos
     if (!this.usuarioEditado.roles || this.usuarioEditado.roles.length === 0) {
       this.usuarioEditado.roles = [{ nombreRol: 'alumno' }];
     }
 
     this.selectedRol = this.usuarioEditado.roles[0].nombreRol;
   }
-
-
 }

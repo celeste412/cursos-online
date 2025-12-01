@@ -1,7 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule, NgFor } from '@angular/common';
+import { Curso, TeacherService } from '../../../services/TeacherService';
 
+interface Material {
+  id?: number;
+  nombre: string;
+  tipo: 'PDF' | 'VIDEO' | 'QUIZ';
+}
+
+interface Leccion {
+  id?: number;
+  titulo: string;
+  materiales?: Material[];
+}
+
+interface Modulo {
+  id?: number;
+  titulo: string;
+  lecciones?: Leccion[];
+}
 
 @Component({
   selector: 'app-mis-cursos-profesor',
@@ -10,9 +28,20 @@ import { CommonModule, NgFor } from '@angular/common';
   templateUrl: './mis-cursos-profesor.html',
   styleUrl: './mis-cursos-profesor.scss',
 })
-export class MisCursosProfesor {
+export class MisCursosProfesor implements OnInit {
 
-  constructor(private router: Router) { }
+  teacherCourses: Curso[] = [];
+  cargando: boolean = true;
+  error: string = '';
+
+  cursoId!: number;
+  // curso seleccionado
+  modulos: any[] = [];
+  nuevoModulo: any = { titulo: '' };
+  nuevaLeccion: any = { titulo: '' };
+  nuevoMaterial: any = { nombre: '', tipo: 'PDF' };
+
+  constructor(private router: Router, private teacherService: TeacherService) { }
 
   activeLink: string = 'courses';
   userMenuOpen: boolean = false;
@@ -38,11 +67,17 @@ export class MisCursosProfesor {
     this.router.navigate(['/login']);
   }
 
-  teacherCourses = [
-    { id: 1, title: 'Marketing Digital', img: '/assets/courses/marketing.jpg', students: 82 },
-    { id: 2, title: 'Gestión de Redes Sociales', img: '/assets/courses/social.jpg', students: 152 },
-    { id: 3, title: 'SEO Profesional', img: '/assets/courses/seo.jpg', students: 60 }
-  ]
+  ngOnInit(): void {
+    this.cargarCursos();
+  }
+
+  cargarCursos() {
+    this.teacherService.getMisCursos().subscribe({
+      next: cursos => this.teacherCourses = cursos,
+      error: err => console.error('Error cargando cursos', err)
+    });
+  }
+
 
   // 🔥 REDIRECCIÓN AL CONSTRUCTOR (NUEVA RUTA)
   goToBuilder(courseId: number) {

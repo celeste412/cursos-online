@@ -46,7 +46,7 @@
   <main class="main-wrapper">
     <div class="top-bar">
       <h1 class="page-title">
-        {{ activeLink === 'reportes' ? 'REPORTES - ADMINISTRADOR' : 'OTRA VISTA - ADMINISTRADOR' }}
+        REPORTES - ADMINISTRADOR
       </h1>
 
       <div class="user-menu-wrapper">
@@ -54,7 +54,7 @@
           <div class="user-avatar">
             <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
           </div>
-          <span class="user-info">Administrador</span>
+          <span class="user-info">{{ adminNombreCompleto }}</span>
           <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
         </div>
         <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
@@ -65,113 +65,129 @@
       </div>
     </div>
 
+    <!-- CONTENIDO DE REPORTES DINÁMICOS -->
+    <div class="reports-dynamic-container">
 
-    <div *ngIf="activeLink === 'reportes'" class="reports-container">
-
+      <!-- GRÁFICO 1: PROGRESO PROMEDIO POR CURSO -->
       <div class="report-card">
         <div class="report-header">
-          <h3 class="report-title">Seguimiento de progreso de los estudiantes</h3>
+          <h3 class="report-title">Progreso Promedio por Curso</h3>
           <div class="report-filters">
-            Curso:
-            <select>
-              <option>Curso A</option>
-              <option>Curso B</option>
-              <option>Todos</option>
+            <label>Filtrar:</label>
+            <select [(ngModel)]="cursoSeleccionado">
+              <option [value]="null">Todos los cursos</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
             </select>
           </div>
         </div>
-
-        <div class="chart-wrapper chart-purple">
-          <div class="y-axis-labels">
-            <span class="label-100">100%</span>
-            <span class="label-75">75%</span>
-            <span class="label-50">50%</span>
-            <span class="label-25">25%</span>
-            <span class="label-0">0%</span>
+        
+        <div class="chart-container">
+          <canvas id="chartProgreso"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="progresoPromedioData.length > 0">
+          <h4>Datos Detallados:</h4>
+          <div class="data-grid">
+            <div class="data-item" *ngFor="let item of progresoPromedioData">
+              <span class="data-label">{{ item.cursoNombre }}</span>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" [style.width.%]="item.progresoPromedio"></div>
+              </div>
+              <span class="data-value">{{ item.progresoPromedio }}%</span>
+            </div>
           </div>
-          <div class="y-axis-grid">
-            <div class="grid-line-50"></div>
-            <div class="grid-line-base"></div>
-          </div>
-
-          <div class="bar-chart-container">
-            <div class="bar" style="height: 15%;" data-label="Est. 1"></div>
-            <div class="bar" style="height: 80%;" data-label="Est. 2"></div>
-            <div class="bar" style="height: 8%;" data-label="Est. 3"></div>
-            <div class="bar" style="height: 65%;" data-label="Est. 4"></div>
-            <div class="bar" style="height: 10%;" data-label="Est. 5"></div>
-            <div class="bar" style="height: 40%;" data-label="Est. 6"></div>
-            <div class="bar" style="height: 25%;" data-label="Est. 7"></div>
-          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="progresoPromedioData.length === 0">
+          <i class="bi bi-graph-up"></i>
+          <p>No hay datos de progreso disponibles</p>
         </div>
       </div>
 
+      <!-- GRÁFICO 2: CALIFICACIONES PROMEDIO -->
       <div class="report-card">
         <div class="report-header">
-          <h3 class="report-title">Promedio de calificaciones por curso</h3>
+          <h3 class="report-title">Calificaciones Promedio por Curso</h3>
           <div class="report-filters">
-            Curso:
-            <select>
-              <option>Curso 1</option>
-              <option>Curso 2</option>
-              <option>Todos</option>
+            <label>Filtrar:</label>
+            <select [(ngModel)]="cursoSeleccionadoCalificaciones">
+              <option [value]="null">Todos los cursos</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
             </select>
           </div>
         </div>
-
-        <div class="chart-wrapper chart-aqua">
-          <div class="y-axis-labels">
-            <span class="label-100">100%</span>
-            <span class="label-75">75%</span>
-            <span class="label-50">50%</span>
-            <span class="label-25">25%</span>
-            <span class="label-0">0%</span>
+        
+        <div class="chart-container">
+          <canvas id="chartCalificaciones"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="calificacionesPromedioData.length > 0">
+          <h4>Resumen de Calificaciones:</h4>
+          <div class="data-grid">
+            <div class="data-item" *ngFor="let item of calificacionesPromedioData">
+              <span class="data-label">{{ item.cursoNombre }}</span>
+              <div class="rating-stars">
+                <span class="star" [class.filled]="item.calificacionPromedio >= 2">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 4">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 6">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 8">★</span>
+                <span class="star" [class.filled]="item.calificacionPromedio >= 10">★</span>
+              </div>
+              <span class="data-value">{{ item.calificacionPromedio }}/10</span>
+            </div>
           </div>
-          <div class="y-axis-grid">
-            <div class="grid-line-50"></div>
-            <div class="grid-line-base"></div>
-          </div>
-
-          <div class="bar-chart-container">
-            <div class="bar" style="height: 20%;" data-label="Cálculo"></div>
-            <div class="bar" style="height: 78%;" data-label="Algoritmos"></div>
-            <div class="bar" style="height: 8%;" data-label="Diseño"></div>
-            <div class="bar" style="height: 70%;" data-label="Redes"></div>
-          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="calificacionesPromedioData.length === 0">
+          <i class="bi bi-star"></i>
+          <p>No hay datos de calificaciones disponibles</p>
         </div>
       </div>
 
+      <!-- GRÁFICO 3: PROGRESO DE ESTUDIANTES -->
       <div class="report-card">
         <div class="report-header">
-          <h3 class="report-title">Progreso de estudiante por Curso</h3>
+          <h3 class="report-title">Progreso de Estudiantes por Curso</h3>
           <div class="report-filters">
-            Alumno:
-            <select>
-              <option>Estudiante X</option>
-              <option>Estudiante Y</option>
+            <label>Curso:</label>
+            <select [(ngModel)]="cursoSeleccionadoEstudiantes" (change)="onFiltroEstudiantesChange()">
+              <option [value]="null">Selecciona un curso</option>
+              <option *ngFor="let curso of cursos" [value]="curso.id_curso">
+                {{ curso.titulo }}
+              </option>
             </select>
           </div>
         </div>
-
-        <div class="chart-wrapper chart-green">
-          <div class="y-axis-labels">
-            <span class="label-100">100%</span>
-            <span class="label-75">75%</span>
-            <span class="label-50">50%</span>
-            <span class="label-25">25%</span>
-            <span class="label-0">0%</span>
+        
+        <div class="chart-container">
+          <canvas id="chartProgresoEstudiantes"></canvas>
+        </div>
+        
+        <div class="chart-data" *ngIf="progresoEstudiantesData.length > 0">
+          <h4>Progreso Individual:</h4>
+          <div class="students-grid">
+            <div class="student-item" *ngFor="let item of progresoEstudiantesData">
+              <div class="student-avatar">
+                {{ item.estudianteNombre?.charAt(0) || 'E' }}
+              </div>
+              <div class="student-info">
+                <span class="student-name">{{ item.estudianteNombre || 'Estudiante' }}</span>
+                <div class="progress-bar-bg small">
+                  <div class="progress-bar-fill" [style.width.%]="item.progreso"></div>
+                </div>
+              </div>
+              <span class="student-progress">{{ item.progreso }}%</span>
+            </div>
           </div>
-          <div class="y-axis-grid">
-            <div class="grid-line-50"></div>
-            <div class="grid-line-base"></div>
-          </div>
-
-          <div class="bar-chart-container">
-            <div class="bar" style="height: 18%;" data-label="HTML"></div>
-            <div class="bar" style="height: 90%;" data-label="CSS"></div>
-            <div class="bar" style="height: 5%;" data-label="JS"></div>
-            <div class="bar" style="height: 75%;" data-label="Angular"></div>
-          </div>
+        </div>
+        
+        <div class="no-data" *ngIf="progresoEstudiantesData.length === 0">
+          <i class="bi bi-people"></i>
+          <p>Selecciona un curso para ver el progreso de estudiantes</p>
         </div>
       </div>
 
@@ -181,4 +197,5 @@
 </div>
 
 <div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
+  <!-- Modal content si es necesario -->
 </div>

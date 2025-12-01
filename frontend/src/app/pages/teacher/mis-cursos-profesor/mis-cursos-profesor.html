@@ -61,12 +61,12 @@
     <!-- GRID DE CURSOS -->
     <div class="course-grid">
       <div class="course-card" *ngFor="let course of teacherCourses">
-        <div class="course-image" [style.backgroundImage]="'url(' + course.img + ')'">
+        <div class="course-image"  [style.backgroundImage]="'url(' + course.imagenUrl + ')'">
         </div>
 
         <div class="course-info">
-          <h3 class="course-title">{{ course.title }}</h3>
-          <p class="course-subtitle">Estudiantes: {{ course.students }}</p>
+          <h3 class="course-title">{{ course.titulo }}</h3>
+          <p class="course-subtitle">Estudiantes: {{ course.students || 0 }}</p>
 
           <button class="btn-base btn-create" (click)="goToBuilder(course.id)">
             Agregar elementos

@@ -2,6 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CursoService } from '../../../services/CursoService';
+import { ModuloDTO } from '../../../models/modulo.DTO';
+import { MaterialDTO } from '../../../models/Material.dto';
+import { LeccionDTO } from '../../../models/leccion.dto';
+
+interface Material {
+  nombre: string;
+  tipo: 'PDF' | 'VIDEO' | 'POWERPOINT' | 'QUIZ';
+}
+
+interface Leccion {
+  nombre: string;
+  materiales: Material[];
+}
+
+interface Modulo {
+  nombre: string;
+  lecciones: Leccion[];
+}
 
 @Component({
   selector: 'app-course-view-profesor',
@@ -13,18 +32,33 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class CourseViewProfesor implements OnInit {
 
   courseId!: number;
-
-  modulos: any[] = [];
+  modulos: Modulo[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cursoService: CursoService
   ) { }
 
 
   ngOnInit() {
     this.courseId = Number(this.route.snapshot.paramMap.get("id"));
     console.log("Curso seleccionado:", this.courseId);
+
+    this.cursoService.getCurso(this.courseId).subscribe(curso => {
+      if (curso.modulos) {
+        this.modulos = curso.modulos.map(m => ({
+          nombre: m.titulo,
+          lecciones: m.lecciones?.map(l => ({
+            nombre: l.titulo,
+            materiales: l.materiales?.map(mat => ({
+              nombre: mat.url,
+              tipo: mat.tipo as 'PDF' | 'VIDEO' | 'POWERPOINT' | 'QUIZ'
+            })) || []
+          })) || []
+        })) || [];
+      }
+    });
   }
 
   activeLink: string = 'courses';
@@ -101,13 +135,33 @@ export class CourseViewProfesor implements OnInit {
   // -------------------------
 
   guardarCurso() {
-    const data = {
-      courseId: this.courseId,
-      estructura: this.modulos
-    };
+  const estructuraDTO = this.modulos.map(modulo => ({
+    titulo: modulo.nombre,  // solo el nombre
+    lecciones: (modulo.lecciones || []).map(leccion => ({
+      titulo: leccion.nombre, // solo el nombre
+      materiales: (leccion.materiales || []).map(material => ({
+        tipo: material.tipo,
+        url: material.nombre // aquí pones la URL o nombre del recurso
+      }))
+    }))
+  }));
 
-    console.log('CURSO GUARDADO:', data);
+  this.cursoService.agregarModulo(this.courseId, { modulos: estructuraDTO })
+    .subscribe({
+      next: res => {
+        console.log('Curso guardado:', res);
+        alert('Curso guardado correctamente');
+      },
+      error: err => {
+        console.error('Error guardando curso', err);
+        alert('No se pudo guardar el curso.');
+      }
+    });
+}
 
-    alert('Curso guardado correctamente');
+
+  goToBuilder(id: number) {
+    this.router.navigate(['/teacher/mis-cursos', id, 'builder']);
   }
+
 }

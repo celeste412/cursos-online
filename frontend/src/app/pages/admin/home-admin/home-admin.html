@@ -39,7 +39,6 @@
         </li>
       </ul>
     </nav>
-
   </aside>
 
   <div class="main-wrapper">
@@ -50,7 +49,7 @@
           <div class="user-avatar">
             <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
           </div>
-          <span class="user-info">Administrador</span>
+          <span class="user-info">{{ adminNombreCompleto }}</span>
           <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
         </div>
 
@@ -66,7 +65,7 @@
     <div class="dashboard-grid-top">
       <div class="welcome-admin-card">
         <div class="welcome-text-area">
-          <h1>Hola <span class="highlight-name">{{adminName}}</span>, ¡Bienvenido!</h1>
+          <h1>Hola <span class="highlight-name">{{ adminNombreCompleto }}</span> ¡Bienvenido!</h1>
           <p>Es bueno verte otra vez.</p>
         </div>
         <div class="welcome-image">
@@ -78,21 +77,21 @@
         <div class="stat-card">
           <div class="stat-icon bg-success"><i class="bi bi-journal-bookmark-fill"></i></div>
           <div class="stat-info">
-            <strong>20</strong>
+            <strong>{{ totales.totalCursos }}</strong>
             <p>Total de cursos</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon bg-primary"><i class="bi bi-people-fill"></i></div>
           <div class="stat-info">
-            <strong>30</strong>
+            <strong>{{ totales.totalEstudiantes }}</strong>
             <p>Total de estudiantes</p>
           </div>
         </div>
         <div class="stat-card large">
           <div class="stat-icon bg-warning"><i class="bi bi-pencil-square"></i></div>
           <div class="stat-info">
-            <strong>5</strong>
+            <strong>{{ totales.totalEditores }}</strong>
             <p>Editores Activos</p>
           </div>
         </div>
@@ -121,25 +120,28 @@
       <section class="latest-courses">
         <div class="section-header">
           <h2>Últimos cursos creados</h2>
-          <button class="btn-base btn-ver-todos">Ver Todos</button>
+          <button class="btn-base btn-ver-todos" (click)="verTodosCursos()">Ver Todos</button>
         </div>
         <div class="course-grid">
-          <div class="course-card">
-            <div class="course-image"
-              style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')"></div>
+          <div class="course-card" *ngFor="let curso of cursos">
+            <!-- IMAGEN REAL DEL CURSO -->
+            <div class="course-image" 
+                 [style.background-image]="'url(' + curso.imagenUrl + ')'"
+                 (error)="curso.imagenUrl = 'https://placehold.co/300x150/d1d5db/4b5563?text=SIN+IMAGEN'">
+            </div>
             <div class="course-info">
-              <p class="course-title">Nombre del curso</p>
-              <p class="course-subtitle">Inicia: 24/07/2023</p>
-              <p class="course-students">N° alumnos registrados</p>
+              <p class="course-title">{{ curso.titulo || 'Nombre del curso' }}</p>
+              <p class="course-subtitle">Inicia: {{ curso.fechaInicio || 'Fecha no disponible' }}</p>
+              <p class="course-students">{{ curso.estudiantesInscritos }} alumnos registrados</p>
             </div>
           </div>
-          <div class="course-card">
+          <div class="course-card" *ngIf="cursos.length === 0">
             <div class="course-image"
-              style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')"></div>
+              style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=SIN+CURSOS')"></div>
             <div class="course-info">
-              <p class="course-title">Roger Hamilton</p>
-              <p class="course-subtitle">Inicia: 24/07/2023</p>
-              <p class="course-students">N° alumnos registrados</p>
+              <p class="course-title">No hay cursos disponibles</p>
+              <p class="course-subtitle">Crea el primer curso</p>
+              <p class="course-students">0 alumnos registrados</p>
             </div>
           </div>
         </div>

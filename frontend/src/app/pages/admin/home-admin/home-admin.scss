@@ -587,3 +587,37 @@ body {
     }
   }
 }
+
+
+// ===== AGREGAR ESTO AL FINAL DEL ARCHIVO =====
+
+// Asegurar que el nombre en el welcome card se vea bien
+.welcome-admin-card {
+  .welcome-text-area {
+    h1 {
+      .highlight-name {
+        color: $primary-color;
+        word-break: break-word;
+        display: inline-block;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+// Mejorar la visualización del nombre en la barra superior
+.top-bar {
+  .user-info {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: $text-color-dark;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+}

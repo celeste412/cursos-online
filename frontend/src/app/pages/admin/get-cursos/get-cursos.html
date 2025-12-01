@@ -50,7 +50,7 @@
                     <div class="user-avatar">
                         <img src="https://placehold.co/35x35/4A90E2/ffffff?text=A" alt="Avatar">
                     </div>
-                    <span class="user-info">Administrador</span>
+                    <span class="user-info">{{ adminNombreCompleto }}</span>
                     <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
                 </div>
                 <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
@@ -88,35 +88,24 @@
                 </div>
 
                 <div class="course-card" *ngFor="let curso of cursos">
-                    <div class="card-category">{{ curso.categoria?.nombre }}</div>
-                    <img src="https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO" alt="Portada de Curso"
-                        class="card-image">
-                    <div class="card-body">
-                        <h4 class="course-title">{{ curso.titulo }}</h4>
-                        <p class="course-editor">{{ curso.editor?.nombre }}</p>
-                        <div class="course-meta">
-                            <span><i class="bi bi-book-fill"></i> {{ curso.modulos?.length || 0 }} secciones </span>
-                        </div>
-                        <div class="course-actions">
-                            <i class="bi bi-pencil-square action-edit"></i>
-                            <i class="bi bi-trash3 action-delete"></i>
-                        </div>
-                    </div>
-                </div>
+                    <div class="card-category">{{ curso.categoriaNombre || 'Sin categoría' }}</div>
 
-                <div class="course-card" *ngFor="let curso of cursos">
-                    <div class="card-category">{{ curso.categoriaNombre }}</div>
-                    <img [src]="curso.imagenUrl || 'https://placehold.co/400x200/90B7D7/FFFFFF/png?text=IMAGEN+CURSO'"
-                        alt="Portada de Curso" class="card-image">
+                    <!-- IMAGEN ACTUALIZADA CON CACHE -->
+                    <img [src]="getImageUrl(curso.imagenUrl)" 
+                         [alt]="'Portada de ' + curso.titulo" 
+                         class="card-image"
+                         (load)="onImageLoad()"
+                         (error)="onImageError($event, curso)">
+
                     <div class="card-body">
                         <h4 class="course-title">{{ curso.titulo }}</h4>
-                        <p class="course-editor">{{ curso.editorNombre }}</p>
+                        <p class="course-editor">{{ curso.editorNombre || 'Sin editor' }}</p>
                         <div class="course-meta">
                             <span><i class="bi bi-book-fill"></i> {{ curso.modulos?.length || 0 }}</span>
                         </div>
                         <div class="course-actions">
-                            <i class="bi bi-pencil-square action-edit"></i>
-                            <i class="bi bi-trash3 action-delete"></i>
+                            <i class="bi bi-pencil-square action-edit" (click)="editarCursoModal(curso)"></i>
+                            <i class="bi bi-trash3 action-delete" (click)="eliminarCurso(curso.id)"></i>
                         </div>
                     </div>
                 </div>
@@ -125,9 +114,10 @@
     </div>
 </div>
 
+<!-- MODAL AGREGAR CURSO -->
 <div class="modal-overlay" [style.display]="modalOpen ? 'flex' : 'none'">
     <div class="modal-card modal-agregar-curso">
-        <h3 class="modal-title">AGREGAR CURSO</h3>
+        <h3 class="modal-title">{{ modalTitle }}</h3>
         <button class="btn-eye-toggle close-button" (click)="closeModal()">
             <i class="bi bi-x-lg"></i>
         </button>
@@ -135,6 +125,10 @@
         <div class="upload-area" (click)="triggerFileInput()">
             <i class="bi bi-cloud-upload-fill"></i>
             <p>Subir portada del Curso</p>
+            <div *ngIf="selectedFile" class="selected-file">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                {{ selectedFile.name }}
+            </div>
         </div>
 
         <input type="file" #fileInput accept="image/*" style="display:none" (change)="onFileSelected($event)">
@@ -143,36 +137,57 @@
 
             <div class="form-group full-width">
                 <label for="new-nombre">Nombre</label>
-                <input type="text" id="new-nombre" name="titulo">
+                <input type="text" id="new-nombre" [(ngModel)]="titulo" placeholder="Ingresa el nombre del curso">
             </div>
 
             <div class="form-group full-width">
                 <label for="new-descripcion">Descripción</label>
-                <textarea id="new-descripcion" rows="3" name="descripcion"></textarea>
+                <textarea id="new-descripcion" rows="3" [(ngModel)]="descripcion"
+                    placeholder="Ingresa la descripción del curso"></textarea>
             </div>
 
             <div class="form-group full-width">
                 <label for="new-categoria">Categoría</label>
                 <div class="custom-select-wrapper">
-                    <select id="new-categoria" name="categoriaId">
+                    <select id="new-categoria" [(ngModel)]="categoriaId" name="categoriaId">
                         <option value="" disabled selected>Selecciona una categoría</option>
-                        <option></option>
+                        <option *ngFor="let cat of categorias" [value]="cat.id">
+                            {{ cat.nombre }}
+                        </option>
                     </select>
+                </div>
+                <div *ngIf="categorias.length === 0" class="debug-info">
+                    <small class="text-warning">No hay categorías disponibles</small>
+                </div>
+                <div *ngIf="categorias.length > 0" class="debug-info">
+                    <small class="text-success">{{ categorias.length }} categorías cargadas</small>
                 </div>
             </div>
 
             <div class="form-group full-width">
                 <label for="new-editor">Editor Responsable</label>
                 <div class="custom-select-wrapper">
-                    <select id="new-editor" name="editorId">
+                    <select id="new-editor" [(ngModel)]="editorId" name="editorId">
                         <option value="" disabled selected>Selecciona un editor</option>
-                        <option></option>
+                        <option *ngFor="let editor of editores" [value]="editor.id">
+                            {{ editor.nombre }}
+                        </option>
                     </select>
+                </div>
+                <div *ngIf="editores.length === 0" class="debug-info">
+                    <small class="text-warning">No hay editores disponibles</small>
+                </div>
+                <div *ngIf="editores.length > 0" class="debug-info">
+                    <small class="text-success">{{ editores.length }} editores cargados</small>
                 </div>
             </div>
 
         </div>
 
-        <button class="btn-primary-action btn-modal-create">CREAR</button>
+        <button class="btn-primary-action btn-modal-create" (click)="editandoId ? guardarEdicion() : crearCurso()"
+            [disabled]="!titulo || !descripcion || !categoriaId || !editorId">
+            {{ editandoId ? 'GUARDAR CAMBIOS' : 'CREAR CURSO' }}
+        </button>
+
     </div>
 </div>
