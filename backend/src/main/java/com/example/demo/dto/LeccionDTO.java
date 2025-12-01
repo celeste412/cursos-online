@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import lombok.*;
 
 @Getter
@@ -14,4 +16,6 @@ public class LeccionDTO {
 
     private Long moduloId;
     private String moduloTitulo;
+
+    private List<MaterialDTO> materiales;
 }

@@ -1,21 +1,22 @@
 package com.example.demo.config;
 
 import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -24,38 +25,55 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors().and()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .requestMatchers("/api/cursos/categorias/**").permitAll()
-                        .requestMatchers("/api/cursos/editores/**").permitAll()
-                        .requestMatchers("/api/cursos/public").permitAll()
+                        // ======== RECURSOS ESTÁTICOS - PERMITIR TODOS ========
+                        .requestMatchers(
+                                "/uploads/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/webjars/**",
+                                "/favicon.ico",
+                                "/error",
+                                "/*.png",
+                                "/*.jpg",
+                                "/*.jpeg",
+                                "/*.gif",
+                                "/*.svg",
+                                "/*.css",
+                                "/*.js")
+                        .permitAll()
 
-                        // Categorías SOLO ADMIN
-                        .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")
+                        // ======== ENDPOINTS PÚBLICOS ========
+                        .requestMatchers(
+                                "/api/auth/**")
+                        .permitAll()
 
-                        // Solo ADMIN crea usuarios
-                        .requestMatchers("/api/usuarios/crear").hasRole("ADMINISTRADOR")
+                        // ======== ENDPOINTS DE ADMINISTRADOR ========
+                        .requestMatchers(
+                                "/api/cursos/crear",
+                                "/api/cursos/editar/**",
+                                "/api/cursos/eliminar/**",
+                                "/api/cursos/editores",
+                                "/api/cursos/categorias",
+                                "/api/categorias/**",
+                                "/api/usuarios/**")
+                        .hasRole("ADMINISTRADOR")
 
-                        // ADMIN administra usuarios y cursos
-                        .requestMatchers("/api/usuarios/**", "/api/cursos/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api/profesor/mis-cursos").hasRole("EDITOR")
 
-                        // EDITOR puede subir materiales, editar cursos
+                        // ======== ENDPOINTS MIXTOS ========
+                        .requestMatchers("/api/cursos/**").authenticated()
                         .requestMatchers("/api/materiales/**").hasAnyRole("ADMINISTRADOR", "EDITOR")
 
-                        // ESTUDIANTE ve progreso, evaluaciones, etc.
-                        .requestMatchers("/api/resultados/**", "/api/evaluaciones/**", "/api/lecciones/**")
-                        .hasAnyRole("ADMINISTRADOR", "EDITOR", "ESTUDIANTE")
-
-                        // Cualquier otro requiere login
+                        // ======== CUALQUIER OTRA PETICIÓN ========
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -63,15 +81,21 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }

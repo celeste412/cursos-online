@@ -6,6 +6,8 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "modulos")
 @Getter
@@ -26,11 +28,13 @@ public class Modulo {
     @Column(length = 500)
     private String descripcion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_curso", nullable = false)
+    @JsonIgnore // ← AGREGA ESTO para evitar referencia circular
     private Curso curso;
 
     @OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // ← AGREGA ESTO
     @Builder.Default 
     private Set<Leccion> lecciones = new HashSet<>();
 }

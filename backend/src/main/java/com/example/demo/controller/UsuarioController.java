@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Usuario;
 import com.example.demo.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,6 @@ public class UsuarioController {
     @GetMapping("/listar")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
-    }
-
-    // Solo ADMIN puede buscar por nombre
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @GetMapping("/{nombreUsuario}")
-    public ResponseEntity<Usuario> buscarPorNombre(@PathVariable String nombreUsuario) {
-        return ResponseEntity.ok(usuarioService.buscarPorNombre(nombreUsuario));
     }
 
     @PutMapping("/editar/{id}")

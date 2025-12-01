@@ -39,9 +39,10 @@ public class Usuario {
     @Column(name = "fecha_creacion", updatable = false, insertable = false)
     private LocalDateTime fechaCreacion;
 
-    // Relación con roles (un usuario puede tener varios roles)
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_rol"))
+    @JoinTable(name = "usuarios_roles", 
+               joinColumns = @JoinColumn(name = "id_usuario"), 
+               inverseJoinColumns = @JoinColumn(name = "id_rol"))
     @Builder.Default
     private Set<Rol> roles = new HashSet<>();
 
@@ -50,4 +51,9 @@ public class Usuario {
     @Builder.Default
     private Set<Inscripcion> inscripciones = new HashSet<>();
 
+    // AGREGA ESTA RELACIÓN para cursos como editor
+    @OneToMany(mappedBy = "editor", fetch = FetchType.LAZY)
+    @JsonIgnore // ← AGREGA ESTO
+    @Builder.Default
+    private Set<Curso> cursosEditados = new HashSet<>();
 }

@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CategoriaDTO;
-import com.example.demo.model.Categoria;
 import com.example.demo.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

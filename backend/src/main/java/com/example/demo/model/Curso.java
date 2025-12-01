@@ -34,13 +34,13 @@ public class Curso {
     @Builder.Default
     private Set<Modulo> modulos = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_editor", nullable = false)
-    private Usuario editor; // suponiendo que el editor viene de la tabla usuarios
+    private Usuario editor;
 
     @Column(name = "imagen_url")
     private String imagenUrl;
