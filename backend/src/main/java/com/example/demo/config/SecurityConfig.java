@@ -24,78 +24,81 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // ======== RECURSOS ESTÁTICOS - PERMITIR TODOS ========
-                        .requestMatchers(
-                                "/uploads/**",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/webjars/**",
-                                "/favicon.ico",
-                                "/error",
-                                "/*.png",
-                                "/*.jpg",
-                                "/*.jpeg",
-                                "/*.gif",
-                                "/*.svg",
-                                "/*.css",
-                                "/*.js")
-                        .permitAll()
+                http
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                // ======== RECURSOS ESTÁTICOS - PERMITIR TODOS ========
+                                                .requestMatchers(
+                                                                "/uploads/**",
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/webjars/**",
+                                                                "/favicon.ico",
+                                                                "/error",
+                                                                "/*.png",
+                                                                "/*.jpg",
+                                                                "/*.jpeg",
+                                                                "/*.gif",
+                                                                "/*.svg",
+                                                                "/*.css",
+                                                                "/*.js")
+                                                .permitAll()
 
-                        // ======== ENDPOINTS PÚBLICOS ========
-                        .requestMatchers(
-                                "/api/auth/**")
-                        .permitAll()
+                                                // ======== ENDPOINTS PÚBLICOS ========
+                                                .requestMatchers(
+                                                                "/api/auth/**")
+                                                .permitAll()
 
-                        // ======== ENDPOINTS DE ADMINISTRADOR ========
-                        .requestMatchers(
-                                "/api/cursos/crear",
-                                "/api/cursos/editar/**",
-                                "/api/cursos/eliminar/**",
-                                "/api/cursos/editores",
-                                "/api/cursos/categorias",
-                                "/api/categorias/**",
-                                "/api/usuarios/**")
-                        .hasRole("ADMINISTRADOR")
+                                                .requestMatchers("/api/dashboard/**").permitAll()
 
-                        .requestMatchers("/api/profesor/mis-cursos").hasRole("EDITOR")
+                                                // ======== ENDPOINTS DE ADMINISTRADOR ========
+                                                .requestMatchers(
+                                                                "/api/cursos/crear",
+                                                                "/api/cursos/editar/**",
+                                                                "/api/cursos/eliminar/**",
+                                                                "/api/cursos/editores",
+                                                                "/api/cursos/categorias",
+                                                                "/api/categorias/**",
+                                                                "/api/usuarios/**")
+                                                .hasRole("ADMINISTRADOR")
 
-                        // ======== ENDPOINTS MIXTOS ========
-                        .requestMatchers("/api/cursos/**").authenticated()
-                        .requestMatchers("/api/materiales/**").hasAnyRole("ADMINISTRADOR", "EDITOR")
+                                                .requestMatchers("/api/profesor/mis-cursos").hasRole("EDITOR")
 
-                        // ======== CUALQUIER OTRA PETICIÓN ========
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                                // ======== ENDPOINTS MIXTOS ========
+                                                .requestMatchers("/api/cursos/**").authenticated()
+                                                .requestMatchers("/api/materiales/**")
+                                                .hasAnyRole("ADMINISTRADOR", "EDITOR")
 
-        return http.build();
-    }
+                                                // ======== CUALQUIER OTRA PETICIÓN ========
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of("http://localhost:4200"));
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+                config.setAllowCredentials(true);
+                config.setMaxAge(3600L);
+
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+                return source;
+        }
 }
