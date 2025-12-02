@@ -6,6 +6,7 @@ import { DashService } from '../../../services/DashService';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CursoService } from '../../../services/CursoService';
 import { UserStateService } from '../../../services/UserStateService';
+import { CursoAvance, UsuarioReciente } from '../../../models/dashboard';
 
 @Component({
   selector: 'app-home-admin',
@@ -18,6 +19,11 @@ export class HomeAdmin implements OnInit {
   usuarios: any[] = [];
   cursos: any[] = [];
   editores: any[] = [];
+
+  // NUEVO
+  avancesCursos: CursoAvance[] = [];
+  cursoSeleccionado: CursoAvance | null = null;
+  usuariosRecientes: UsuarioReciente[] = [];
 
   adminName: string = 'Administrador';
   adminNombreCompleto: string = 'Administrador';
@@ -59,9 +65,12 @@ export class HomeAdmin implements OnInit {
     }
 
     this.cargarTotales();
-    
+
     this.cargarPerfilAdmin();
     this.cargarDatosDashboard();
+    // 👇👇👇 ESTO FALTABA
+    this.cargarAvanceCursos();
+    this.cargarUsuariosRecientes();
   }
 
   // CARGAR PERFIL DEL ADMINISTRADOR
@@ -265,5 +274,55 @@ export class HomeAdmin implements OnInit {
   // IR A GESTIÓN DE CURSOS
   verTodosCursos(): void {
     this.router.navigate(['/admin/getCursos']);
+  }
+
+
+  // ============== NUEVO: AVANCE POR CURSO ===============
+  cargarAvanceCursos(): void {
+    this.dashService.obtenerAvanceCursos().subscribe({
+      next: (data) => {
+        this.avancesCursos = data;
+        console.log('Avances cursos:', data);
+        this.cursoSeleccionado = this.avancesCursos.length > 0 ? this.avancesCursos[0] : null;
+      },
+      error: (err) => {
+        console.error('Error cargando avance cursos:', err);
+        this.avancesCursos = [];
+        this.cursoSeleccionado = null;
+      }
+    });
+  }
+
+  onCursoSeleccionChange(cursoIdStr: string): void {
+    if (!cursoIdStr) {
+      this.cursoSeleccionado = null;
+      return;
+    }
+    const cursoId = Number(cursoIdStr);
+    this.cursoSeleccionado = this.avancesCursos.find(c => c.idCurso === cursoId) || null;
+  }
+
+  // ============== NUEVO: USUARIOS RECIENTES ===============
+  cargarUsuariosRecientes(): void {
+    this.dashService.obtenerUsuariosRecientes(5).subscribe({
+      next: (data) => {
+        this.usuariosRecientes = data;
+        console.log('Usuarios recientes:', data);
+      },
+      error: (err) => {
+        console.error('Error cargando usuarios recientes:', err);
+        this.usuariosRecientes = [];
+      }
+    });
+  }
+
+  obtenerIniciales(nombre: string): string {
+    if (!nombre) { return 'NA'; }
+    return nombre
+      .split(' ')
+      .filter(p => p.length > 0)
+      .slice(0, 2)
+      .map(p => p[0].toUpperCase())
+      .join('');
   }
 }

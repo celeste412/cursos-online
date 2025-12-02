@@ -50,6 +50,7 @@ export const routes: Routes = [
   { path: 'student/cursos-select', component: MisCursosSelectComponent },
   { path: 'student/complete-courses', component: CompleteCoursesComponent },
   { path: 'student/content-courses', component: ContentCoursesComponent },
+  
   //{ path: 'student/mis-cursos', component: MisCursos },
   { path: 'student/course/:id', component: CourseView },
 

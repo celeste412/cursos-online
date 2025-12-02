@@ -103,18 +103,54 @@
         <h2>Avance promedio por curso</h2>
         <div class="chart-filter">
           <label for="course-select">Curso:</label>
-          <select id="course-select">
-            <option>----------</option>
-            <option>Curso A</option>
-            <option>Curso B</option>
+          <select id="course-select" #cursoSelect (change)="onCursoSeleccionChange(cursoSelect.value)">
+            <option value="">Todos</option>
+            <option *ngFor="let c of avancesCursos" [value]="c.idCurso">
+              {{ c.titulo }}
+            </option>
           </select>
         </div>
       </div>
+
       <div class="chart-container">
-        <img src="https://placehold.co/800x300/e0e7ff/3f51b5?text=GRAFICO+DE+AVANCE" alt="Gráfico de Avance"
-          class="chart-placeholder">
+        <ng-container *ngIf="avancesCursos && avancesCursos.length > 0; else sinDatos">
+
+          <!-- Si hay uno seleccionado, muestro solo ese -->
+          <div *ngIf="cursoSeleccionado; else todosCursos">
+            <div class="course-progress-item">
+              <div class="course-progress-header">
+                <span>{{ cursoSeleccionado.titulo }}</span>
+                <span>{{ cursoSeleccionado.avancePromedio | number:'1.0-0' }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="cursoSeleccionado.avancePromedio"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Si no hay seleccion, muestro todos -->
+          <ng-template #todosCursos>
+            <div class="course-progress-item" *ngFor="let avance of avancesCursos">
+              <div class="course-progress-header">
+                <span>{{ avance.titulo }}</span>
+                <span>{{ avance.avancePromedio | number:'1.0-0' }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="avance.avancePromedio"></div>
+              </div>
+            </div>
+          </ng-template>
+
+        </ng-container>
+
+        <ng-template #sinDatos>
+          <div class="chart-placeholder empty-state">
+            Aún no hay datos de progreso.
+          </div>
+        </ng-template>
       </div>
     </section>
+
 
     <div class="dashboard-grid-bottom">
       <section class="latest-courses">
@@ -125,9 +161,8 @@
         <div class="course-grid">
           <div class="course-card" *ngFor="let curso of cursos">
             <!-- IMAGEN REAL DEL CURSO -->
-            <div class="course-image" 
-                 [style.background-image]="'url(' + curso.imagenUrl + ')'"
-                 (error)="curso.imagenUrl = 'https://placehold.co/300x150/d1d5db/4b5563?text=SIN+IMAGEN'">
+            <div class="course-image" [style.background-image]="'url(' + curso.imagenUrl + ')'"
+              (error)="curso.imagenUrl = 'https://placehold.co/300x150/d1d5db/4b5563?text=SIN+IMAGEN'">
             </div>
             <div class="course-info">
               <p class="course-title">{{ curso.titulo || 'Nombre del curso' }}</p>
@@ -152,26 +187,26 @@
           <h2>Últimos usuarios registrados</h2>
         </div>
         <div class="user-list">
-          <div class="user-list-item">
+
+          <div class="user-list-item" *ngFor="let user of usuariosRecientes">
             <div class="user-avatar-small">
-              <img src="https://placehold.co/40x40/FF7E00/ffffff?text=JM" alt="Juan Martínez">
+              <div class="avatar-circle">
+                {{ obtenerIniciales(user.nombreMostrar) }}
+              </div>
             </div>
             <div class="user-details">
-              <p class="user-name">Juan Martínez</p>
-              <span class="user-role">Alumno</span>
+              <p class="user-name">{{ user.nombreMostrar }}</p>
+              <span class="user-role">{{ user.rol }}</span>
+              <span class="user-date">Registrado: {{ user.fechaRegistro }}</span>
             </div>
           </div>
-          <div class="user-list-item">
-            <div class="user-avatar-small">
-              <img src="https://placehold.co/40x40/FF7E00/ffffff?text=LR" alt="Lucas Ramírez">
-            </div>
-            <div class="user-details">
-              <p class="user-name">Lucas Ramírez</p>
-              <span class="user-role">Alumno</span>
-            </div>
+
+          <div *ngIf="usuariosRecientes.length === 0" class="empty-state">
+            <p>No hay usuarios registrados aún.</p>
           </div>
         </div>
       </section>
+
     </div>
   </div>
 </div>
