@@ -509,4 +509,11 @@ public class CursoService {
                 .findFirst().orElseThrow(() -> new RuntimeException("Lección no encontrada"));
     }
 
+    public CursoDTO obtenerCursoDTO(Long id) {
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        return CursoMapper.toDTO(curso);
+    }
+
 }

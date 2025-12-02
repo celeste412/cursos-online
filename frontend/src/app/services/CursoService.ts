@@ -210,4 +210,23 @@ export class CursoService {
         );
     }
 
+    listarCursosPublicos(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/publicos`, this.getHeaders());
+    }
+
+    listarCursosInscritos(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/inscritos`, this.getHeaders());
+    }
+
+
+    obtenerCursoPorId(id: number): Observable<any> {
+        const headers = this.getHeaders();
+        return this.http.get(`${this.apiUrl}/${id}`, headers);
+    }
+
+    inscribir(idCurso: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${idCurso}/inscribir`, {}, this.getHeaders());
+    }
+
+
 }

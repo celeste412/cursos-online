@@ -80,18 +80,12 @@
 
       <aside class="course-sidebar">
         <h3 class="sidebar-title">Descripción general básica</h3>
-        <div class="module-list">
-          <div class="module-item">
-            <h4 class="module-title">MODULO 1 ------</h4>
+        <div class="module-list" *ngIf="curso?.modulos?.length > 0">
+          <div class="module-item"  *ngFor="let m of curso.modulos; index as i">
+            <h4 class="module-title">MÓDULO {{ i + 1 }} — {{ m.titulo }}</h4>
             <ul class="lesson-list">
-              <li class="lesson-item"><span class="lesson-number">L1</span> Presentation</li>
-              <li class="lesson-item"><span class="lesson-number">L2</span> Job opportunities...</li>
-              <li class="lesson-item"><span class="lesson-number">L3</span> How to get the most...</li>
-              <li class="lesson-item"><span class="lesson-number">L4</span> How to get the most...</li>
-              <li class="lesson-item"><span class="lesson-number">L5</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L6</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L7</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L8</span> Lorem ipsum dolor sit...</li>
+              <li class="lesson-item" *ngFor="let l of m.lecciones; index as j">
+                <span class="lesson-number">L{{ j + 1 }}</span> {{ l.titulo }}</li>
             </ul>
           </div>
           <div class="module-item">

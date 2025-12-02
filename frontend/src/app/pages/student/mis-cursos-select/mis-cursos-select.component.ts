@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { CursoService } from '../../../services/CursoService';
 
 @Component({
   selector: 'app-mis-cursos-select',
@@ -9,15 +10,14 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './mis-cursos-select.component.html',
   styleUrl: './mis-cursos-select.component.scss'
 })
-export class MisCursosSelectComponent {
+export class MisCursosSelectComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private cursoService: CursoService) { }
+
+  cursos: any[] = [];
 
   activeLink: string = 'cursos-select';
   userMenuOpen: boolean = false;
-  modalOpen: boolean = false;
-  modalTitle: string = '';
-  modalMessage: string = '';
 
   setActive(link: string) { this.activeLink = link; }
 
@@ -32,5 +32,25 @@ export class MisCursosSelectComponent {
     // 2. Redirigir al login
     this.router.navigate(['/login']);
   }
+
+  ngOnInit() {
+    this.cargarCursos();
+  }
+
+  cargarCursos() {
+    this.cursoService.listarCursosInscritos().subscribe({
+      next: data => this.cursos = data,
+      error: err => console.error("Error cargando inscritos:", err)
+    });
+  }
+
+
+  getTotalLecciones(curso: any): number {
+    return curso.modulos?.reduce(
+      (t: number, m: any) => t + (m.lecciones?.length || 0),
+      0
+    ) || 0;
+  }
+
 
 }

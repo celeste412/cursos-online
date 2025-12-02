@@ -69,6 +69,12 @@ public class CursoController {
         return ResponseEntity.ok(cursoService.listarCursos());
     }
 
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ESTUDIANTE')")
+    @GetMapping("/publicos")
+    public ResponseEntity<List<CursoDTO>> listarCursosPublicos() {
+        return ResponseEntity.ok(cursoService.listarCursos());
+    }
+
     // Solo ADMIN puede listar editores
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/editores")
@@ -273,6 +279,12 @@ public class CursoController {
             Authentication auth) {
         EvaluacionDTO evaluacion = cursoService.crearEvaluacion(cursoId, moduloId, leccionId, dto, auth.getName());
         return ResponseEntity.ok(evaluacion);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','ESTUDIANTE')")
+    @GetMapping("/{id}")
+    public ResponseEntity<CursoDTO> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(cursoService.obtenerCursoDTO(id));
     }
 
 }
