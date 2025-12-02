@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
 import { CursoDTO } from '../models/curso.dto';
+import { MaterialDTO } from '../models/material.dto';
 
 @Injectable({ providedIn: 'root' })
 export class CursoService {
@@ -91,7 +92,7 @@ export class CursoService {
             'Authorization': `Bearer ${token}`
         });
 
-        return this.http.delete(`${this.apiUrl}/eliminar/${id}`, { 
+        return this.http.delete(`${this.apiUrl}/eliminar/${id}`, {
             headers,
             responseType: 'text'  // ← ESTA ES LA SOLUCIÓN
         });
@@ -117,6 +118,96 @@ export class CursoService {
     agregarModulo(cursoId: number, estructura: any): Observable<CursoDTO> {
         const headers = this.getHeaders();
         return this.http.post<CursoDTO>(`${this.apiUrl}/${cursoId}/modulos`, estructura, headers);
+    }
+
+    // ✅ CORREGIDO: URL + HEADERS
+    subirMaterial(cursoId: number, moduloId: number, leccionId: number, form: FormData) {
+        const headers = this.getHeaders();
+        return this.http.post<MaterialDTO>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}/materiales`,
+            form,
+            headers
+        );
+    }
+
+    // ✅ CORREGIDO: HEADERS
+    editarModulo(cursoId: number, moduloId: number, dto: any) {
+        const headers = this.getHeaders();
+        return this.http.put<any>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}`,
+            dto,
+            headers
+        );
+    }
+
+
+    //ELIMINAR
+    eliminarModulo(cursoId: number, moduloId: number) {
+        const headers = this.getHeaders();
+        return this.http.delete<void>(`${this.apiUrl}/${cursoId}/modulos/${moduloId}`, headers);
+    }
+
+    eliminarLeccion(cursoId: number, moduloId: number, leccionId: number) {
+        const headers = this.getHeaders();
+        return this.http.delete<void>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}`,
+            headers
+        );
+    }
+
+    eliminarMaterial(cursoId: number, moduloId: number, leccionId: number, materialId: number) {
+        const headers = this.getHeaders();
+        return this.http.delete<void>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}/materiales/${materialId}`,
+            headers
+        );
+    }
+
+    eliminarEvaluacion(cursoId: number, moduloId: number, leccionId: number, evaluacionId: number) {
+        const headers = this.getHeaders();
+        return this.http.delete<void>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}/evaluaciones/${evaluacionId}`,
+            headers
+        );
+    }
+
+    //EXTRAS
+    // NUEVO: Crear lección
+    crearLeccion(cursoId: number, moduloId: number, dto: any) {
+        const headers = this.getHeaders();
+        return this.http.post<any>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones`,
+            dto,
+            headers
+        );
+    }
+    // NUEVO: Editar lección
+    editarLeccion(cursoId: number, moduloId: number, leccionId: number, dto: any) {
+        const headers = this.getHeaders();
+        return this.http.put<any>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}`,
+            dto,
+            headers
+        );
+    }
+
+    // NUEVO: Crear material con URL
+    crearMaterialUrl(cursoId: number, moduloId: number, leccionId: number, dto: any) {
+        const headers = this.getHeaders();
+        return this.http.post<any>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}/materiales/url`,
+            dto,
+            headers
+        );
+    }
+    // NUEVO: Crear evaluación
+    crearEvaluacion(cursoId: number, moduloId: number, leccionId: number, dto: any) {
+        const headers = this.getHeaders();
+        return this.http.post<any>(
+            `${this.apiUrl}/${cursoId}/modulos/${moduloId}/lecciones/${leccionId}/evaluaciones`,
+            dto,
+            headers
+        );
     }
 
 }

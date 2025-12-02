@@ -1,3 +1,4 @@
+@use "sass:color";
 // VARIABLES
 $primary-color: #FF7E00;
 $secondary-color: #FFB84D;
@@ -13,6 +14,16 @@ $padding-base: 1.5rem;
 $max-width: 1400px;
 $font-family: 'Inter', sans-serif;
 $sidebar-width: 300px; // ANCHO DEL ASIDE A 300PX
+$radius: 12px;
+$gray-light: #f3f4f6;
+$gray-soft: #fafafa;
+$gray-border: #e5e7eb;
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$primary: #FF7E00;
+$primary-light: #FFB84D;
+$white: #ffffff;
+$border: #e5e7eb;
 
 // GLOBAL
 * {
@@ -617,248 +628,460 @@ body {
             }
         }
     }
-
-    // MODAL
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-
-        &.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: $radius-large;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-
-            .show & {
-                transform: scale(1);
-            }
-
-            h3 {
-                color: $primary-color;
-                font-size: 1.6rem;
-                margin-top: 0;
-                font-weight: 800;
-            }
-
-            p {
-                color: $text-color-dark;
-                margin-bottom: 1.5rem;
-            }
-
-            .btn-base {
-                font-weight: 600;
-                padding: 0.6rem 1.5rem;
-                border-radius: 9999px;
-                font-size: 1rem;
-                border: none;
-                cursor: pointer;
-                background: linear-gradient(90deg, $primary-color, $secondary-color);
-                color: white;
-                transition: all 0.3s;
-
-                &:hover {
-                    background: linear-gradient(90deg, $secondary-color, $primary-color);
-                    box-shadow: 0 4px 15px rgba($primary-color, 0.4);
-                }
-            }
-        }
-    }
 }
 
-.page-title {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 25px;
-}
+/* BUILDER */
 
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    grid-gap: 25px;
-}
+/* ============================================
+    BUILDER — VERSIÓN FINAL PROFESIONAL (MEJORADA)
+    ============================================ */
 
-.course-card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    transition: all .2s ease;
-    cursor: pointer;
-}
-
-.course-card:hover {
-    transform: translateY(-3px);
-}
-
-.course-image {
-    width: 100%;
-    height: 150px;
-    border-radius: 14px;
-    background-size: cover;
-    background-position: center;
-    margin-bottom: 12px;
-}
-
-.course-title {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.btn-create {
-    background: $primary-color;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 10px;
-    width: 100%;
-    border: none;
-    margin-top: 12px;
-}
-
-.btn-create:hover {
-    opacity: 0.9;
-}
-
+/* CONTENEDOR */
 .builder-container {
-    padding: 25px;
-    max-width: 900px;
-    margin: auto;
+    margin-top: 1.5rem; // Más espacio arriba
+    padding: 35px 35px; // Aumento de padding para "aire"
+    background: #ffffff;
+    border-radius: 20px; // Bordes más suaves
+    border: 1px solid #f0f0f0; // Borde más sutil
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); // Sombra más profunda y suave
+}
 
-    h2 {
-        margin-bottom: 20px;
+/* TITULO */
+.title-builder {
+    font-size: 32px; // Un poco más grande
+    font-weight: 800;
+    margin-bottom: 25px; // Más espacio debajo del título
+    color: $text-dark; // Usamos la variable general
+}
+
+/* BOTÓN NUEVO MÓDULO */
+.add-module-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px; // Aumento de margen
+
+    .btn-add-module {
+        // Mantenemos el estilo de gradiente vibrante
+        background: linear-gradient(135deg, $primary 0%, color.mix($primary, $primary-light, 70%) 100%);
+        padding: 12px 24px; // Más padding, parece más un botón principal
+        border-radius: 12px;
+        color: white;
+        border: none;
+        font-size: 16px; // Más legible
+        font-weight: 700; // Más negrita
+        box-shadow: 0 6px 15px rgba($primary, 0.45);
+        transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1); // Transición suave
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba($primary, 0.55);
+        }
     }
 }
 
-.btn-add,
-.btn-sub,
-.btn-save {
-    background: $primary-color;
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 15px;
+/* ============================================
+    MÓDULOS — Tarjetas estilo dashboard
+=============================================== */
+
+.module-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; // Espaciado vertical entre módulos
+}
+
+.module-card {
+    background: $white;
+    padding: 25px; // Aumento de padding
+    border-radius: 16px; // Bordes más suaves
+    border: 1px solid $border; // Usamos variable de borde general
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); // Sombra más notoria
+    transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative; // Para posicionamiento de elementos internos
 
     &:hover {
-        background: $secondary-color;
+        transform: translateY(-4px); // Efecto de elevación más prominente
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     }
 }
 
-.modulo,
-.leccion {
-    background: #fafafa;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #dedede;
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; // Alineación al inicio
+    margin-bottom: 18px; // Más espacio
+
+    .module-tag {
+        background: #fff3e6; // Mantenemos el color de fondo suave
+        color: $primary;
+        padding: 4px 10px;
+        border-radius: 6px; // Un poco más pequeño
+        font-size: 11px; // Más pequeño para el "tag"
+        font-weight: 700;
+        text-transform: uppercase; // Le da un toque formal
+        letter-spacing: 0.5px;
+        flex-shrink: 0; // Evita que se encoja
+        margin-bottom: 8px; // Espacio debajo del tag
+    }
+
+    .module-title {
+        font-size: 24px; // Título más grande y dominante
+        font-weight: 800;
+        color: $text-dark;
+        margin-top: 0;
+        line-height: 1.2;
+    }
+
+    .module-desc {
+        font-size: 15px; // Texto más legible
+        color: $text-light;
+        margin-top: 5px;
+        line-height: 1.5;
+    }
+
+    .module-actions {
+        display: flex;
+        gap: 8px; // Espacio entre los botones de acción
+        margin-left: 15px;
+        flex-shrink: 0;
+    }
 }
 
-.mod-header,
-.leccion-header {
+/* ICONOS ACCIÓN (edit/delete) */
+.btn-icon {
+    width: 36px; // Un poco más grandes
+    height: 36px;
+    border-radius: 10px; // Bordes suaves
+    background: $bg-gray; // Fondo gris suave
+    border: none; // Eliminamos el borde
+    color: $text-light; // Color de ícono neutro
+    font-size: 16px; // Ícono más grande
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        background: $primary-light; // Hover con color primario
+        color: $white;
+        box-shadow: 0 2px 8px rgba($primary, 0.2);
+    }
+
+    &.danger {
+        color: #dc2626; // Rojo fuerte
+
+        &:hover {
+            background: #fecaca; // Fondo rojo suave en hover
+            color: #b91c1c; // Rojo oscuro
+        }
+    }
+}
+
+/* ============================================
+    LECCIONES
+=============================================== */
+
+.lessons-container {
+    padding: 0 0 10px 0; // Pequeño padding interno
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // Espacio entre lecciones
+}
+
+.lesson-item {
+    background: $gray-soft; // Fondo más suave para lecciones
+    padding: 18px; // Más padding
+    border-radius: 14px;
+    border: 1px solid $gray-border;
+    transition: border-color .3s;
+    cursor: default;
+
+    &:hover {
+        border-color: $primary-light; // Resaltar en hover
+    }
+}
+
+.lesson-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px; // Espacio antes de los botones internos
 }
 
-.material {
-    padding-left: 15px;
-    margin-top: 12px;
+.lesson-title {
+    font-size: 16px; // Más legible
+    font-weight: 700;
+    color: $text-dark;
 }
 
-.material-block {
+.lesson-desc {
+    font-size: 13px;
+    color: $text-light;
+    margin-top: 3px;
+}
+
+.lesson-actions {
     display: flex;
-    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.lesson-inline-actions {
+    display: flex;
     gap: 10px;
-
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    margin-bottom: 15px; // Espacio antes de los materiales
+    margin-top: 5px; // Espacio después de las acciones de lección
 }
 
-input,
-select {
-    padding: 7px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.btn-remove,
-.btn-remove-small {
-    background: #c62828;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
+.lesson-inline-actions .btn-add-small {
+    padding: 8px 12px; // Más padding
+    border-radius: 9999px; // Borde completamente redondeado (pill)
+    border: 1px dashed $primary;
+    background: $white;
+    color: $primary;
+    font-size: 13px;
+    font-weight: 600;
 
     &:hover {
-        background: #b71c1c;
+        background: $primary;
+        color: $white;
     }
 }
 
-.btn-remove-small {
-    padding: 4px 7px;
+/* ============================================
+    MATERIALES
+=============================================== */
+.material-list,
+.quiz-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; // Espacio entre ítems
 }
 
-.guardar {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Espaciado general para separar secciones */
-.btn-add,
-.btn-add-sm {
-    margin-bottom: 20px !important;
-    margin-top: 10px !important;
-}
-
-/* Separación entre módulos */
-.modulo {
-    margin-bottom: 35px;
-    padding: 20px;
+.material-row,
+.quiz-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px; // Más padding
+    background: $white;
     border-radius: 10px;
+    border: 1px solid $gray-border;
+    transition: all .2s;
+    cursor: default; // Por si son elementos interactivos
+
+    &:hover {
+        border-color: $secondary-color;
+        background: $gray-soft;
+    }
+
+    .material-left,
+    .quiz-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-grow: 1;
+    }
+
+    i {
+        font-size: 18px;
+        padding: 8px; // Más padding para el ícono
+        border-radius: 10px;
+        background: #fff3e6;
+        color: $primary;
+        flex-shrink: 0;
+    }
+
+    .material-title,
+    .quiz-question {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-dark;
+        margin: 0;
+    }
+
+    .material-actions,
+    .quiz-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
 }
 
-/* Separación entre lecciones */
-.leccion {
-    margin-bottom: 25px;
-    padding: 15px;
-    border-radius: 8px;
-    background: #fff8e7;
+/* QUIZZES - Detalles extra */
+.quiz-meta {
+    font-size: 12px;
+    color: $text-light;
+    margin-top: 4px;
+    line-height: 1.4;
 }
 
-/* Separación entre materiales */
-.material {
-    margin-bottom: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #fdfdfd;
+/* ============================================
+    AGREGAR LECCIÓN
+=============================================== */
+
+.btn-add-lesson {
+    margin-top: 15px; // Más espacio
+    background: $white;
+    border: 2px dashed $primary; // Borde más grueso
+    padding: 12px 18px;
+    border-radius: 12px;
+    color: $primary;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all .3s;
+    text-align: center;
+
+    &:hover {
+        background: $primary;
+        color: $white;
+        border-color: $primary;
+    }
 }
 
-.modulo > * + *,
-.leccion > * + *,
-.material > * + * {
-  margin-top: 15px;
+/* ============================================
+   MODAL PREMIUM — Digital Academy Style
+=============================================== */
+
+/* Fondo difuminado */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 17, 17, 0.40); // Oscuro suave
+  backdrop-filter: blur(6px); // Efecto blur elegante
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4000;
+  padding: 20px;
+}
+
+/* Caja del modal */
+.edit-modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  padding: 28px 30px;
+  border-radius: 18px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  animation: modalFade .25s ease-out;
+}
+
+/* Animación suave */
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título del modal */
+.edit-modal h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.edit-modal label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  color: #374151; /* gris oscuro */
+}
+
+/* Inputs principales */
+.input-main {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+  transition: .2s;
+
+  &:focus {
+    border-color: $primary;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    outline: none;
+  }
+}
+
+/* Textarea */
+.textarea {
+  height: 110px;
+  resize: none;
+}
+
+/* Select */
+.select-material {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 14px;
+  transition: .2s;
+
+  &:focus {
+    border-color: $primary;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    outline: none;
+  }
+}
+
+/* Botones inferiores */
+.modal-actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Botón primario */
+.btn-save {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+  color: white;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 4px 12px rgba($primary, .35);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primary, .45);
+  }
+}
+
+/* Botón cancelar */
+.btn-cancel {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover {
+    background: #d1d5db;
+  }
 }

@@ -1,8 +1,9 @@
 <div class="dashboard-layout">
+
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo">
-      <img src="/assets/LogoDigital.png" alt="Logo Digital Academy" class="logo-img" />
+      <img src="/assets/LogoDigital.png" class="logo-img" />
     </div>
 
     <nav>
@@ -10,29 +11,27 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/teacher/home" [ngClass]="{'nav-link-active': activeLink==='home'}"
             (click)="setActive('home')">
-            <i class="bi bi-speedometer2 nav-icon"></i>
-            <span>Inicio</span>
+            <i class="bi bi-speedometer2"></i> Inicio
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/teacher/mis-cursos" [ngClass]="{'nav-link-active': activeLink==='courses'}"
             (click)="setActive('courses')">
-            <i class="bi bi-journal-richtext nav-icon"></i>
-            <span>Mis Cursos</span>
+            <i class="bi bi-journal-richtext"></i> Mis Cursos
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/teacher/progreso" [ngClass]="{'nav-link-active': activeLink==='students'}"
             (click)="setActive('students')">
-            <i class="bi bi-people-fill nav-icon"></i>
-            <span>Progreso Estudiantes</span>
+            <i class="bi bi-people-fill"></i> Progreso Estudiantes
           </a>
         </li>
       </ul>
     </nav>
   </aside>
+
 
   <!-- MAIN WRAPPER -->
   <div class="main-wrapper">
@@ -41,97 +40,252 @@
     <div class="user-menu-wrapper">
       <div class="user-menu" (click)="toggleUserMenu()">
         <div class="user-avatar">
-          <img src="https://placehold.co/35x35/FF7E00/ffffff?text=P" alt="Avatar">
+          <img src="https://placehold.co/35x35/FF7E00/fff?text=P">
         </div>
-        <span class="user-info">Profesor</span>
+        <span>Profesor</span>
         <i class="bi bi-chevron-down" [class.rotate]="userMenuOpen"></i>
       </div>
 
       <div class="user-dropdown-menu" [class.visible]="userMenuOpen">
         <a class="dropdown-item logout" (click)="logout()">
-          <i class="bi bi-box-arrow-right"></i>
-          <span>Cerrar Sesión</span>
+          <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
         </a>
       </div>
     </div>
 
     <!-- TITULO -->
     <div class="builder-container">
+      <h2 class="title-builder">Estructura del Curso</h2>
 
-      <h2>Editor de Curso</h2>
-
-      <button class="btn-add" (click)="agregarModulo()">
-        + Agregar módulo
-      </button>
-
-      <div class="modulo" *ngFor="let modulo of modulos; let mi = index">
-
-        <!-- Título del módulo -->
-        <div class="mod-header">
-          <h3>M{{ mi + 1 }}:
-            <input type="text" [(ngModel)]="modulo.nombre" placeholder="Nombre del módulo" />
-          </h3>
-
-          <button class="btn-remove" (click)="eliminarModulo(mi)">Eliminar</button>
-        </div>
-
-        <button class="btn-sub" (click)="agregarLeccion(mi)">
-          + Agregar lección
+      <div class="add-module-top">
+        <button class="btn-add-module" (click)="abrirModalNuevoModulo()">
+          + Nuevo Módulo
         </button>
+      </div>
 
-        <!-- LECCIONES -->
-        <div class="leccion" *ngFor="let leccion of modulo.lecciones; let li = index">
 
-          <div class="leccion-header">
-            <h4>L{{ li + 1 }}:
-              <input type="text" [(ngModel)]="leccion.nombre" placeholder="Nombre de la lección" />
-            </h4>
+      <!-- LISTA DE MÓDULOS -->
+      <div class="module-list">
 
-            <button class="btn-remove" (click)="eliminarLeccion(mi, li)">Eliminar</button>
+        <div class="module-card" *ngFor="let modulo of modulos; let mi = index">
+
+          <!-- HEADER MÓDULO -->
+          <div class="module-header">
+            <div>
+              <span class="module-tag">Semana {{ mi + 1 }}</span>
+              <h3 class="module-title">{{ modulo.titulo }}</h3>
+
+              <p class="module-desc" *ngIf="modulo.descripcion">{{ modulo.descripcion }}</p>
+            </div>
+
+            <div class="module-actions">
+              <button class="btn-icon" (click)="abrirModalModulo(mi)">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+
+              <button class="btn-icon danger" (click)="eliminarModulo(mi)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           </div>
 
-          <button class="btn-sub" (click)="agregarMaterial(mi, li)">
-            + Agregar material
-          </button>
+          <!-- LECCIONES -->
+          <div class="lessons-container">
 
-          <!-- MATERIALES -->
-          <div class="material" *ngFor="let material of leccion.materiales; let ma = index">
+            <div class="lesson-item" *ngFor="let lec of modulo.lecciones; let li = index">
 
-            <div class="material-block">
+              <div class="lesson-header">
+                <div>
+                  <div class="lesson-title">{{ lec.titulo || 'Lección ' + (li+1) }}</div>
+                  <div class="lesson-desc" *ngIf="lec.descripcion">{{ lec.descripcion }}</div>
+                </div>
 
-              <div class="material-title">
-                <strong>M{{ ma + 1 }}:</strong>
+                <div class="lesson-actions">
+                  <button class="btn-icon" (click)="abrirModalLeccion(mi, li)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+
+                  <button class="btn-icon danger" (click)="eliminarLeccion(mi, li)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </div>
 
-              <input type="text" [(ngModel)]="material.nombre" placeholder="Nombre del material" />
+              <!-- BOTONES DENTRO DE LECCIÓN -->
+              <div class="lesson-inline-actions">
+                <button class="btn-add-small" (click)="agregarMaterialExistente(mi, li)">
+                  + Material
+                </button>
 
-              <select [(ngModel)]="material.tipo">
-                <option value="PDF">PDF</option>
-                <option value="VIDEO">VIDEO</option>
-                <option value="POWERPOINT">POWERPOINT</option>
-                <option value="QUIZ">QUIZ</option>
-              </select>
+                <button class="btn-add-small" (click)="agregarQuizExistente(mi, li)">
+                  + Quiz
+                </button>
+              </div>
 
-              <button class="btn-remove-small" (click)="eliminarMaterial(mi, li, ma)">
-                X
-              </button>
+
+              <!-- LISTA DE MATERIALES -->
+              <ul class="material-list" *ngIf="lec.materiales?.length">
+
+                <li class="material-row" *ngFor="let mat of lec.materiales; let mati=index">
+
+                  <div class="material-left">
+                    <i class="bi" [ngClass]="{
+                        'bi-file-earmark-pdf': mat.tipo==='PDF',
+                        'bi-play-btn-fill': mat.tipo==='VIDEO',
+                        'bi-question-circle': mat.tipo==='QUIZ'
+                      }"></i>
+
+                    <div class="material-title">
+                      {{ mat.tipo }} — {{ mat.url | slice:0:60 }}
+                    </div>
+                  </div>
+
+                  <div class="material-actions">
+                    <button class="btn-icon" (click)="abrirModalMaterial(mi, li, mati)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="btn-icon danger" (click)="eliminarMaterial(mi, li, mati)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+
+                </li>
+
+              </ul>
+
+              <!-- QUIZ LIST -->
+              <div class="quiz-list" *ngIf="lec.evaluaciones?.length">
+
+                <div class="quiz-row" *ngFor="let q of lec.evaluaciones; let qi = index">
+
+                  <div class="quiz-left">
+                    <i class="bi bi-check2-square"></i>
+
+                    <div>
+                      <div class="quiz-question">{{ q.pregunta }}</div>
+
+                      <div class="quiz-meta">
+                        A: {{q.opcionA}} ·
+                        B: {{q.opcionB}} ·
+                        C: {{q.opcionC}} ·
+                        D: {{q.opcionD}} ·
+                        Correcta: {{q.respuestaCorrecta}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="quiz-actions">
+                    <button class="btn-icon" (click)="abrirModalQuiz(mi, li, qi)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="btn-icon danger" (click)="eliminarQuiz(mi, li, qi)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
 
             </div>
 
+            <!-- AGREGAR NUEVA LECCIÓN -->
+            <button class="btn-add-small btn-add-lesson" (click)="agregarLeccionExistente(mi)">
+              + Agregar nueva lección
+            </button>
+
           </div>
-          <!-- FIN materiales -->
 
         </div>
-        <!-- FIN lecciones -->
 
-      </div>
-
-      <div class="guardar">
-        <button class="btn-save" (click)="guardarCurso()">Guardar Curso</button>
       </div>
 
     </div>
 
 
+    <!-- MODAL EDICIÓN -->
+    <div class="modal-backdrop" *ngIf="editModalVisible">
+      <div class="edit-modal">
+
+        <h3>{{ editTitle }}</h3>
+
+        <!-- CONTROLLER DEL MODAL -->
+        <ng-container *ngIf="editContext as ctx">
+
+          <!-- MODULO / LECCIÓN -->
+          <div *ngIf="ctx.tipo==='modulo' || ctx.tipo==='leccion' || ctx.tipo==='nuevoModulo'">
+            <label>Título</label>
+            <input class="input-main" [(ngModel)]="editData.titulo">
+
+            <label>Descripción</label>
+            <textarea class="input-main textarea" [(ngModel)]="editData.descripcion"></textarea>
+          </div>
+
+
+          <!-- MATERIAL -->
+          <div *ngIf="ctx.tipo==='material'">
+
+            <label>Tipo de material</label>
+            <select class="select-material" [(ngModel)]="editData.tipo" (change)="onMaterialTypeChange()">
+              <option value="PDF">PDF</option>
+              <option value="VIDEO">VIDEO</option>
+            </select>
+
+            <!-- PDF -->
+            <div *ngIf="editData.tipo==='PDF'">
+              <label>Subir archivo PDF</label>
+              <input type="file" accept="application/pdf" (change)="onFileSelected($event)">
+              <p *ngIf="editData.url">Archivo actual: {{editData.url}}</p>
+            </div>
+
+            <!-- VIDEO -->
+            <div *ngIf="editData.tipo==='VIDEO'">
+              <label>URL Video</label>
+              <input class="input-main" [(ngModel)]="editData.url">
+            </div>
+
+          </div>
+
+
+          <!-- QUIZ -->
+          <div *ngIf="ctx.tipo==='quiz'" class="quiz-modal">
+            <label>Pregunta</label>
+            <input class="input-main" [(ngModel)]="editData.pregunta">
+
+            <label>Opción A</label>
+            <input class="input-main" [(ngModel)]="editData.opcionA">
+
+            <label>Opción B</label>
+            <input class="input-main" [(ngModel)]="editData.opcionB">
+
+            <label>Opción C</label>
+            <input class="input-main" [(ngModel)]="editData.opcionC">
+
+            <label>Opción D</label>
+            <input class="input-main" [(ngModel)]="editData.opcionD">
+
+            <label>Correcta</label>
+            <select class="select-material" [(ngModel)]="editData.respuestaCorrecta">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="D">D</option>
+            </select>
+          </div>
+
+        </ng-container>
+
+        <!-- BOTONES MODAL -->
+        <div class="modal-actions">
+          <button class="btn-save" (click)="guardarEdicion()">Guardar</button>
+          <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
+
 </div>
