@@ -16,6 +16,18 @@ import com.example.demo.model.Modulo;
 public class CursoMapper {
 
         public static CursoDTO toDTO(Curso curso) {
+                String nombreCompleto = null;
+
+                if (curso.getEditor() != null) {
+                        String nombre = curso.getEditor().getNombre();
+                        String apellido = curso.getEditor().getApellido();
+
+                        if (nombre != null && apellido != null) {
+                                nombreCompleto = nombre + " " + apellido;
+                        } else {
+                                nombreCompleto = curso.getEditor().getNombreUsuario(); // fallback
+                        }
+                }
                 return CursoDTO.builder()
                                 .id(curso.getId())
                                 .titulo(curso.getTitulo())
@@ -24,7 +36,7 @@ public class CursoMapper {
                                 .idCategoria(curso.getCategoria() != null ? curso.getCategoria().getId() : null)
                                 .categoriaNombre(curso.getCategoria() != null ? curso.getCategoria().getNombre() : null)
                                 .idEditor(curso.getEditor() != null ? curso.getEditor().getId() : null)
-                                .editorNombre(curso.getEditor() != null ? curso.getEditor().getNombreUsuario() : null)
+                                .editorNombre(nombreCompleto)
                                 .modulos(
                                                 curso.getModulos() != null ? curso.getModulos().stream()
                                                                 .map(CursoMapper::toModuloDTO)

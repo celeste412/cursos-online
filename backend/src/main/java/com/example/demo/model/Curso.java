@@ -51,4 +51,8 @@ public class Curso {
     protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "curso")
+    private Set<Inscripcion> inscripciones;
+
 }

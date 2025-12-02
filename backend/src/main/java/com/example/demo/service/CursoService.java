@@ -8,7 +8,9 @@ import com.example.demo.dto.ModuloDTO;
 import com.example.demo.mapper.CursoMapper;
 import com.example.demo.model.Categoria;
 import com.example.demo.model.Curso;
+import com.example.demo.model.EstadoInscripcion;
 import com.example.demo.model.Evaluacion;
+import com.example.demo.model.Inscripcion;
 import com.example.demo.model.Leccion;
 import com.example.demo.model.Material;
 import com.example.demo.model.Modulo;
@@ -16,6 +18,7 @@ import com.example.demo.model.TipoMaterial;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.CursoRepository;
+import com.example.demo.repository.InscripcionRepository;
 import com.example.demo.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +47,7 @@ public class CursoService {
     private final CursoRepository cursoRepository;
     private final CategoriaRepository categoriaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final InscripcionRepository inscripcionRepository;
 
     // Ruta ABSOLUTA para guardar las imágenes
     private final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
@@ -514,6 +519,37 @@ public class CursoService {
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
         return CursoMapper.toDTO(curso);
+    }
+
+    @Transactional
+    public void inscribirEstudiante(Long idCurso, String username) {
+
+        Usuario estudiante = usuarioRepository.findByNombreUsuario(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Curso curso = cursoRepository.findById(idCurso)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        // verificar duplicado
+        if (inscripcionRepository.existsByCursoIdAndUsuarioId(idCurso, estudiante.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya estás inscrito");
+        }
+
+        Inscripcion insc = new Inscripcion();
+        insc.setCurso(curso);
+        insc.setUsuario(estudiante);
+        insc.setEstado(EstadoInscripcion.ACTIVO);
+        insc.setFechaInscripcion(LocalDateTime.now());
+
+        inscripcionRepository.save(insc);
+    }
+
+    public boolean estaInscrito(Long idCurso, String username) {
+
+        Usuario estudiante = usuarioRepository.findByNombreUsuario(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return inscripcionRepository.existsByCursoIdAndUsuarioId(idCurso, estudiante.getId());
     }
 
 }

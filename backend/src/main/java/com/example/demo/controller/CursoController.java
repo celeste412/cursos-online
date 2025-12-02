@@ -121,7 +121,7 @@ public class CursoController {
 
     // Obtener curso completo con módulos, lecciones y materiales
     @PreAuthorize("hasRole('EDITOR')")
-    @GetMapping("/{cursoId}")
+    @GetMapping("/{cursoId}/editor")
     public ResponseEntity<CursoDTO> obtenerCurso(
             @PathVariable Long cursoId,
             Authentication auth) {
@@ -285,6 +285,32 @@ public class CursoController {
     @GetMapping("/{id}")
     public ResponseEntity<CursoDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(cursoService.obtenerCursoDTO(id));
+    }
+
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    @PostMapping("/{id}/inscribir")
+    public ResponseEntity<?> inscribir(
+            @PathVariable Long id,
+            Authentication auth) {
+
+        String username = auth.getName();
+
+        cursoService.inscribirEstudiante(id, username);
+
+        return ResponseEntity.ok("Inscrito correctamente");
+    }
+
+    @PreAuthorize("hasRole('ESTUDIANTE')")
+    @GetMapping("/{id}/inscrito")
+    public ResponseEntity<Boolean> verificarInscripcion(
+            @PathVariable Long id,
+            Authentication auth) {
+
+        String username = auth.getName();
+
+        boolean inscrito = cursoService.estaInscrito(id, username);
+
+        return ResponseEntity.ok(inscrito);
     }
 
 }
