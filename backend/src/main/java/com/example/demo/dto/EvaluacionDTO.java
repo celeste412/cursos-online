@@ -15,4 +15,5 @@ public class EvaluacionDTO {
     private String opcionC;
     private String opcionD;
     private String respuestaCorrecta;
+    private Long leccionId;
 }

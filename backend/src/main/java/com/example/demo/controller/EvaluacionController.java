@@ -19,15 +19,21 @@ public class EvaluacionController {
         this.evaluacionService = evaluacionService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
-    @GetMapping("/leccion/{leccionId}")
-    public ResponseEntity<List<EvaluacionDTO>> listarEvaluacionesPorLeccion(@PathVariable Long leccionId) {
-        return ResponseEntity.ok(evaluacionService.listarEvaluacionesPorLeccion(leccionId));
+    /*
+     * @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR','ESTUDIANTE')")
+     * 
+     * @GetMapping("/leccion/{leccionId}")
+     * public ResponseEntity<List<EvaluacionDTO>>
+     * listarEvaluacionesPorLeccion(@PathVariable Long leccionId) {
+     * return
+     * ResponseEntity.ok(evaluacionService.listarEvaluacionesPorLeccion(leccionId));
+     * }
+     */
+
+    @PostMapping("/evaluaciones")
+    @PreAuthorize("hasRole('EDITOR')")
+    public ResponseEntity<?> crearEvaluacion(@RequestBody EvaluacionDTO dto) {
+        return ResponseEntity.ok(evaluacionService.crearEvaluacion(dto));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EDITOR')")
-    @PostMapping("/leccion/{leccionId}")
-    public ResponseEntity<EvaluacionDTO> crearEvaluacion(@PathVariable Long leccionId, @RequestBody EvaluacionDTO evaluacionDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(evaluacionService.crearEvaluacion(leccionId, evaluacionDTO));
-    }
 }

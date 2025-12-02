@@ -18,4 +18,5 @@ public class LeccionDTO {
     private String moduloTitulo;
 
     private List<MaterialDTO> materiales;
+    private List<EvaluacionDTO> evaluaciones;
 }

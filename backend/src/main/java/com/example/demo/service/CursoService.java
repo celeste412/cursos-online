@@ -1,12 +1,14 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.CursoDTO;
+import com.example.demo.dto.EvaluacionDTO;
 import com.example.demo.dto.LeccionDTO;
 import com.example.demo.dto.MaterialDTO;
 import com.example.demo.dto.ModuloDTO;
 import com.example.demo.mapper.CursoMapper;
 import com.example.demo.model.Categoria;
 import com.example.demo.model.Curso;
+import com.example.demo.model.Evaluacion;
 import com.example.demo.model.Leccion;
 import com.example.demo.model.Material;
 import com.example.demo.model.Modulo;
@@ -17,9 +19,12 @@ import com.example.demo.repository.CursoRepository;
 import com.example.demo.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,54 +170,343 @@ public class CursoService {
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
     }
 
+    // extra yooo
+
     @Transactional
-    public Curso agregarModulo(Long cursoId, ModuloDTO moduloDTO, String username) {
+    public Curso agregarModulo(Long cursoId, ModuloDTO moduloDTO, String usernameToken) {
+
         Curso curso = cursoRepository.findById(cursoId)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
-        // Verificar que el usuario sea el profesor asignado
-        if (!curso.getEditor().getNombre().equals(username)) {
-            throw new RuntimeException("No tienes permisos para modificar este curso");
+        Usuario profesor = usuarioRepository.findByNombreUsuario(usernameToken)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!curso.getEditor().getId().equals(profesor.getId())) {
+            throw new RuntimeException("No tienes permisos para modificar este curso.");
         }
 
-        // Crear módulo
-        Modulo modulo = Modulo.builder()
-                .titulo(moduloDTO.getTitulo())
-                .descripcion(moduloDTO.getDescripcion())
-                .curso(curso)
-                .lecciones(new HashSet<>())
-                .build();
-
-        // Convertir Lecciones
-        if (moduloDTO.getLecciones() != null) {
-            for (LeccionDTO lDTO : moduloDTO.getLecciones()) {
-                Leccion leccion = Leccion.builder()
-                        .titulo(lDTO.getTitulo())
-                        .descripcion(lDTO.getDescripcion())
-                        .modulo(modulo)
-                        .materiales(new HashSet<>())
-                        .evaluaciones(new HashSet<>())
-                        .build();
-
-                // Convertir Materiales
-                if (lDTO.getMateriales() != null) {
-                    for (MaterialDTO mDTO : lDTO.getMateriales()) {
-                        Material material = Material.builder()
-                                .tipo(TipoMaterial.valueOf(mDTO.getTipo()))
-                                .url(mDTO.getUrl())
-                                .leccion(leccion)
-                                .build();
-                        leccion.getMateriales().add(material);
-                    }
-                }
-
-                modulo.getLecciones().add(leccion);
-            }
-        }
+        Modulo modulo = new Modulo();
+        modulo.setTitulo(moduloDTO.getTitulo());
+        modulo.setDescripcion(moduloDTO.getDescripcion());
+        modulo.setCurso(curso);
 
         curso.getModulos().add(modulo);
 
+        if (moduloDTO.getLecciones() != null) {
+            modulo.setLecciones(new HashSet<>());
+
+            for (LeccionDTO l : moduloDTO.getLecciones()) {
+                Leccion leccion = new Leccion();
+                leccion.setTitulo(l.getTitulo());
+                leccion.setDescripcion(l.getDescripcion());
+                leccion.setModulo(modulo);
+
+                modulo.getLecciones().add(leccion);
+
+                // MATERIALES
+                if (l.getMateriales() != null) {
+                    leccion.setMateriales(new HashSet<>());
+
+                    for (MaterialDTO m : l.getMateriales()) {
+                        Material mat = new Material();
+                        mat.setTipo(TipoMaterial.valueOf(m.getTipo()));
+                        mat.setUrl(m.getUrl());
+                        mat.setLeccion(leccion);
+
+                        leccion.getMateriales().add(mat);
+                    }
+                }
+
+                // EVALUACIONES (QUIZ)
+                if (l.getEvaluaciones() != null) {
+                    leccion.setEvaluaciones(new HashSet<>());
+
+                    for (EvaluacionDTO ev : l.getEvaluaciones()) {
+                        Evaluacion e = new Evaluacion();
+                        e.setPregunta(ev.getPregunta());
+                        e.setOpcionA(ev.getOpcionA());
+                        e.setOpcionB(ev.getOpcionB());
+                        e.setOpcionC(ev.getOpcionC());
+                        e.setOpcionD(ev.getOpcionD());
+                        e.setRespuestaCorrecta(ev.getRespuestaCorrecta());
+                        e.setLeccion(leccion);
+
+                        leccion.getEvaluaciones().add(e);
+                    }
+                }
+            }
+        }
+
         return cursoRepository.save(curso);
+    }
+
+    @Transactional
+    public CursoDTO agregarModuloDTO(Long cursoId, ModuloDTO moduloDTO, String usernameToken) {
+
+        Curso cursoActualizado = agregarModulo(cursoId, moduloDTO, usernameToken);
+
+        // Convertimos a DTO completo
+        return CursoMapper.toDTO(cursoActualizado);
+    }
+
+    public MaterialDTO subirMaterial(Long cursoId, Long moduloId, Long leccionId, MultipartFile file)
+            throws IOException {
+
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        Leccion leccion = modulo.getLecciones().stream()
+                .filter(l -> l.getId().equals(leccionId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+        // Guardar PDF físicamente
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String nombreUnico = UUID.randomUUID() + extension;
+
+        Path ruta = Paths.get("uploads/materiales/" + nombreUnico);
+        Files.createDirectories(ruta.getParent());
+        Files.write(ruta, file.getBytes());
+
+        // Crear entidad Material
+        Material material = new Material();
+        material.setTipo(TipoMaterial.PDF);
+        material.setUrl("/uploads/materiales/" + nombreUnico);
+        material.setLeccion(leccion);
+
+        leccion.getMateriales().add(material);
+        cursoRepository.save(curso);
+
+        return CursoMapper.toMaterialDTO(material);
+    }
+
+    @Transactional
+    public ModuloDTO editarModulo(Long cursoId, Long moduloId, ModuloDTO dto, String username) {
+
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        // ✔ Validación correcta con nombre_usuario
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new RuntimeException("No tienes permisos para modificar este curso");
+        }
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        modulo.setTitulo(dto.getTitulo());
+        modulo.setDescripcion(dto.getDescripcion());
+
+        cursoRepository.save(curso);
+
+        return CursoMapper.toModuloDTO(modulo);
+    }
+
+    @Transactional
+    public void eliminarModuloSeguro(Long cursoId, Long moduloId, String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos");
+        }
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        // TODO: Aquí deberías validar si hay estudiantes inscritos / intentos
+        boolean usadoPorEstudiantes = false; // reemplazar con tu lógica real
+        if (usadoPorEstudiantes) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "No se puede eliminar el módulo: ya tiene actividad de estudiantes.");
+        }
+
+        curso.getModulos().remove(modulo);
+        cursoRepository.save(curso);
+    }
+
+    @Transactional
+    public void eliminarLeccionSeguro(Long cursoId, Long moduloId, Long leccionId, String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos");
+        }
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        Leccion leccion = modulo.getLecciones().stream()
+                .filter(l -> l.getId().equals(leccionId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+        boolean usadoPorEstudiantes = false; // TODO lógica real
+        if (usadoPorEstudiantes) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "No se puede eliminar la lección: ya tiene actividad de estudiantes.");
+        }
+
+        modulo.getLecciones().remove(leccion);
+        cursoRepository.save(curso);
+    }
+
+    @Transactional
+    public void eliminarMaterialSeguro(Long cursoId, Long moduloId, Long leccionId, Long materialId, String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos");
+        }
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        Leccion leccion = modulo.getLecciones().stream()
+                .filter(l -> l.getId().equals(leccionId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+        Material material = leccion.getMateriales().stream()
+                .filter(m -> m.getId().equals(materialId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Material no encontrado"));
+
+        boolean usadoPorEstudiantes = false; // TODO lógica real
+        if (usadoPorEstudiantes) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "No se puede eliminar el material: ya fue utilizado por estudiantes.");
+        }
+
+        leccion.getMateriales().remove(material);
+        cursoRepository.save(curso);
+
+        // Opcional: borrar archivo físico si quieres
+    }
+
+    @Transactional
+    public void eliminarEvaluacionSeguro(Long cursoId, Long moduloId, Long leccionId, Long evaluacionId,
+            String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos");
+        }
+
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+
+        Leccion leccion = modulo.getLecciones().stream()
+                .filter(l -> l.getId().equals(leccionId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+        Evaluacion evaluacion = leccion.getEvaluaciones().stream()
+                .filter(e -> e.getId().equals(evaluacionId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Evaluación no encontrada"));
+
+        boolean respondida = false; // TODO lógica real
+        if (respondida) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "No se puede eliminar la evaluación: ya fue respondida por estudiantes.");
+        }
+
+        leccion.getEvaluaciones().remove(evaluacion);
+        cursoRepository.save(curso);
+    }
+
+    // nuevos
+    // NUEVO: Crear lección
+    @Transactional
+    public LeccionDTO crearLeccion(Long cursoId, Long moduloId, LeccionDTO dto, String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new RuntimeException("No tienes permisos para modificar este curso.");
+        }
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+        Leccion leccion = new Leccion();
+        leccion.setTitulo(dto.getTitulo());
+        leccion.setDescripcion(dto.getDescripcion());
+        leccion.setModulo(modulo);
+        modulo.getLecciones().add(leccion);
+        cursoRepository.save(curso);
+        return CursoMapper.toLeccionDTO(leccion);
+    }
+
+    // NUEVO: Editar lección
+    @Transactional
+    public LeccionDTO editarLeccion(Long cursoId, Long moduloId, Long leccionId, LeccionDTO dto, String username) {
+        Leccion leccion = getLeccion(cursoId, moduloId, leccionId, username);
+        leccion.setTitulo(dto.getTitulo());
+        leccion.setDescripcion(dto.getDescripcion());
+        cursoRepository.save(leccion.getModulo().getCurso());
+        return CursoMapper.toLeccionDTO(leccion);
+    }
+
+    // NUEVO: Crear material con URL
+    @Transactional
+    public MaterialDTO crearMaterialUrl(Long cursoId, Long moduloId, Long leccionId, MaterialDTO dto, String username) {
+        Leccion leccion = getLeccion(cursoId, moduloId, leccionId, username);
+        Material material = new Material();
+        material.setTipo(TipoMaterial.valueOf(dto.getTipo()));
+        material.setUrl(dto.getUrl());
+        material.setLeccion(leccion);
+        leccion.getMateriales().add(material);
+        cursoRepository.save(leccion.getModulo().getCurso());
+        return CursoMapper.toMaterialDTO(material);
+    }
+
+    // NUEVO: Crear evaluación
+    @Transactional
+    public EvaluacionDTO crearEvaluacion(Long cursoId, Long moduloId, Long leccionId, EvaluacionDTO dto,
+            String username) {
+        Leccion leccion = getLeccion(cursoId, moduloId, leccionId, username);
+        Evaluacion evaluacion = new Evaluacion();
+        evaluacion.setPregunta(dto.getPregunta());
+        evaluacion.setOpcionA(dto.getOpcionA());
+        evaluacion.setOpcionB(dto.getOpcionB());
+        evaluacion.setOpcionC(dto.getOpcionC());
+        evaluacion.setOpcionD(dto.getOpcionD());
+        evaluacion.setRespuestaCorrecta(dto.getRespuestaCorrecta());
+        evaluacion.setLeccion(leccion);
+        leccion.getEvaluaciones().add(evaluacion);
+        cursoRepository.save(leccion.getModulo().getCurso());
+        return CursoMapper.toEvaluacionDTO(evaluacion);
+    }
+
+    // MÉTODO AUXILIAR: Obtener lección con validaciones
+    private Leccion getLeccion(Long cursoId, Long moduloId, Long leccionId, String username) {
+        Curso curso = cursoRepository.findById(cursoId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+        if (!curso.getEditor().getNombreUsuario().equals(username)) {
+            throw new RuntimeException("No tienes permisos");
+        }
+        Modulo modulo = curso.getModulos().stream()
+                .filter(m -> m.getId().equals(moduloId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Módulo no encontrado"));
+        return modulo.getLecciones().stream()
+                .filter(l -> l.getId().equals(leccionId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Lección no encontrada"));
     }
 
 }

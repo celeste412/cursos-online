@@ -5,6 +5,9 @@ import com.example.demo.model.Evaluacion;
 import com.example.demo.model.Leccion;
 import com.example.demo.repository.EvaluacionRepository;
 import com.example.demo.repository.LeccionRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +23,7 @@ public class EvaluacionService {
         this.evaluacionRepository = evaluacionRepository;
         this.leccionRepository = leccionRepository;
     }
-
+    /* 
     public List<EvaluacionDTO> listarEvaluacionesPorLeccion(Long leccionId) {
         return evaluacionRepository.findByLeccionId(leccionId).stream()
                 .map(evaluacion -> new EvaluacionDTO(
@@ -30,32 +33,27 @@ public class EvaluacionService {
                         evaluacion.getOpcionB(),
                         evaluacion.getOpcionC(),
                         evaluacion.getOpcionD(),
-                        evaluacion.getRespuestaCorrecta()))
+                        evaluacion.getRespuestaCorrecta(),
+                        evaluacion.getLeccion()
+                    ))
                 .collect(Collectors.toList());
+    }*/
+
+    @Transactional
+    public Evaluacion crearEvaluacion(EvaluacionDTO dto) {
+        Leccion leccion = leccionRepository.findById(dto.getLeccionId())
+                .orElseThrow(() -> new RuntimeException("Leccion no existe"));
+
+        Evaluacion e = new Evaluacion();
+        e.setPregunta(dto.getPregunta());
+        e.setOpcionA(dto.getOpcionA());
+        e.setOpcionB(dto.getOpcionB());
+        e.setOpcionC(dto.getOpcionC());
+        e.setOpcionD(dto.getOpcionD());
+        e.setRespuestaCorrecta(dto.getRespuestaCorrecta());
+        e.setLeccion(leccion);
+
+        return evaluacionRepository.save(e);
     }
 
-    public EvaluacionDTO crearEvaluacion(Long leccionId, EvaluacionDTO dto) {
-        Leccion leccion = leccionRepository.findById(leccionId)
-                .orElseThrow(() -> new RuntimeException("Lección no encontrada"));
-
-        Evaluacion evaluacion = new Evaluacion();
-        evaluacion.setPregunta(dto.getPregunta());
-        evaluacion.setOpcionA(dto.getOpcionA());
-        evaluacion.setOpcionB(dto.getOpcionB());
-        evaluacion.setOpcionC(dto.getOpcionC());
-        evaluacion.setOpcionD(dto.getOpcionD());
-        evaluacion.setRespuestaCorrecta(dto.getRespuestaCorrecta());
-        evaluacion.setLeccion(leccion);
-
-        Evaluacion guardada = evaluacionRepository.save(evaluacion);
-
-        return new EvaluacionDTO(
-                guardada.getId(),
-                guardada.getPregunta(),
-                guardada.getOpcionA(),
-                guardada.getOpcionB(),
-                guardada.getOpcionC(),
-                guardada.getOpcionD(),
-                guardada.getRespuestaCorrecta());
-    }
 }

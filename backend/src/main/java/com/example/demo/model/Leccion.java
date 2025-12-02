@@ -26,15 +26,13 @@ public class Leccion {
     @Column(length = 500)
     private String descripcion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_modulo", nullable = false)
     private Modulo modulo;
 
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default 
     private Set<Material> materiales = new HashSet<>();
 
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default   
     private Set<Evaluacion> evaluaciones = new HashSet<>();
 }
