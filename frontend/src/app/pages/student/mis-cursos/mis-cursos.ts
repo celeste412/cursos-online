@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { CursoService } from '../../../services/CursoService';
 
 @Component({
   selector: 'app-mis-cursos',
@@ -9,8 +10,10 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './mis-cursos.html',
   styleUrl: './mis-cursos.scss',
 })
-export class MisCursos {
-  constructor(private router: Router) { }
+export class MisCursos implements OnInit {
+  cursos: any[] = [];
+
+  constructor(private router: Router, private cursoService: CursoService) { }
 
   activeLink: string = 'cursos';
   userMenuOpen: boolean = false;
@@ -35,4 +38,24 @@ export class MisCursos {
     // 2. Redirigir al login
     this.router.navigate(['/login']);
   }
+
+  ngOnInit(): void {
+    this.cargarCursos();
+  }
+
+  cargarCursos() {
+    this.cursoService.listarCursosPublicos().subscribe({
+      next: data => this.cursos = data,
+      error: err => console.error("Error cargando catálogo:", err)
+    });
+  }
+
+  getTotalLecciones(curso: any): number {
+    if (!curso.modulos) return 0;
+
+    return curso.modulos.reduce((total: number, modulo: any) => {
+      return total + (modulo.lecciones?.length || 0);
+    }, 0);
+  }
+
 }

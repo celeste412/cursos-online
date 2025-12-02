@@ -24,9 +24,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/student/mis-cursos"
-                        [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
-                        (click)="setActive('mis-cursos')">
+                    <a class="nav-link" routerLink="/student/cursos-select"
+                        [ngClass]="{'nav-link-active': activeLink==='cursos-select'}"
+                        (click)="setActive('cursos-select')">
+
+
                         <i class="bi bi-journal-check nav-icon"></i>
                         <span>Cursos Inscritos</span>
                     </a>
@@ -64,18 +66,20 @@
             <div class="enrolled-courses-grid">
 
                 <!-- CARD 1 -->
-                <div class="course-card" routerLink="/student/complete-courses">
-                    <div class="course-image has-category" data-category="CATEGORIA"
-                        style="background-image: url('https://placehold.co/300x150/d1d5db/4b5563?text=IMAGEN+CURSO')">
+                <div class="course-card" *ngFor="let curso of cursos"
+                    [routerLink]="['/student/complete-courses', curso.id]">
+                    <div class="course-image has-category" [attr.data-category]="curso.categoria || 'Sin categoría'"
+                        [style.background-image]="'url(' + curso.imagen + ')'">
+                        <div class="course-info">
+                            <p class="course-title">{{ curso.titulo }}</p>
+                            .<p class="course-subtitle">
+                                <i class="bi bi-file-earmark-text"></i>
+                                {{ getTotalLecciones(curso) }} Lecciones
+                            </p>
+                        </div>
                     </div>
-                    <div class="course-info">
-                        <p class="course-title">NOMBRE DEL CURSO</p>
-                        <p class="course-subtitle">
-                            <i class="bi bi-file-earmark-text"></i> 15 Lecciones
-                        </p>
-                    </div>
-                </div>
 
+                </div>
             </div>
         </section>
 

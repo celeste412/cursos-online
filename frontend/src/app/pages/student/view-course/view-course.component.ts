@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CursoService } from '../../../services/CursoService';
+
+
 
 @Component({
   selector: 'app-view-course',
@@ -9,8 +12,10 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './view-course.component.html',
   styleUrl: './view-course.component.scss'
 })
-export class ViewCourseComponent {
-  constructor(private router: Router) { }
+export class ViewCourseComponent implements OnInit {
+  curso: any = null;
+
+  constructor(private router: Router, private cursoService: CursoService, private route: ActivatedRoute) { }
 
   activeLink: string = 'cursos';
   userMenuOpen: boolean = false;
@@ -38,8 +43,32 @@ export class ViewCourseComponent {
   showModal = false;
 
   inscribirse() {
-    this.showModal = true;
-    setTimeout(() => this.showModal = false, 2000);
+    const id = this.route.snapshot.params['id'];
+
+    this.cursoService.inscribir(id).subscribe({
+      next: () => {
+        this.showModal = true;
+        setTimeout(() => this.showModal = false, 2000);
+      },
+      error: err => console.error("Error inscribiendo:", err)
+    });
+  }
+
+
+
+
+  ngOnInit() {
+    const id = this.route.snapshot.params['id'];
+
+    this.cursoService.obtenerCursoPorId(id).subscribe({
+      next: data => {
+        this.curso = data;
+        console.log("Curso cargado: ", this.curso);
+      },
+      error: err => {
+        console.error("Error cargando curso:", err);
+      }
+    });
   }
 
 }

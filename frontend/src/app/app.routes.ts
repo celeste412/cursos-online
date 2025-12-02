@@ -12,9 +12,7 @@ import { CourseViewProfesor } from './pages/teacher/course-view-profesor/course-
 import { MisCursosProfesor } from './pages/teacher/mis-cursos-profesor/mis-cursos-profesor';
 import { ProgresoEstudiante } from './pages/teacher/progreso-estudiante/progreso-estudiante';
 
-import { Cursos } from './pages/student/cursos/cursos';
 import { MisCursos } from './pages/student/mis-cursos/mis-cursos';
-import { CourseView } from './pages/student/course-view/course-view';
 import { HomePrincipal } from './pages/home/home';
 import { Register } from './pages/student/register/register';
 import { SobreNosotrosComponent } from './pages/sobre-nosotros/sobre-nosotros.component';
@@ -22,9 +20,9 @@ import { CatalogoComponent } from './pages/catalogo/catalogo.component';
 import { LoginComponent } from './pages/login/login.component';
 import { DashEstudianteComponent } from './pages/student/dash-estudiante/dash-estudiante.component';
 import { ViewCourseComponent } from './pages/student/view-course/view-course.component';
-import { MisCursosSelectComponent } from './pages/student/mis-cursos-select/mis-cursos-select.component';
 import { CompleteCoursesComponent } from './pages/student/complete-courses/complete-courses.component';
 import { ContentCoursesComponent } from './pages/student/content-courses/content-courses.component';
+import { MisCursosSelectComponent } from './pages/student/mis-cursos-select/mis-cursos-select.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -46,12 +44,11 @@ export const routes: Routes = [
   // Student
   { path: 'student/home', component: DashEstudianteComponent },
   { path: 'student/cursos', component: MisCursos },
-  { path: 'student/view', component: ViewCourseComponent },
+  { path: 'student/view/:id', component: ViewCourseComponent },
   { path: 'student/cursos-select', component: MisCursosSelectComponent },
-  { path: 'student/complete-courses', component: CompleteCoursesComponent },
+  { path: 'student/complete-courses/:id', component: CompleteCoursesComponent },
   { path: 'student/content-courses', component: ContentCoursesComponent },
   //{ path: 'student/mis-cursos', component: MisCursos },
-  { path: 'student/course/:id', component: CourseView },
 
   // Página de inicio para todos
   { path: '', component: HomePrincipal },
