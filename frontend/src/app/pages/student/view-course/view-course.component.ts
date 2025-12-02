@@ -14,6 +14,9 @@ import { CursoService } from '../../../services/CursoService';
 })
 export class ViewCourseComponent implements OnInit {
   curso: any = null;
+  estaInscrito = false;
+  mensajeExito = false;
+
 
   constructor(private router: Router, private cursoService: CursoService, private route: ActivatedRoute) { }
 
@@ -42,33 +45,44 @@ export class ViewCourseComponent implements OnInit {
   }
   showModal = false;
 
+
+  ngOnInit() {
+    const id = Number(this.route.snapshot.params['id']);
+
+    this.cursoService.obtenerCursoPorId(id).subscribe({
+      next: (data) => {
+        this.curso = data;
+      },
+      error: (err) => console.error(err)
+    });
+
+    // 🔥 NUEVO: verificar inscripción
+    this.cursoService.verificarInscripcion(id).subscribe({
+      next: (resp) => {
+        this.estaInscrito = resp;
+      }
+    });
+
+  }
   inscribirse() {
-    const id = this.route.snapshot.params['id'];
+    const id = Number(this.route.snapshot.params['id']);
 
     this.cursoService.inscribir(id).subscribe({
       next: () => {
-        this.showModal = true;
-        setTimeout(() => this.showModal = false, 2000);
+        this.mensajeExito = true;
+        this.estaInscrito = true;
+
+        setTimeout(() => (this.mensajeExito = false), 2000);
       },
-      error: err => console.error("Error inscribiendo:", err)
-    });
-  }
-
-
-
-
-  ngOnInit() {
-    const id = this.route.snapshot.params['id'];
-
-    this.cursoService.obtenerCursoPorId(id).subscribe({
-      next: data => {
-        this.curso = data;
-        console.log("Curso cargado: ", this.curso);
-      },
-      error: err => {
-        console.error("Error cargando curso:", err);
+      error: (err) => {
+        if (err.status === 409) {
+          this.estaInscrito = true;
+        } else {
+          console.error("Error inscribiendo:", err);
+        }
       }
     });
   }
+
 
 }

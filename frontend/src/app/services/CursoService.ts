@@ -112,7 +112,7 @@ export class CursoService {
     // Obtener un curso completo
     getCurso(id: number): Observable<CursoDTO> {
         const headers = this.getHeaders();
-        return this.http.get<CursoDTO>(`${this.apiUrl}/${id}`, headers);
+        return this.http.get<CursoDTO>(`${this.apiUrl}/${id}/editor`, headers);
     }
 
     agregarModulo(cursoId: number, estructura: any): Observable<CursoDTO> {
@@ -225,8 +225,20 @@ export class CursoService {
     }
 
     inscribir(idCurso: number): Observable<any> {
-        return this.http.post(`${this.apiUrl}/${idCurso}/inscribir`, {}, this.getHeaders());
+        return this.http.post(
+            `${this.apiUrl}/${idCurso}/inscribir`,
+            {},
+            {
+                ...this.getHeaders(),
+                responseType: 'text' as 'json'   // <---- CLAVE
+            }
+        );
     }
+
+    verificarInscripcion(idCurso: number) {
+        return this.http.get<boolean>(`${this.apiUrl}/${idCurso}/inscrito`, this.getHeaders());
+    }
+
 
 
 }

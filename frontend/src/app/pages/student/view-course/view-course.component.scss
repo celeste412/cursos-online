@@ -534,7 +534,7 @@ body {
 
         i {
             font-size: 3rem;
-            color: $success-color; 
+            color: $success-color;
             margin-bottom: 1rem;
         }
 
@@ -556,4 +556,21 @@ body {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+.btn-normal {
+    background: #FF7E00;
+    color: white;
+    transition: 0.3s;
+}
+
+.btn-normal:hover {
+    background: #e56e00;
+}
+
+.btn-inscrito {
+    background: #10B981 !important;
+    color: white !important;
+    cursor: not-allowed;
+    opacity: 0.8;
 }

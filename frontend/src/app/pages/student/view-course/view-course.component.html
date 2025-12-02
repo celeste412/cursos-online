@@ -21,6 +21,14 @@
             <span>Catalogo Cursos</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/student/cursos-select"
+            [ngClass]="{'nav-link-active': activeLink==='cursos-select', 'nav-link-inactive': activeLink!=='cursos-select'}"
+            (click)="setActive('cursos-select')">
+            <i class="bi bi-journal-check nav-icon"></i>
+            <span>Cursos Inscritos</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </aside>
@@ -52,28 +60,27 @@
     <div class="course-detail-page">
       <div class="course-main-content">
         <h1 class="course-title-detail">Nombre del curso</h1>
-        <div class="course-hero-image"
-          style="background-image: url('https://placehold.co/900x450/d1d5db/4b5563?text=IMAGEN+DEL+CURSO')"></div>
+        <div class="course-hero-image" [style.background-image]="'url(' + curso?.imagenUrl + ')'">
+        </div>
+
 
         <div class="course-meta">
-          <p class="course-creator-info">Por <strong>Nombre del Creador de curso</strong></p>
-          <p class="course-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+          <p class="course-creator-info">
+            Por <strong>{{ curso?.editorNombre || 'Profesor no asignado' }}</strong>
           </p>
-          <p class="course-includes-title">Este curso incluye:</p>
-          <div class="course-stats">
-            <span><i class="bi bi-person-fill"></i> 2167 Alumnos</span>
-            <span><i class="bi bi-file-earmark-text"></i> 59 lecciones (9h 11m)</span>
-            <span><i class="bi bi-book"></i> 6 módulos</span>
-            <span><i class="bi bi-headphones"></i> Audio: Español</span>
-          </div>
+          <p class="course-description">
+            {{ curso?.descripcion }}
+          </p>
+
           <div class="course-actions">
-            <button class="btn-primary-action" (click)="inscribirse()">
-              Inscribirme
+            <button class="btn-primary-action" [disabled]="estaInscrito" [ngClass]="{
+    'btn-inscrito': estaInscrito,
+    'btn-normal': !estaInscrito
+  }" (click)="inscribirse()">
+
+              {{ estaInscrito ? "YA ESTÁS INSCRITO" : "INSCRIBIRME" }}
             </button>
+
           </div>
         </div>
       </div>
@@ -81,24 +88,12 @@
       <aside class="course-sidebar">
         <h3 class="sidebar-title">Descripción general básica</h3>
         <div class="module-list" *ngIf="curso?.modulos?.length > 0">
-          <div class="module-item"  *ngFor="let m of curso.modulos; index as i">
+          <div class="module-item" *ngFor="let m of curso.modulos; index as i">
             <h4 class="module-title">MÓDULO {{ i + 1 }} — {{ m.titulo }}</h4>
             <ul class="lesson-list">
               <li class="lesson-item" *ngFor="let l of m.lecciones; index as j">
-                <span class="lesson-number">L{{ j + 1 }}</span> {{ l.titulo }}</li>
-            </ul>
-          </div>
-          <div class="module-item">
-            <h4 class="module-title">MODULO 2 ------</h4>
-            <ul class="lesson-list">
-              <li class="lesson-item"><span class="lesson-number">L1</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L2</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L3</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L4</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L5</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L6</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L7</span> Lorem ipsum dolor sit...</li>
-              <li class="lesson-item"><span class="lesson-number">L8</span> Lorem ipsum dolor sit...</li>
+                <span class="lesson-number">L{{ j + 1 }}</span> {{ l.titulo }}
+              </li>
             </ul>
           </div>
         </div>
@@ -107,7 +102,7 @@
   </div>
 </div>
 
-<div class="modal-inscrito" [class.visible]="showModal">
+<div class="modal-inscrito" [class.visible]="mensajeExito">
   <div class="modal-content-inscrito">
     <i class="bi bi-check-circle-fill"></i>
     <p>¡Inscrito correctamente!</p>
